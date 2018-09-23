@@ -1,14 +1,19 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+
+import { MealPage } from '../meal/meal';
+import { TimePage } from '../time/time';
+import { SettingsPage } from '../settings/settings';
 
 @Component({
-  selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
 
-  constructor(public navCtrl: NavController) {
+  tab1Root = MealPage;
+  tab2Root = TimePage;
+  tab3Root = SettingsPage;
+
+  constructor() {
 
   }
-
 }
