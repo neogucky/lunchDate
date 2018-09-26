@@ -8,11 +8,27 @@
 
 <ion-content padding>
 
-<h2>When would you like to go?</h2>
+<h2>Current suggestions</h2>
+{{global.participantName}}
+<ion-list>
+
+  <ion-item *ngFor="let suggestion of suggestionList">
+    <ion-label>
+     {{suggestion.time}}
+    </ion-label>
+    <div item-content>
+      {{formatNames(suggestion.participants)}}
+    </div>
+	<button ion-button outline item-end>{{ getParticipationString(suggestion.participants) }}</button>
+  </ion-item>
+
+</ion-list>
+
+<h2>Tell others when you want to go lunching</h2>
 
 <ion-item>
-  <ion-label>Präferierte Zeit</ion-label>
-  <ion-datetime displayFormat="HH:mm" [(ngModel)]="selectedTime"></ion-datetime>
+  <ion-label>Suggest lunch time</ion-label>
+  <ion-datetime value="11:30" displayFormat="HH:mm" [(ngModel)]="selectedTime"></ion-datetime>
 </ion-item>
 
 </ion-content>

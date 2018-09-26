@@ -12,6 +12,9 @@ import { SettingsPage } from '../pages/settings/settings';
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
 
+import { Global } from '../services/global';
+
+
 @NgModule({
   declarations: [
     MyApp,
@@ -36,6 +39,7 @@ import { HomePage } from '../pages/home/home';
     StatusBar,
     SplashScreen,
 	OneSignal, 
+	Global,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
