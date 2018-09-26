@@ -8,13 +8,21 @@
 
 <ion-content padding>
 
+<h2>{{auth.getEmail()}}</h2>
+
+<ion-item (click)="logout()" *ngIf="auth.authenticated">
+	<ion-icon name="log-out" item-left></ion-icon>
+	Log out
+</ion-item>
+
+
 <h2>Select your display name</h2>
 <p>
 Let your coworkers know who you are, so they will not go without you! 
 </p>
 <ion-item>
   <ion-label color="primary">Your name</ion-label>
-  <ion-input placeholder="Happy Worker" [(ngModel)]="tmpParticipantName"></ion-input>
+  <ion-input placeholder="Happy Worker" (input)="onInput()" [(ngModel)]="tmpParticipantName"></ion-input>
 </ion-item>
 
 </ion-content>
