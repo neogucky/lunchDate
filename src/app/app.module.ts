@@ -15,14 +15,14 @@ import { LoginPage } from '../pages/login/login';
 
 import { Global } from '../services/global';
 
-import { AngularFireModule } from 'angularfire2';
-import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuth } from '@angular/fire/auth';
 import { firebaseConfig } from '../services/config';
 import { AuthService } from '../services/auth.service';
 import { SignupPage } from '../pages/signup/signup';
-import { NgxErrorsModule } from '@ultimate/ngxerrors';
 
-import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { FirebaseService } from '../services/firebase.service';
 
 
 @NgModule({
@@ -39,7 +39,6 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
     BrowserModule,
     IonicModule.forRoot(MyApp),
 	AngularFireModule.initializeApp(firebaseConfig.fire),
-	NgxErrorsModule,
 	AngularFirestoreModule
   ],
   bootstrap: [IonicApp],
@@ -59,6 +58,7 @@ import { AngularFirestoreModule } from 'angularfire2/firestore';
 	Global,
 	AngularFireAuth,
 	AuthService,
+	FirebaseService,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

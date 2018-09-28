@@ -9,17 +9,16 @@
 <ion-content padding>
 
 <h2>Current suggestions</h2>
-{{global.participantName}}
 <ion-list>
 
   <ion-item *ngFor="let suggestion of suggestionList">
     <ion-label>
-     {{suggestion.time}}
+     {{suggestion.time.toDate() | date:"hh:mm"}}
     </ion-label>
     <div item-content>
-      {{formatNames(suggestion.participants)}}
+      {{getParticipants(suggestion.id)}}
     </div>
-	<button ion-button outline item-end>{{ getParticipationString(suggestion.participants) }}</button>
+	<button ion-button (click)="switchParticipation(suggestion.id)" outline item-end>{{ getParticipationString(suggestion.id) }}</button>
   </ion-item>
 
 </ion-list>

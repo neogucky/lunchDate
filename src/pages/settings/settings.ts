@@ -3,6 +3,7 @@ import { NavController } from 'ionic-angular';
 import { ToastController } from 'ionic-angular';
 import { Global } from '../../services/global';
 import { AuthService } from '../../services/auth.service';
+import { FirebaseService } from '../../services/firebase.service';
 import { LoginPage } from '../../pages/login/login';
 
 
@@ -12,11 +13,11 @@ import { LoginPage } from '../../pages/login/login';
 })
 export class SettingsPage {
 
-	tmpParticipantName: String;
+	participantName: String;
 	onEditTimer: any;
 	
-	constructor(public navCtrl: NavController, private toastCtrl: ToastController, public global: Global, private auth: AuthService) {
-		this.tmpParticipantName = global.participantName;
+	constructor(public navCtrl: NavController, private toastCtrl: ToastController, public global: Global, private auth: AuthService,  private backend: FirebaseService) {
+		this.participantName = global.participantName;
 	}
   
 	//update name when 1 second no input
@@ -30,13 +31,14 @@ export class SettingsPage {
 	
 	private changeName = () => {
 		
-		if (this.global.participantName == this.tmpParticipantName){
+		if (this.global.participantName == this.participantName){
 			return;
 		}
-				
-		this.global.participantName = this.tmpParticipantName;
+						
+		this.backend.updateUser(this.participantName);
+		
 		this.toastCtrl.create({
-			message: 'Name was changed to: "'+this.tmpParticipantName+'"',
+			message: 'Name was changed to: "'+this.participantName+'"',
 			duration: 3000,
 			position: 'bottom'
 		}).present();
