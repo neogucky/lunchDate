@@ -24,6 +24,9 @@ import { SignupPage } from '../pages/signup/signup';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { FirebaseService } from '../services/firebase.service';
 
+import { IonicStorageModule } from '@ionic/storage';
+
+
 
 @NgModule({
   declarations: [
@@ -39,7 +42,9 @@ import { FirebaseService } from '../services/firebase.service';
     BrowserModule,
     IonicModule.forRoot(MyApp),
 	AngularFireModule.initializeApp(firebaseConfig.fire),
-	AngularFirestoreModule
+	AngularFirestoreModule,
+	IonicStorageModule.forRoot()
+
   ],
   bootstrap: [IonicApp],
   entryComponents: [

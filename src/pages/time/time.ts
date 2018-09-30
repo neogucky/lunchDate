@@ -12,6 +12,7 @@ export class TimePage {
 	suggestionList: any;
 	participantMap: any;
 	participants: any;
+	selectedTime: Date;
 
   constructor(public navCtrl: NavController, public global: Global, private backend: FirebaseService) {
 
@@ -29,8 +30,9 @@ export class TimePage {
 		if (self.suggestionList == undefined ){
 			return;
 		}
+		self.participantMap = {};
+
 		self.suggestionList.forEach(function(suggestion) {
-			console.log(suggestion);
 			self.participants.forEach(function(participant) {
 				console.log(participant);
 				if (suggestion.id == participant.suggestionID){
@@ -50,7 +52,7 @@ export class TimePage {
   
   }
   
-  getParticipants(id){
+   getParticipants(id){
 	 
 	console.log(this.participantMap);
 	console.log(id);
@@ -83,5 +85,24 @@ export class TimePage {
 	} else {
 		this.backend.participate(id);
 	}
+  }
+  
+	suggestDate(){
+		var self = this;
+		suggestionList.forEach( function (suggestion){
+			let suggestionDate = suggestion.time.toDate();
+			if (suggestionDate.getMinutes() == self.selectedTime.getMinutes()
+				&& suggestionDate.getHours() == self.selectedTime.getHours()) {
+					//date already exists
+					self.toastCtrl.create({
+						message: 'The time was already suggested, please us "JOIN" to join.',
+						duration: 3000,
+						position: 'bottom'
+					}).present();
+					return;
+				}
+		});
+	  
+		this.backend.addSuggestion();
   }
 }

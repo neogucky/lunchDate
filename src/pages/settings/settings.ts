@@ -13,11 +13,9 @@ import { LoginPage } from '../../pages/login/login';
 })
 export class SettingsPage {
 
-	participantName: String;
 	onEditTimer: any;
 	
 	constructor(public navCtrl: NavController, private toastCtrl: ToastController, public global: Global, private auth: AuthService,  private backend: FirebaseService) {
-		this.participantName = global.participantName;
 	}
   
 	//update name when 1 second no input
@@ -30,15 +28,11 @@ export class SettingsPage {
 	}
 	
 	private changeName = () => {
-		
-		if (this.global.participantName == this.participantName){
-			return;
-		}
-						
-		this.backend.updateUser(this.participantName);
+								
+		this.backend.updateUser(global.participantName);
 		
 		this.toastCtrl.create({
-			message: 'Name was changed to: "'+this.participantName+'"',
+			message: 'Name was changed to: "'+global.participantName+'"',
 			duration: 3000,
 			position: 'bottom'
 		}).present();

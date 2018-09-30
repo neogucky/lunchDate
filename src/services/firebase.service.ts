@@ -24,9 +24,15 @@ export class FirebaseService {
 		});
     }
 	
-	getUser() : String {
-		return this.afs.collection<any>('participants/'+this.auth.uid)
+	getUser() : any {
+		return this.afs.doc<any>('participants/'+this.auth.uid)
 			.valueChanges();
+	}
+	
+	addSuggestion(time) {
+		this.afs.doc('suggestions/')
+			  .set({time: time,
+					id: Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10)});
 	}
 	
 	getTodaysSuggestions() : any {
@@ -49,11 +55,11 @@ export class FirebaseService {
 	
 	unparticipate() {
 		this.afs.doc('participants/'+this.auth.uid)
-			  .set({suggestionID: ' '});
+			  .update({suggestionID: ' '});
 	}
 	
 	participate(id) {
 		this.afs.doc('participants/'+this.auth.uid)
-			  .set({suggestionID: id});
+			  .update({suggestionID: id});
 	}
 }
