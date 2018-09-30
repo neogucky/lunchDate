@@ -14,34 +14,34 @@ import { LoginPage } from '../../pages/login/login';
 export class SettingsPage {
 
 	onEditTimer: any;
-	
+
 	constructor(public navCtrl: NavController, private toastCtrl: ToastController, public global: Global, private auth: AuthService,  private backend: FirebaseService) {
 	}
-  
+
 	//update name when 1 second no input
 	onInput(){
 		if (this.onEditTimer !== undefined){
 			clearTimeout(this.onEditTimer);
 		}
-		
+
 		this.onEditTimer = setTimeout(this.changeName, 1000)
 	}
-	
+
 	private changeName = () => {
-								
-		this.backend.updateUser(global.participantName);
-		
+
+		this.backend.updateUser(this.global.participantName);
+
 		this.toastCtrl.create({
-			message: 'Name was changed to: "'+global.participantName+'"',
+			message: 'Name was changed to: "'+this.global.participantName+'"',
 			duration: 3000,
 			position: 'bottom'
 		}).present();
 	}
-	
+
 	logout() {
 		this.auth.signOut();
 		this.navCtrl.setRoot(LoginPage);
 	}
-  
+
 
 }

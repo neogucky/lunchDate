@@ -30,8 +30,8 @@ export class FirebaseService {
 	}
 	
 	addSuggestion(time) {
-		this.afs.doc('suggestions/')
-			  .set({time: time,
+		this.afs.collection('suggestions/')
+			  .add({time: time,
 					id: Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10)});
 	}
 	

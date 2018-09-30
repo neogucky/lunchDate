@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Global } from '../../services/global';
 import { FirebaseService } from '../../services/firebase.service';
+import { ToastController } from 'ionic-angular';
 
 @Component({
   selector: 'page-time',
@@ -12,21 +13,21 @@ export class TimePage {
 	suggestionList: any;
 	participantMap: any;
 	participants: any;
-	selectedTime: Date;
+	selectedTime: String = "11:00";
 
-  constructor(public navCtrl: NavController, public global: Global, private backend: FirebaseService) {
+  constructor(public navCtrl: NavController, public global: Global, private backend: FirebaseService,private toastCtrl: ToastController) {
 
 	this.participantMap = {};
-  
+
 	let today = new Date();
 	backend.getTodaysSuggestions().subscribe(data=>{
         this.suggestionList = data;
     });
-	
+
 	var self = this;
 	backend.getParticipants().subscribe(data=>{
         self.participants = data;
-		
+
 		if (self.suggestionList == undefined ){
 			return;
 		}
@@ -41,36 +42,33 @@ export class TimePage {
 					}
 					self.participantMap[suggestion.id].push(participant.name);
 				}
-			});	
-		});		
+			});
+		});
     });
-	
+
 	//this.suggestionList = [ {time: '11:30', participants: ['Marcel', 'Tim', "Torben", "Henrik", "Daniel", "Jan", "Marcus", "Michael"]}, {time: '11:35', participants: ["Thomas"]}, {time: '11:25', participants: []} ];
-	
+
 	//TODO: sort by time (problem: string
-	//this.suggestionList.sort(function(a, b){return b.time-a.time});												
-  
+	//this.suggestionList.sort(function(a, b){return b.time-a.time});
+
   }
-  
+
    getParticipants(id){
-	 
-	console.log(this.participantMap);
-	console.log(id);
-	 
+
 	if (this.participantMap[id] === undefined || this.participantMap[id].length == 0){
 		return "No participants yet";
-	}  
-	 
+	}
+
 	let participanList = this.participantMap[id].slice();
-	  
+
 	if (participanList.length == 1){
 		return participanList[0] + " is participating";;
 	} else {
 		let firstParticipant = participanList.splice(0,1);
 		return participanList.join(', ') + " and " + firstParticipant + " are participating";
 	}
-  } 
-  
+  }
+
   getParticipationString(id){
 	if (this.participantMap[id] != undefined && this.participantMap[id].includes(this.global.participantName)){
 		return "Cancel"
@@ -78,7 +76,7 @@ export class TimePage {
 		return "Join"
 	}
   }
-  
+
   switchParticipation(id){
 	if (this.participantMap[id] != undefined && this.participantMap[id].includes(this.global.participantName)){
 		this.backend.unparticipate();
@@ -86,23 +84,34 @@ export class TimePage {
 		this.backend.participate(id);
 	}
   }
-  
+
 	suggestDate(){
-		var self = this;
-		suggestionList.forEach( function (suggestion){
+
+        //FIXME: remove unsexy js workarround
+        var selectedTime = new Date();
+        selectedTime.setHours(this.selectedTime.substring(0,1));
+        selectedTime.setMinutes(this.selectedTime.substring(3,4));
+
+        var error = false;
+        var self = this;
+		this.suggestionList.forEach( function (suggestion){
 			let suggestionDate = suggestion.time.toDate();
-			if (suggestionDate.getMinutes() == self.selectedTime.getMinutes()
-				&& suggestionDate.getHours() == self.selectedTime.getHours()) {
+			console.log(suggestion);
+			console.log(selectedTime);
+			if (suggestionDate.getMinutes() == selectedTime.getMinutes()
+				&& suggestionDate.getHours() == selectedTime.getHours()) {
 					//date already exists
 					self.toastCtrl.create({
-						message: 'The time was already suggested, please us "JOIN" to join.',
+						message: 'The time was already suggested, please use "JOIN" to join.',
 						duration: 3000,
 						position: 'bottom'
 					}).present();
-					return;
+					error = true;
 				}
 		});
-	  
-		this.backend.addSuggestion();
+        if (!error){
+            this.backend.addSuggestion(selectedTime);
+        }
+		
   }
 }
