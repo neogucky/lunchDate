@@ -93,8 +93,8 @@ export class TimePage {
 
         //FIXME: remove unsexy js workarround due to not binding Date object
         var selectedTime = new Date();
-        selectedTime.setHours(this.selectedTime.substring(0,2));
-        selectedTime.setMinutes(this.selectedTime.substring(3,5));
+        selectedTime.setHours(Number(this.selectedTime.substring(0,2)));
+        selectedTime.setMinutes(Number(this.selectedTime.substring(3,5)));
         console.log(this.selectedTime);
         console.log(selectedTime);
 

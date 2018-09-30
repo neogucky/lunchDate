@@ -9,6 +9,8 @@ import { FirebaseService } from '../../services/firebase.service';
 
 import { Storage } from '@ionic/storage';
 
+import { App } from "ionic-angular"
+
 
 @Component({
   templateUrl: 'home.html'
@@ -19,12 +21,17 @@ export class HomePage {
   tab2Root = TimePage;
   tab3Root = SettingsPage;
 
-  constructor( private backend: FirebaseService, public global: Global, private storage: Storage ) {
+  constructor( private backend: FirebaseService, public global: Global, private storage: Storage, private app: App ) {
   }
   
     ionViewDidLoad() {
 		this.backend.getUser().subscribe(data=>{
-			this.global.participantName = data.name;
+			if (data !== undefined && data.name !== undefined){
+				this.global.participantName = data.name;
+				this.app.getRootNav().getActiveChildNav().select(1);
+			} else {
+				this.app.getRootNav().getActiveChildNav().select(2);
+			}
 		});
 	}
 }

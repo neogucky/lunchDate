@@ -24,17 +24,18 @@ export class SettingsPage {
 			clearTimeout(this.onEditTimer);
 		}
 
-		this.onEditTimer = setTimeout(this.changeName, 1000)
+		this.onEditTimer = setTimeout(this.changeName, 3000)
 	}
 
 	private changeName = () => {
 
 		this.backend.updateUser(this.global.participantName);
 
+		/* always show toast in top as not to overlap the navigation bar */
 		this.toastCtrl.create({
 			message: 'Name was changed to: "'+this.global.participantName+'"',
 			duration: 3000,
-			position: 'bottom'
+			position: 'top'
 		}).present();
 	}
 

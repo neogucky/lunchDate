@@ -25,4 +25,6 @@ Let your coworkers know who you are, so they will not go without you!
   <ion-input placeholder="Happy Worker" (input)="onInput()" [(ngModel)]="global.participantName"></ion-input>
 </ion-item>
 
+<h3 *ngIf="global.participantName === undefined || global.participantName === ''">You need to choose a public name in order to select a lunch date.</h3>
+
 </ion-content>
