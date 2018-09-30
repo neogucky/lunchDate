@@ -85,19 +85,24 @@ export class TimePage {
 	}
   }
 
+    onInputChange(){
+        setTimeout(this.suggestDate.bind(this), 500);
+    }
+
 	suggestDate(){
 
-        //FIXME: remove unsexy js workarround
+        //FIXME: remove unsexy js workarround due to not binding Date object
         var selectedTime = new Date();
-        selectedTime.setHours(this.selectedTime.substring(0,1));
-        selectedTime.setMinutes(this.selectedTime.substring(3,4));
+        selectedTime.setHours(this.selectedTime.substring(0,2));
+        selectedTime.setMinutes(this.selectedTime.substring(3,5));
+        console.log(this.selectedTime);
+        console.log(selectedTime);
 
         var error = false;
         var self = this;
 		this.suggestionList.forEach( function (suggestion){
 			let suggestionDate = suggestion.time.toDate();
 			console.log(suggestion);
-			console.log(selectedTime);
 			if (suggestionDate.getMinutes() == selectedTime.getMinutes()
 				&& suggestionDate.getHours() == selectedTime.getHours()) {
 					//date already exists
