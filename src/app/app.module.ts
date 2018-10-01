@@ -3,7 +3,6 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
-import { OneSignal } from '@ionic-native/onesignal';
 
 import { MealPage } from '../pages/meal/meal';
 import { TimePage } from '../pages/time/time';
@@ -26,7 +25,7 @@ import { FirebaseService } from '../services/firebase.service';
 
 import { IonicStorageModule } from '@ionic/storage';
 
-
+import { FCM } from '@ionic-native/fcm';
 
 @NgModule({
   declarations: [
@@ -58,12 +57,12 @@ import { IonicStorageModule } from '@ionic/storage';
   ],
   providers: [
     StatusBar,
-    SplashScreen,
-	OneSignal, 
+    SplashScreen, 
 	Global,
 	AngularFireAuth,
 	AuthService,
 	FirebaseService,
+	FCM,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

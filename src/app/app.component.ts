@@ -4,6 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginPage } from '../pages/login/login';
 import { AuthService } from '../services/auth.service';
+import { FCM } from '@ionic-native/fcm';
 
 
 import { HomePage } from '../pages/home/home';
@@ -16,33 +17,38 @@ export class MyApp {
   constructor( private platform: Platform, 
 				private statusBar: StatusBar, 
 				private splashScreen: SplashScreen, 
-				private auth: AuthService) {
+				private auth: AuthService,
+				public fcm: FCM) {
     platform.ready().then(() => {
 		// Okay, so the platform is ready and our plugins are available.
 		// Here you can do any higher level native things you might need.
 		statusBar.styleDefault();
 		splashScreen.hide();
 	  
-		// OneSignal Code start:
-		// Enable to debug issues:
-		// window["plugins"].OneSignal.setLogLevel({logLevel: 4, visualLevel: 4});
-
-		var notificationOpenedCallback = function(jsonData) {
-		  console.log('notificationOpenedCallback: ' + JSON.stringify(jsonData));
-		};
-
-		var notificationReceivedCallback = function(jsonData) {
-		  console.log('notificationReceivedCallback: ' + JSON.stringify(jsonData));
-		};
-
+		
 		if(platform.is('core') || platform.is('mobileweb')) {
 			console.log("Platform is core or is mobile web");
 		} else {
-			window["plugins"].OneSignal
-			  .startInit("ab65daee-f5e9-407d-89b8-01fe3cfe63f6", "415277590824")
-			  .handleNotificationOpened(notificationOpenedCallback)
-			  .handleNotificationReceived(notificationReceivedCallback)
-			  .endInit();
+			//get push token
+			this.fcm.getToken().then(token => {
+			  // Your best bet is to here store the token on the user's profile on the
+			  // Firebase database, so that when you want to send notifications to this 
+			  // specific user you can do it from Cloud Functions.
+			});
+			
+			//FIXME: make datePool (i.e. company name etc.) configurable
+			var datePool = "IMIS";
+			
+			this.fcm.subscribeToTopic(datePool);
+			
+			//FIXME: react to received push notifications
+			fcm.onNotification().subscribe( data => {
+			  if(data.wasTapped){
+				//Notification was received on device tray and tapped by the user.
+			  }else{
+				//Notification was received in foreground. Maybe the user needs to be notified.
+			  }
+			});
 		}
 	});
   }
