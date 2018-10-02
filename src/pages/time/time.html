@@ -1,19 +1,12 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>
-      Lunch Time
-    </ion-title>
-  </ion-navbar>
-</ion-header>
-
+<img width="200" src="assets/img/app_banner.png">
 <ion-content padding>
 
-<h2>Current suggestions</h2>
+<h3 *ngIf="suggestionList === undefined || suggestionList.length == 0">Klick + to tell your collegues when you would like to go for lunch</h3>
 <ion-list>
 
   <ion-item *ngFor="let suggestion of suggestionList">
     <ion-label>
-     {{suggestion.time.toDate() | date:"hh:mm"}}
+     {{suggestion.time.toDate() | date:"HH:mm"}}
     </ion-label>
     <div item-content>
       {{getParticipants(suggestion.id)}}
@@ -22,11 +15,22 @@
   </ion-item>
 
 </ion-list>
+<br>
+<br>
 
-<h2>Tell others when you want to go lunching</h2>
+<ion-col (click)="datePicker.open()" width-50>
+	<ion-icon name="add-circle" id="addDate"></ion-icon>
 
-<ion-item>
-  <ion-label>Suggest lunch time</ion-label>
-  <ion-datetime (ngModelChange)="onInputChange()" value="11:30" displayFormat="HH:mm" [(ngModel)]="selectedTime"></ion-datetime>
-</ion-item>
+	<ion-item no-lines hidden="true">
+		<ion-datetime  #datePicker
+			text-center
+			(ionChange)="onInputChange()"
+			displayFormat="HH:mm" 
+			hourValues="10,11,12,13,14,15" 
+			minuteValues="0,15,30,45" 
+			[(ngModel)]="selectedTime"></ion-datetime>
+	</ion-item>
+</ion-col>
+
+
 </ion-content>

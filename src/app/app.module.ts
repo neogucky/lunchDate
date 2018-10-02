@@ -23,6 +23,8 @@ import { SignupPage } from '../pages/signup/signup';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { FirebaseService } from '../services/firebase.service';
 
+import { LocalNotifications } from '@ionic-native/local-notifications';
+
 import { IonicStorageModule } from '@ionic/storage';
 
 import { FCM } from '@ionic-native/fcm';
@@ -63,6 +65,7 @@ import { FCM } from '@ionic-native/fcm';
 	AuthService,
 	FirebaseService,
 	FCM,
+	LocalNotifications,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })

@@ -1,8 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { Global } from '../../services/global';
 import { FirebaseService } from '../../services/firebase.service';
 import { ToastController } from 'ionic-angular';
+import { LocalNotifications } from '@ionic-native/local-notifications';
+import { Platform } from 'ionic-angular';
+import * as moment from 'moment';
 
 @Component({
   selector: 'page-time',
@@ -14,8 +17,17 @@ export class TimePage {
 	participantMap: any;
 	participants: any;
 	selectedTime: String = "11:00";
+	
 
-  constructor(public navCtrl: NavController, public global: Global, private backend: FirebaseService,private toastCtrl: ToastController) {
+	@ViewChild('datePicker') datePicker;
+	
+  constructor(
+	public navCtrl: NavController, 
+	public global: Global, 
+	private backend: FirebaseService,
+	private toastCtrl: ToastController, 
+	private localNotifications: LocalNotifications,
+	private platform: Platform) {
 
 	this.participantMap = {};
 
@@ -35,7 +47,6 @@ export class TimePage {
 
 		self.suggestionList.forEach(function(suggestion) {
 			self.participants.forEach(function(participant) {
-				console.log(participant);
 				if (suggestion.id == participant.suggestionID){
 					if (self.participantMap[suggestion.id] === undefined) {
 						self.participantMap[suggestion.id] = [];
@@ -78,9 +89,20 @@ export class TimePage {
   }
 
   switchParticipation(id){
+	if(!this.platform.is('core') && !this.platform.is('mobileweb')){
+		this.localNotifications.clearAll();
+	}
+	
 	if (this.participantMap[id] != undefined && this.participantMap[id].includes(this.global.participantName)){
 		this.backend.unparticipate();
 	} else {
+		if (this.global.notifyBeforeDate && !this.platform.is('core') && !this.platform.is('mobileweb')){
+			//this.localNotifications.schedule({
+			//   text: 'Your Lunch Date will happen soon!',
+			//   trigger: {at: (this.suggestionList[id].time - 300)},
+			//   id: id
+			//});
+		}
 		this.backend.participate(id);
 	}
   }
@@ -95,27 +117,21 @@ export class TimePage {
         var selectedTime = new Date();
         selectedTime.setHours(Number(this.selectedTime.substring(0,2)));
         selectedTime.setMinutes(Number(this.selectedTime.substring(3,5)));
-        console.log(this.selectedTime);
-        console.log(selectedTime);
 
         var error = false;
         var self = this;
 		this.suggestionList.forEach( function (suggestion){
 			let suggestionDate = suggestion.time.toDate();
-			console.log(suggestion);
 			if (suggestionDate.getMinutes() == selectedTime.getMinutes()
 				&& suggestionDate.getHours() == selectedTime.getHours()) {
 					//date already exists
-					self.toastCtrl.create({
-						message: 'The time was already suggested, please use "JOIN" to join.',
-						duration: 3000,
-						position: 'bottom'
-					}).present();
+					self.switchParticipation(suggestion.id);
 					error = true;
 				}
 		});
         if (!error){
-            this.backend.addSuggestion(selectedTime);
+			var id = this.backend.addSuggestion(selectedTime);
+            self.switchParticipation(id);			
         }
 		
   }

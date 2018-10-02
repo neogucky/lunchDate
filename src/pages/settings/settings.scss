@@ -1,3 +1,34 @@
-page-about {
+page-settings {
+
+	img {
+		left: 50%;
+		position: absolute;
+		margin: 20px 0 10px -100px;
+	}
+
+	ion-content {
+		margin-top: 150px;
+	}
+	
+	div.userBox {
+		
+		margin: 15px;
+	
+		ion-icon {
+			font-size: 4.5em;
+			float:left;
+		}
+		
+		div.inner {
+			margin-left: 20px;
+			margin-top: 6px;
+			display: inline-block;
+		}
+		
+		div.clear {
+			clear:both;
+		}
+		
+	}
 
 }

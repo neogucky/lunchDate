@@ -1,28 +1,24 @@
-<ion-header>
-  <ion-navbar>
-    <ion-title>
-      Settings
-    </ion-title>
-  </ion-navbar>
-</ion-header>
+<img width="200" src="assets/img/app_banner.png">
 
 <ion-content padding>
 
-<h2>{{auth.getEmail()}}</h2>
+<div class="userBox">
+      <ion-icon name="contact"></ion-icon>
+	  <div class="inner">
+	  {{global.participantName}}
+	  <br>
+      {{auth.getEmail()}}
+	  <br>
+	  <a (click)="logout()">log out</a>
+	  </div>
+	  <div class="clear"></div>
+</div>
 
-<ion-item (click)="logout()" *ngIf="auth.authenticated">
-	<ion-icon name="log-out" item-left></ion-icon>
-	Log out
-</ion-item>
+<br>
 
-
-<h2>Select your display name</h2>
-<p>
-Let your coworkers know who you are, so they will not go without you! 
-</p>
 <ion-item>
   <ion-label color="primary">Your name</ion-label>
-  <ion-input placeholder="Happy Worker" (input)="onInput()" [(ngModel)]="global.participantName"></ion-input>
+  <ion-input placeholder="Please add a name" (input)="onInput()" [(ngModel)]="global.participantName"></ion-input>
 </ion-item>
 
 <h3 *ngIf="global.participantName === undefined || global.participantName === ''">You need to choose a public name in order to select a lunch date.</h3>

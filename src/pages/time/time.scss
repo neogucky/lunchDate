@@ -1,17 +1,32 @@
-page-contact {
+page-time {
+	img {
+		left: 50%;
+		position: absolute;
+		margin: 20px 0 10px -100px;
+	}
 
+	.item .label {
+		min-width: 90px;
+		font-size: large;
+	}
+
+	button.item-button.button.button-md.button-outline.button-outline-md {
+		min-width: 70px;
+		margin-left: 20px;
+	}
+
+	h2 {
+		margin-top: 30px;
+	}
+	
+	ion-content {
+		margin-top: 150px;
+	}
+	
+	#addDate.icon {
+		font-size: 6em;
+		width: 100%;
+		text-align: center;
+	}
 }
 
-.item .label {
-	min-width: 90px;
-    font-size: x-large;
-}
-
-button.item-button.button.button-md.button-outline.button-outline-md {
-	min-width: 70px;
-	margin-left: 20px;
-}
-
-h2 {
-	margin-top: 30px;
-}
