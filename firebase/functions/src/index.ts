@@ -7,15 +7,14 @@ admin.initializeApp();
 exports.newLunchDate = functions.firestore
     .document('suggestions/{suggestionId}')
     .onCreate((change, context) => {
-
-
-    
+   
     const data = change.data();
 
     const id = data.id
 	
 	const time = data.time.toDate();
-    const timeFormatted = time.getHours() + ":" + time.getMinutes();
+		
+    const timeFormatted = (time.getHours() + 2) + ":" + time.getMinutes();
 
 	
     // Notification content

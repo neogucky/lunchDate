@@ -9,7 +9,7 @@ exports.newLunchDate = functions.firestore
     const data = change.data();
     const id = data.id;
     const time = data.time.toDate();
-    const timeFormatted = time.getHours() + ":" + time.getMinutes();
+    const timeFormatted = (time.getHours() + 2) + ":" + time.getMinutes();
     // Notification content
     const payload = {
         notification: {
