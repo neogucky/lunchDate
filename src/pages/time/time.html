@@ -8,7 +8,7 @@
     <ion-label>
      {{suggestion.time.toDate() | date:"HH:mm"}}
     </ion-label>
-    <div item-content>
+    <div item-content class="participants">
       {{getParticipants(suggestion.id)}}
     </div>
 	<button ion-button (click)="switchParticipation(suggestion.id)" outline item-end>{{ getParticipationString(suggestion.id) }}</button>
