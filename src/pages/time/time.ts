@@ -96,7 +96,7 @@ export class TimePage {
 	if (this.participantMap[id] != undefined && this.participantMap[id].includes(this.global.participantName)){
 		this.backend.unparticipate();
 	} else {
-		if (this.global.notifyBeforeDate && !this.platform.is('core') && !this.platform.is('mobileweb')){
+		if (!this.platform.is('core') && !this.platform.is('mobileweb')){
 			//this.localNotifications.schedule({
 			//   text: 'Your Lunch Date will happen soon!',
 			//   trigger: {at: (this.suggestionList[id].time - 300)},

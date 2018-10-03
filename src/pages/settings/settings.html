@@ -21,6 +21,11 @@
   <ion-input placeholder="Please add a name" (input)="onInput()" [(ngModel)]="global.participantName"></ion-input>
 </ion-item>
 
-<h3 *ngIf="global.participantName === undefined || global.participantName === ''">You need to choose a public name in order to select a lunch date.</h3>
+<h3 *ngIf="global.participantName === undefined || global.participantName == ''">You need to choose a public name in order to select a lunch date.</h3>
 
+<ion-item>
+  <ion-label color="primary">Receive notifications</ion-label>
+  <ion-toggle (input)="onInput()" [(ngModel)]="global.allowPush"></ion-toggle>
+</ion-item>
+    
 </ion-content>

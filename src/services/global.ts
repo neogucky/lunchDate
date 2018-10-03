@@ -4,5 +4,5 @@ import { Injectable } from '@angular/core';
 export class Global {
   public participantName:String;
   public registeredNewUser: boolean;
-  public notifyBeforeDate: boolean = true;
+  public allowPush: boolean = true;
 }

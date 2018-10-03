@@ -28,7 +28,11 @@ export class SettingsPage {
 	}
 
 	private changeName = () => {
-
+        
+        if (this.global.participantName === undefined || this.global.participantName == ''){
+            return;
+        }
+        
 		this.backend.updateUser(this.global.participantName);
 
 		/* always show toast in top as not to overlap the navigation bar */
