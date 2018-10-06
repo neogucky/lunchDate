@@ -5,6 +5,7 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginPage } from '../pages/login/login';
 import { AuthService } from '../services/auth.service';
 import { FCM } from '@ionic-native/fcm';
+import { Global } from '../services/global';
 
 
 import { HomePage } from '../pages/home/home';
@@ -18,7 +19,8 @@ export class MyApp {
 				private statusBar: StatusBar, 
 				private splashScreen: SplashScreen, 
 				private auth: AuthService,
-				public fcm: FCM) {
+				public fcm: FCM,
+				public global: Global) {
     platform.ready().then(() => {
 		// Okay, so the platform is ready and our plugins are available.
 		// Here you can do any higher level native things you might need.
@@ -35,9 +37,9 @@ export class MyApp {
 			});
 			
 			//FIXME: make datePool (i.e. company name etc.) configurable
-			var datePool = "IMIS";
+			global.datePool = "IMIS";
 			
-			this.fcm.subscribeToTopic(datePool);
+			this.fcm.subscribeToTopic(global.datePool);
 			
 			//FIXME: react to received push notifications
 			fcm.onNotification().subscribe( data => {

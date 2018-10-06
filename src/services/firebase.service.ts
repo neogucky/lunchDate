@@ -11,7 +11,7 @@ export class FirebaseService {
 
 	}
 
-    updateUser(value){
+    updateUserName(value){
 		this.afs.doc('participants/'+this.auth.uid)
 		.update({name: value})
 		.then(() => {
@@ -21,6 +21,19 @@ export class FirebaseService {
 			// console.log('Error updating user', error); // (document does not exists)
 			this.afs.doc('participants/'+this.auth.uid)
 			  .set({name: value});
+		});
+    }
+	
+	updateUserAllowPush(value){
+		this.afs.doc('participants/'+this.auth.uid)
+		.update({allowPush: value})
+		.then(() => {
+			// update successful (document exists)
+		})
+		.catch((error) => {
+			// console.log('Error updating user', error); // (document does not exists)
+			this.afs.doc('participants/'+this.auth.uid)
+			  .set({allowPush: value});
 		});
     }
 	

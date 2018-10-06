@@ -25,7 +25,7 @@
 
 <ion-item>
   <ion-label color="primary">Receive notifications</ion-label>
-  <ion-toggle (input)="onInput()" [(ngModel)]="global.allowPush"></ion-toggle>
+  <ion-toggle (ionChange)="onAllowPush()" [(ngModel)]="global.allowPush"></ion-toggle>
 </ion-item>
     
 </ion-content>

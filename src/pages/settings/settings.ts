@@ -5,6 +5,7 @@ import { Global } from '../../services/global';
 import { AuthService } from '../../services/auth.service';
 import { FirebaseService } from '../../services/firebase.service';
 import { LoginPage } from '../../pages/login/login';
+import { FCM } from '@ionic-native/fcm';
 
 
 @Component({
@@ -15,9 +16,20 @@ export class SettingsPage {
 
 	onEditTimer: any;
 
-	constructor(public navCtrl: NavController, private toastCtrl: ToastController, public global: Global, private auth: AuthService,  private backend: FirebaseService) {
+	constructor(public navCtrl: NavController, 
+		private toastCtrl: ToastController, 
+		public global: Global, 
+		private auth: AuthService,  
+		private backend: FirebaseService,
+		public fcm: FCM)		{
 	}
 
+	ionViewDidLoad() {
+		if (this.global.allowPush){
+			setTimeout(() => {this.global.allowPush = true;}, 100);
+		}
+	}
+	
 	//update name when 1 second no input
 	onInput(){
 		if (this.onEditTimer !== undefined){
@@ -27,13 +39,23 @@ export class SettingsPage {
 		this.onEditTimer = setTimeout(this.changeName, 3000)
 	}
 
+	onAllowPush(){
+		this.backend.updateUserAllowPush(this.global.allowPush);
+		
+		if (this.global.allowPush){		
+			this.fcm.subscribeToTopic(this.global.datePool);
+		} else {
+			this.fcm.unsubscribeFromTopic(this.global.datePool);
+		}
+	}
+	
 	private changeName = () => {
         
         if (this.global.participantName === undefined || this.global.participantName == ''){
             return;
         }
         
-		this.backend.updateUser(this.global.participantName);
+		this.backend.updateUserName(this.global.participantName);
 
 		/* always show toast in top as not to overlap the navigation bar */
 		this.toastCtrl.create({
