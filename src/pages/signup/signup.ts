@@ -6,7 +6,7 @@ import { AuthService } from '../../services/auth.service';
 import { Global } from '../../services/global';
 
 @Component({
-	selector: 'as-page-signup',
+	selector: 'page-signup',
 	templateUrl: './signup.html'
 })
 export class SignupPage {

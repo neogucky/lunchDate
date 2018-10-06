@@ -10,7 +10,6 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { Platform } from 'ionic-angular';
 import firebase from 'firebase/app';
 
-@IonicPage()
 @Component({
   selector: 'page-login',
   templateUrl: 'login.html',
@@ -26,7 +25,7 @@ export class LoginPage {
 		private splashScreen: SplashScreen,
 		private fb: FormBuilder,
 		private global: Global,
-		private platform: Platform, 
+		private platform: Platform
 	) {
 		this.loginForm = fb.group({
 			email: ['', Validators.compose([Validators.required, Validators.email])],
@@ -46,7 +45,7 @@ export class LoginPage {
 				}
 				navCtrl.setRoot(HomePage);
 			} 
-		});
+		});		
 	}
 			
 	login() {
