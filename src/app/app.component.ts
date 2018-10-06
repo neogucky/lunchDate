@@ -38,9 +38,7 @@ export class MyApp {
 			
 			//FIXME: make datePool (i.e. company name etc.) configurable
 			global.datePool = "IMIS";
-			
-			this.fcm.subscribeToTopic(global.datePool);
-			
+
 			//FIXME: react to received push notifications
 			fcm.onNotification().subscribe( data => {
 			  if(data.wasTapped){
