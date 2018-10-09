@@ -27,7 +27,8 @@ export class SignupPage {
   
   signup() {
 		let data = this.form.value;
-				
+		let self = this;
+        
 		let credentials = {
 			email: data.email,
 			password: data.password
@@ -36,7 +37,10 @@ export class SignupPage {
 		this.global.registeredNewUser = true;
 		
 		this.auth.signUp(credentials).then(
-			() => this.navCtrl.setRoot(HomePage),
+			() => {
+                self.auth.sendEmailVerification();
+                this.navCtrl.setRoot(HomePage);
+                },
 			error => this.signupError = error.message
 		);
 }

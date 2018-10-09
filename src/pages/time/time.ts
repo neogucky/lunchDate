@@ -67,16 +67,20 @@ export class TimePage {
    getParticipants(id){
 
 	if (this.participantMap[id] === undefined || this.participantMap[id].length == 0){
-		return "No participants yet";
+		return "No participants";
 	}
 
 	let participanList = this.participantMap[id].slice();
 
 	if (participanList.length == 1){
-		return participanList[0] + " is participating";;
-	} else {
+		return participanList[0] + " is going";;
+	} else if (participanList.length <= 4) {
 		let firstParticipant = participanList.splice(0,1);
-		return participanList.join(', ') + " and " + firstParticipant + " are participating";
+		return participanList.join(', ') + " and " + firstParticipant + " are going";
+	} else {
+		let participantCount = participanList.length;
+		participanList = participanList.splice(0,3);
+		return participanList.join(', ') + " and " + (participantCount -3) + " others are going";
 	}
   }
 

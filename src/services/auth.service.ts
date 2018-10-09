@@ -1,14 +1,18 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase/app';
-import AuthProvider = firebase.auth.AuthProvider;
 
 @Injectable()
 export class AuthService {
 	private user: firebase.User;
+	private verifyUserWhenReady: boolean;
 
 	constructor(public afAuth: AngularFireAuth) {
 		afAuth.authState.subscribe(user => {
+			if (this.verifyUserWhenReady && !user.emailVerified){
+				this.verifyUserWhenReady = false;
+				user.sendEmailVerification();
+			}
 			this.user = user;
 		});
 	}
@@ -21,6 +25,10 @@ export class AuthService {
 	
 	signUp(credentials) {
 		return this.afAuth.auth.createUserWithEmailAndPassword(credentials.email, credentials.password);
+	}
+
+	sendEmailVerification() {
+		this.verifyUserWhenReady = true;
 	}
 	
 	get authenticated(): boolean {

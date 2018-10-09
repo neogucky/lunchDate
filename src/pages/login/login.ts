@@ -5,10 +5,10 @@ import { HomePage } from '../home/home';
 import { ToastController } from 'ionic-angular';
 import { AuthService } from '../../services/auth.service';
 import { SignupPage } from '../signup/signup';
-import { Global } from '../../services/global';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { Platform } from 'ionic-angular';
 import firebase from 'firebase/app';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'page-login',
@@ -17,6 +17,7 @@ import firebase from 'firebase/app';
 export class LoginPage {
 	loginForm: FormGroup;
 	loginError: string;
+    staySignedin: boolean;
 
 	constructor(
 		private navCtrl: NavController,
@@ -24,28 +25,31 @@ export class LoginPage {
 		private toastCtrl: ToastController,
 		private splashScreen: SplashScreen,
 		private fb: FormBuilder,
-		private global: Global,
-		private platform: Platform
+		private platform: Platform,
+        private storage: Storage
 	) {
 		this.loginForm = fb.group({
 			email: ['', Validators.compose([Validators.required, Validators.email])],
 			password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
 		});
 		var self = this;
-		firebase.auth().onAuthStateChanged(function(user) {
-			if (user) {
-				if (global.registeredNewUser){
-					global.registeredNewUser = false;
-					user.sendEmailVerification();
-				}
-				//FIXME this is ignored at the moment
-				if(!platform.is('core') && !platform.is('mobileweb')) {
-					//self.splashScreen.show();
-					setTimeout(self.splashScreen.hide, 500);
-				}
-				navCtrl.setRoot(HomePage);
-			} 
-		});		
+        storage.get('staySignedin').then((val) => {
+            if (val == true){
+                firebase.auth().onAuthStateChanged(function(user) {
+                    if (user) {
+                        //FIXME this is ignored at the moment
+                        if(!platform.is('core') && !platform.is('mobileweb')) {
+                            //self.splashScreen.show();
+                            setTimeout(self.splashScreen.hide, 500);
+                        }
+                        navCtrl.setRoot(HomePage);
+                    } 
+                });		
+            } else {
+                //FIXME: automated sign out 
+            }
+          });
+		
 	}
 			
 	login() {
@@ -53,7 +57,7 @@ export class LoginPage {
 
 		if (!data.email || !data.password) {
 			this.toastCtrl.create({
-				message: 'Please enter mail adress and password.',
+				message: 'Please enter mail address and password.',
 				duration: 3000,
 				position: 'bottom'
 			}).present();
@@ -71,8 +75,12 @@ export class LoginPage {
 			);
 	}
 	
-	signup(){
+	signup() {
 	  this.navCtrl.push(SignupPage);
 	}
+    
+    onStaySignedin() {
+        this.storage.set('staySignedin', this.staySignedin);
+    }
 
 }

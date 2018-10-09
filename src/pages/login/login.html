@@ -19,26 +19,32 @@
 			<ion-item>
 				<ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
 			</ion-item>
+
+        <ion-item>
+          <ion-label color="primary">Stay signedin </ion-label>
+          <ion-toggle  [ngModelOptions]="{standalone: true}" (ionChange)="onStaySignedin()" [(ngModel)]="staySignedin"></ion-toggle>
+        </ion-item>
             
 		</ion-list>
 
+
+        
 		<div padding-horizontal>
 			<div class="form-error">{{loginError}}</div>
 
 			<button ion-button full type="submit" [disabled]="!loginForm.valid">Log in</button>
 			<div class="login-footer">
 				<p>
-					<a href="#">Forgot password?</a>
+					<a style="display:none;" href="#">Forgot password?</a>
 					If you're a new user, please sign up.
 				</p>
 			</div>
-
-			<ion-list>
-				<button ion-button icon-left block clear (click)="signup()">
-					<ion-icon name="person-add"></ion-icon>
-					Sign up
-				</button>
-			</ion-list>
 		</div>
 	</form>
+	<ion-list>
+		<button ion-button icon-left block clear (click)="signup()">
+			<ion-icon name="person-add"></ion-icon>
+			Sign up
+		</button>
+	</ion-list>
 </ion-content>

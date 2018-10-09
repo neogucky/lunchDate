@@ -12,8 +12,9 @@ page-time {
 	}
     
     div.participants {
-        width: calc(100% - 65px);
+        width: 100%;
         text-align: right;
+		font-size: smaller;
     }
 
 	button.item-button.button.button-md.button-outline.button-outline-md {
@@ -33,6 +34,19 @@ page-time {
 		font-size: 6em;
 		width: 100%;
 		text-align: center;
+	}
+
+	@media only screen and (max-width: 400px) {
+		[padding].content .scroll-content {
+			padding: 0 !important;
+		}
+		.item .label {
+			min-width: 46px;
+			max-width: 46px;
+		}
+		button.item-button.button.button-md.button-outline.button-outline-md {
+			margin-left: 16px;
+		}
 	}
 }
 
