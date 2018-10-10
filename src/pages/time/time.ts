@@ -17,7 +17,8 @@ export class TimePage {
 	participantMap: any;
 	participants: any;
 	selectedTime: String = "11:00";
-	
+	suggestionSubscription: any;
+	dayStamp: number;
 
 	@ViewChild('datePicker') datePicker;
 	
@@ -32,9 +33,14 @@ export class TimePage {
 	this.participantMap = {};
 
 	let today = new Date();
-	backend.getTodaysSuggestions().subscribe(data=>{
+	this.suggestionSubscription = backend.getTodaysSuggestions();
+  	this.suggestionSubscription.subscribe(data=>{
         this.suggestionList = data;
     });
+
+  	let today = new Date();
+  	this.dayStamp = today.getDay();
+    document.addEventListener("resume", this.onResume, false);
 
 	var self = this;
 	backend.getParticipants().subscribe(data=>{
@@ -73,7 +79,7 @@ export class TimePage {
 	let participanList = this.participantMap[id].slice();
 
 	if (participanList.length == 1){
-		return participanList[0] + " is going";;
+		return participanList[0] + " is going";
 	} else if (participanList.length <= 4) {
 		let firstParticipant = participanList.splice(0,1);
 		return participanList.join(', ') + " and " + firstParticipant + " are going";
@@ -139,4 +145,19 @@ export class TimePage {
         }
 		
   }
+
+	/*
+	*	After the app was in standby we will reset the subscription so the data of the correct day is displayed
+	*
+	*/
+	onResume(){
+		let checkDay = new Date();
+		if (this.dayStamp != checkDay.getDay()){
+			this.dayStamp = checkDay.getDay();
+			this.suggestionSubscription.unsubscribe();
+			this.suggestionSubscription.subscribe(data=>{
+				this.suggestionList = data;
+			});
+		}
+	}
 }
