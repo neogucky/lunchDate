@@ -5,6 +5,7 @@ import { FirebaseService } from '../../services/firebase.service';
 import { ToastController } from 'ionic-angular';
 import { LocalNotifications } from '@ionic-native/local-notifications';
 import { Platform } from 'ionic-angular';
+import { AlertController } from 'ionic-angular';
 import * as moment from 'moment';
 
 @Component({
@@ -28,6 +29,7 @@ export class TimePage {
 	private backend: FirebaseService,
 	private toastCtrl: ToastController, 
 	private localNotifications: LocalNotifications,
+	public alertCtrl: AlertController,
 	private platform: Platform) {
 
 	this.participantMap = {};
@@ -38,7 +40,6 @@ export class TimePage {
         this.suggestionList = data;
     });
 
-  	let today = new Date();
   	this.dayStamp = today.getDay();
     document.addEventListener("resume", this.onResume, false);
 
@@ -99,19 +100,21 @@ export class TimePage {
   }
 
   switchParticipation(id){
+	  
 	if(!this.platform.is('core') && !this.platform.is('mobileweb')){
 		this.localNotifications.clearAll();
 	}
-	
+
 	if (this.participantMap[id] != undefined && this.participantMap[id].includes(this.global.participantName)){
 		this.backend.unparticipate();
 	} else {
-		if (!this.platform.is('core') && !this.platform.is('mobileweb')){
-			//this.localNotifications.schedule({
-			//   text: 'Your Lunch Date will happen soon!',
-			//   trigger: {at: (this.suggestionList[id].time - 300)},
-			//   id: id
-			//});
+		if (!this.platform.is('core') && !this.platform.is('mobileweb') && this.global.allowReminder){
+			let suggestion = this.suggestionList.find( suggestion => suggestion.id == id);
+			//noinspection TypeScriptValidateTypes
+			this.localNotifications.schedule({
+			   text: 'Meetup for lunch in 5 minutes!',
+			   trigger: {at: new Date(suggestion.time.toDate().getTime() - 300000)}
+			});
 		}
 		this.backend.participate(id);
 	}
@@ -145,6 +148,25 @@ export class TimePage {
         }
 		
   }
+
+	goNow(){
+		const confirm = this.alertCtrl.create({
+			title: 'Alert your collegues',
+			message: 'Do you want to ask your collegues to go for lunch in 5 minutes?',
+			buttons: [
+				{
+					text: 'Cancel'
+				},
+				{
+					text: 'Ask collegues',
+					handler: () => {
+						this.backend.goNow();
+					}
+				}
+			]
+		});
+		confirm.present();
+	}
 
 	/*
 	*	After the app was in standby we will reset the subscription so the data of the correct day is displayed

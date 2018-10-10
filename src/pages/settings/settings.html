@@ -23,9 +23,13 @@
 
 <h3 *ngIf="global.participantName === undefined || global.participantName == ''">You need to choose a public name in order to select a lunch date.</h3>
 
-<ion-item>
-  <ion-label color="primary">Receive notifications</ion-label>
-  <ion-toggle (ionChange)="onAllowPush()" [(ngModel)]="global.allowPush"></ion-toggle>
-</ion-item>
+	<ion-item>
+		<ion-label color="primary">New time notification</ion-label>
+		<ion-toggle (ionChange)="onAllowPush()" [(ngModel)]="global.allowPush"></ion-toggle>
+	</ion-item>
+	<ion-item>
+		<ion-label color="primary">Lunch starts notification</ion-label>
+		<ion-toggle (ionChange)="onAllowReminder()" [(ngModel)]="global.allowReminder"></ion-toggle>
+	</ion-item>
     
 </ion-content>

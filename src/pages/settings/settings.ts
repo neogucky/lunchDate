@@ -28,6 +28,9 @@ export class SettingsPage {
 		if (this.global.allowPush){
 			setTimeout(() => {this.global.allowPush = true;}, 100);
 		}
+		if (this.global.allowReminder){
+			setTimeout(() => {this.global.allowReminder = true;}, 100);
+		}
 	}
 	
 	//update name when 1 second no input
@@ -41,12 +44,16 @@ export class SettingsPage {
 
 	onAllowPush(){
 		this.backend.updateUserAllowPush(this.global.allowPush);
-		
-		if (this.global.allowPush){		
+
+		if (this.global.allowPush){
 			this.fcm.subscribeToTopic(this.global.datePool);
 		} else {
 			this.fcm.unsubscribeFromTopic(this.global.datePool);
 		}
+	}
+
+	onAllowReminder(){
+		this.backend.updateUserAllowReminder(this.global.allowReminder);
 	}
 	
 	private changeName = () => {

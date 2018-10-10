@@ -34,6 +34,7 @@ export class HomePage {
 			if (data !== undefined && data.name !== undefined){
 				this.global.participantName = data.name;
 				this.global.allowPush = data.allowPush;
+				this.global.allowReminder = data.allowReminder;
 			}
 
 			//run this only once

@@ -29,11 +29,11 @@ page-time {
 	ion-content {
 		margin-top: 150px;
 	}
-	
-	#addDate.icon {
+
+	#addDate.icon,
+	#goNow.icon {
 		font-size: 6em;
-		width: 100%;
-		text-align: center;
+		margin: 0 calc(25% - 40px);
 	}
 
 	@media only screen and (max-width: 400px) {

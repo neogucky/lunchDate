@@ -23,19 +23,42 @@ export class FirebaseService {
 			  .set({name: value});
 		});
     }
-	
+
 	updateUserAllowPush(value){
 		this.afs.doc('participants/'+this.auth.uid)
-		.update({allowPush: value})
-		.then(() => {
-			// update successful (document exists)
-		})
-		.catch((error) => {
-			// console.log('Error updating user', error); // (document does not exists)
-			this.afs.doc('participants/'+this.auth.uid)
-			  .set({allowPush: value});
-		});
-    }
+			.update({allowPush: value})
+			.then(() => {
+				// update successful (document exists)
+			})
+			.catch((error) => {
+				// console.log('Error updating user', error); // (document does not exists)
+				this.afs.doc('participants/'+this.auth.uid)
+					.set({allowPush: value});
+			});
+	}
+
+	updateUserAllowReminder(value){
+		this.afs.doc('participants/'+this.auth.uid)
+			.update({allowReminder: value})
+			.then(() => {
+				// update successful (document exists)
+			})
+			.catch((error) => {
+				// console.log('Error updating user', error); // (document does not exists)
+				this.afs.doc('participants/'+this.auth.uid)
+					.set({allowReminder: value});
+			});
+	}
+
+	goNow() {
+		let currentTime = new Date();
+		currentTime = new Date( currentTime.getDate() + 300000);
+		var uniqueID = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
+		this.afs.collection('suggestions/')
+			.add({time: currentTime,
+				id: uniqueID});
+		return uniqueID;
+	}
 	
 	getUser() : any {
 		return this.afs.doc<any>('participants/'+this.auth.uid)
