@@ -35,15 +35,16 @@ export class TimePage {
 	this.participantMap = {};
 
 	let today = new Date();
-	this.suggestionSubscription = backend.getTodaysSuggestions();
-  	this.suggestionSubscription.subscribe(data=>{
+
+  	this.suggestionSubscription  = backend.getSuggestions(today).subscribe(data=>{
         this.suggestionList = data;
     });
 
-  	this.dayStamp = today.getDay();
-    document.addEventListener("resume", this.onResume, false);
-
 	var self = this;
+  	this.dayStamp = today.getDay();
+
+	document.addEventListener("resume", this.onResume.bind(this), false);
+
 	backend.getParticipants().subscribe(data=>{
         self.participants = data;
 
@@ -52,22 +53,13 @@ export class TimePage {
 		}
 		self.participantMap = {};
 
-		self.suggestionList.forEach(function(suggestion) {
-			self.participants.forEach(function(participant) {
-				if (suggestion.id == participant.suggestionID){
-					if (self.participantMap[suggestion.id] === undefined) {
-						self.participantMap[suggestion.id] = [];
-					}
-					self.participantMap[suggestion.id].push(participant.name);
-				}
-			});
+		self.participants.forEach(function(participant) {
+			if (self.participantMap[participant.suggestionID] === undefined) {
+				self.participantMap[participant.suggestionID] = [];
+			}
+			self.participantMap[participant.suggestionID].push(participant.name);
 		});
     });
-
-	//this.suggestionList = [ {time: '11:30', participants: ['Marcel', 'Tim', "Torben", "Henrik", "Daniel", "Jan", "Marcus", "Michael"]}, {time: '11:35', participants: ["Thomas"]}, {time: '11:25', participants: []} ];
-
-	//TODO: sort by time (problem: string
-	//this.suggestionList.sort(function(a, b){return b.time-a.time});
 
   }
 
@@ -133,15 +125,18 @@ export class TimePage {
 
         var error = false;
         var self = this;
-		this.suggestionList.forEach( function (suggestion){
-			let suggestionDate = suggestion.time.toDate();
-			if (suggestionDate.getMinutes() == selectedTime.getMinutes()
-				&& suggestionDate.getHours() == selectedTime.getHours()) {
+		if (this.suggestionList !== undefined){
+			this.suggestionList.forEach( function (suggestion){
+				let suggestionDate = suggestion.time.toDate();
+				if (suggestionDate.getMinutes() == selectedTime.getMinutes()
+					&& suggestionDate.getHours() == selectedTime.getHours()) {
 					//date already exists
 					self.switchParticipation(suggestion.id);
 					error = true;
 				}
-		});
+			});
+		}
+
         if (!error){
 			var id = this.backend.addSuggestion(selectedTime);
             self.switchParticipation(id);			
@@ -173,11 +168,11 @@ export class TimePage {
 	*
 	*/
 	onResume(){
-		let checkDay = new Date();
-		if (this.dayStamp != checkDay.getDay()){
-			this.dayStamp = checkDay.getDay();
+		let today = new Date();
+		if (this.dayStamp != today.getDay()){
+			this.dayStamp = today.getDay();
 			this.suggestionSubscription.unsubscribe();
-			this.suggestionSubscription.subscribe(data=>{
+			this.suggestionSubscription  = this.backend.getSuggestions(today).subscribe(data=>{
 				this.suggestionList = data;
 			});
 		}

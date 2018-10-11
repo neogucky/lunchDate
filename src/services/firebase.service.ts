@@ -73,12 +73,12 @@ export class FirebaseService {
 		return uniqueID;
 	}
 	
-	getTodaysSuggestions() : any {
+	getSuggestions(day) : any {
 
-		var start = new Date();
+		var start = new Date(day.getTime());
 		start.setHours(0,0,0,0);
 
-		var end = new Date();
+		var end = new Date(day.getTime());
 		end.setHours(23,59,59,999);
 	
 		return this.afs.collection<any>('suggestions', ref => ref.where('time', '>', start).where('time', '<', end))
