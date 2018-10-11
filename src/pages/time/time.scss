@@ -25,7 +25,11 @@ page-time {
 	h2 {
 		margin-top: 30px;
 	}
-	
+
+	h3 {
+		margin-bottom: 60px;
+	}
+
 	ion-content {
 		margin-top: 150px;
 	}
@@ -46,6 +50,16 @@ page-time {
 		}
 		button.item-button.button.button-md.button-outline.button-outline-md {
 			margin-left: 16px;
+		}
+
+		#addDate.icon,
+		#goNow.icon {
+			font-size: 4em;
+			margin: 0 calc(25% - 30px);
+		}
+
+		h3 {
+			padding: 16px;
 		}
 	}
 }
