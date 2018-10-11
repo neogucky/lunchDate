@@ -5,6 +5,7 @@ import { Global } from '../../services/global';
 import { AuthService } from '../../services/auth.service';
 import { FirebaseService } from '../../services/firebase.service';
 import { LoginPage } from '../../pages/login/login';
+import { AlertController } from 'ionic-angular';
 import { FCM } from '@ionic-native/fcm';
 
 
@@ -21,6 +22,7 @@ export class SettingsPage {
 		public global: Global, 
 		private auth: AuthService,  
 		private backend: FirebaseService,
+		public alertCtrl: AlertController,
 		public fcm: FCM)		{
 	}
 
@@ -55,7 +57,26 @@ export class SettingsPage {
 	onAllowReminder(){
 		this.backend.updateUserAllowReminder(this.global.allowReminder);
 	}
-	
+
+	onAbout(){
+		//FIXME: show this in a dedicated view with better formatting
+		const confirm = this.alertCtrl.create({
+			title: 'About Lunch Date',
+			message: '<span style="color:black">' +
+			'<b>Lunch Date</b> <span style="color:grey">[luhnch deyt]</span><br>' +
+			'noun<br>' +
+			'1. A fruit that is traditionally shared with coworkers at lunchtime.<br>' +
+			'2. A set time to meet people for lunch.' +
+			'</span>',
+			buttons: [
+				{
+					text: 'Close'
+				}
+			]
+		});
+		confirm.present();
+	}
+
 	private changeName = () => {
         
         if (this.global.participantName === undefined || this.global.participantName == ''){
