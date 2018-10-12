@@ -6,7 +6,8 @@ import { LoginPage } from '../pages/login/login';
 import { AuthService } from '../services/auth.service';
 import { FCM } from '@ionic-native/fcm';
 import { Global } from '../services/global';
-
+import { Network } from '@ionic-native/network';
+import { AlertController } from 'ionic-angular';
 
 import { HomePage } from '../pages/home/home';
 @Component({
@@ -47,6 +48,42 @@ export class MyApp {
 				//Notification was received in foreground. Maybe the user needs to be notified.
 			  }
 			});
+
+			/* NOT WORKING shows blank page!
+			 * prevent users using the app without internet (not because we hate them but because it will not work)
+
+			let offline = false;
+			// watch network for a disconnect
+			let disconnectSubscription = this.network.onDisconnect().subscribe(() => {
+				offline = true;
+				const alert = this.alertCtrl.create({
+					title: 'No Internet',
+					message: 'You need a connection to the internet for this app to work. Restart the app if this message is wrong.',
+					buttons: [
+						{
+							text: 'Retry',
+							handler: () => {
+								if (offline) {
+									//reopen this dialog
+									alert.present();
+								}
+							}
+						}
+					]
+				});
+				alert.present();
+
+				// watch network for a connection
+				let connectSubscription = this.network.onConnect().subscribe(() => {
+					//dismiss dialog
+					alert.dismiss();
+
+					connectSubscription.unsubscribe();
+				});
+
+			});
+			 */
+
 		}
 	});
   }

@@ -1,13 +1,15 @@
 import { Injectable } from "@angular/core";
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AuthService } from '../services/auth.service';
+import { Global } from '../services/global';
 
 @Injectable()
 export class FirebaseService {
 
   constructor(
     public afs: AngularFirestore,
-	private auth: AuthService){
+	private auth: AuthService,
+	public global: Global){
 
 	}
 
@@ -56,7 +58,9 @@ export class FirebaseService {
 		var uniqueID = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
 		this.afs.collection('suggestions/')
 			.add({time: currentTime,
-				id: uniqueID});
+				id: uniqueID,
+				type: 'now',
+				creator: this.global.participantName});
 		return uniqueID;
 	}
 	
@@ -69,7 +73,10 @@ export class FirebaseService {
 		var uniqueID = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
 		this.afs.collection('suggestions/')
 			  .add({time: time,
-					id: uniqueID});
+					id: uniqueID,
+			  		type: 'time',
+				  	creator: this.global.participantName
+			  });
 		return uniqueID;
 	}
 	
