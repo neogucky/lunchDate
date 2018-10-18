@@ -46,9 +46,18 @@ export class HomePage {
 					this.tabs.select(2);
 				}
 			}
-			
 		});
+	}
 	
+	//FIXME: Workarround for bug where ion-tabs sometimes forgets to highlight correct tab
+	switchedTab(){
+		let tab = this.tabs.getSelected().index; 
+		
+		//unselect all
+		Array.from(document.querySelectorAll('.tab-button')).forEach( element => element.removeAttribute('aria-selected'));
+		//select correct tab
+		document.getElementById("tab-t0-"+tab).setAttribute('aria-selected', 'true');
+		
 	}
 	
 }
