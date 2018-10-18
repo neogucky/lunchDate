@@ -96,12 +96,15 @@ export class TimePage {
 	if(!this.platform.is('core') && !this.platform.is('mobileweb')){
 		this.localNotifications.clearAll();
 	}
-
+	
 	if (this.participantMap[id] != undefined && this.participantMap[id].includes(this.global.participantName)){
 		this.backend.unparticipate();
 	} else {
 		if (!this.platform.is('core') && !this.platform.is('mobileweb') && this.global.allowReminder){
-			let suggestion = this.suggestionList.find( suggestion => suggestion.id == id);
+			let suggestion = this.suggestionList.find( item => item.id == id);
+			if (suggestion == undefined){
+				console.log("Too fast error! Suggestion with ID: " + id + " not ready yet. (or it doesn't exist at all...)");
+			}
 			//noinspection TypeScriptValidateTypes
 			this.localNotifications.schedule({
 			   text: 'Meetup for lunch in 5 minutes!',
@@ -126,20 +129,22 @@ export class TimePage {
         var error = false;
         var self = this;
 		if (this.suggestionList !== undefined){
-			this.suggestionList.forEach( function (suggestion){
-				let suggestionDate = suggestion.time.toDate();
-				if (suggestionDate.getMinutes() == selectedTime.getMinutes()
-					&& suggestionDate.getHours() == selectedTime.getHours()) {
-					//date already exists
-					self.switchParticipation(suggestion.id);
-					error = true;
+			this.suggestionList.forEach( 
+				function (suggestion){
+					let suggestionDate = suggestion.time.toDate();
+					if (suggestionDate.getMinutes() == selectedTime.getMinutes()
+						&& suggestionDate.getHours() == selectedTime.getHours()) {
+						//date already exists
+						self.switchParticipation(suggestion.id);
+						error = true;
+					}
 				}
-			});
+			);
 		}
 
         if (!error){
 			var id = this.backend.addSuggestion(selectedTime);
-            self.switchParticipation(id);			
+            setTimeout(function () {self.switchParticipation(id);}, 500);			
         }
 		
   }

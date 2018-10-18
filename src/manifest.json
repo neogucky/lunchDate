@@ -1,13 +1,49 @@
 {
-  "name": "Ionic",
-  "short_name": "Ionic",
-  "start_url": "index.html",
-  "display": "standalone",
-  "icons": [{
-    "src": "assets/imgs/logo.png",
-    "sizes": "512x512",
-    "type": "image/png"
-  }],
-  "background_color": "#4e8ef7",
-  "theme_color": "#4e8ef7"
+	"name": "Lunch Date",
+	"short_name": "LunchDate",
+	"description": "Get lunch with your coworkers!",
+	"start_url": "index.html",
+	"display": "standalone",
+	"icons": [{
+		"src": "assets/imgs/logo.png",
+		"sizes": "512x512",
+		"type": "image/png"
+	},{
+		"src": "assets/imgs/apple-icon-114x114.png",
+		"sizes": "114x114",
+		"type": "image/png"
+	},{
+		"src": "assets/imgs/apple-icon-120x120.png",
+		"sizes": "120x120",
+		"type": "image/png"
+	},{
+		"src": "assets/imgs/apple-icon-144x144.png",
+		"sizes": "144x144",
+		"type": "image/png"
+	},{
+		"src": "assets/imgs/apple-icon-152x152.png",
+		"sizes": "152x152",
+		"type": "image/png"
+	},{
+		"src": "assets/imgs/apple-icon-180x180.png",
+		"sizes": "180x180",
+		"type": "image/png"
+	},{
+      "src": "assets/imgs/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/imgs/logo-384.png",
+      "sizes": "384x384",
+      "type": "image/png"
+    },
+	{
+		"src": "assets/imgs/icon-1024.png",
+		"sizes": "1024x1024",
+		"type": "image/png"
+	}],
+	"background_color": "#4e8ef7",
+	"theme_color": "#4e8ef7",
+	"gcm_sender_id": "996231231186"
 }

@@ -33,8 +33,8 @@ export class LoginPage {
 			password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
 		});
 		var self = this;
-        storage.get('staySignedin').then((val) => {
-            if (val == true){
+        storage.get('staySignedin').then((staySignedin) => {
+            if (staySignedin == true){
                 firebase.auth().onAuthStateChanged(function(user) {
                     if (user) {
                         //FIXME this is ignored at the moment

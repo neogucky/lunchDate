@@ -6,8 +6,6 @@ import { LoginPage } from '../pages/login/login';
 import { AuthService } from '../services/auth.service';
 import { FCM } from '@ionic-native/fcm';
 import { Global } from '../services/global';
-import { Network } from '@ionic-native/network';
-import { AlertController } from 'ionic-angular';
 
 import { HomePage } from '../pages/home/home';
 @Component({
