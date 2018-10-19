@@ -4,7 +4,7 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginPage } from '../pages/login/login';
 import { AuthService } from '../services/auth.service';
-import { FCM } from '@ionic-native/fcm';
+
 import { Global } from '../services/global';
 
 import { HomePage } from '../pages/home/home';
@@ -18,7 +18,6 @@ export class MyApp {
 				private statusBar: StatusBar, 
 				private splashScreen: SplashScreen, 
 				private auth: AuthService,
-				public fcm: FCM,
 				public global: Global) {
     platform.ready().then(() => {
 		// Okay, so the platform is ready and our plugins are available.
@@ -28,24 +27,6 @@ export class MyApp {
 		if(platform.is('core') || platform.is('mobileweb')) {
 			console.log("Platform is core or is mobile web");
 		} else {
-			//get push token
-			this.fcm.getToken().then(token => {
-			  // Your best bet is to here store the token on the user's profile on the
-			  // Firebase database, so that when you want to send notifications to this 
-			  // specific user you can do it from Cloud Functions.
-			});
-			
-			//FIXME: make datePool (i.e. company name etc.) configurable
-			global.datePool = "IMIS";
-
-			//FIXME: react to received push notifications
-			fcm.onNotification().subscribe( data => {
-			  if(data.wasTapped){
-				//Notification was received on device tray and tapped by the user.
-			  }else{
-				//Notification was received in foreground. Maybe the user needs to be notified.
-			  }
-			});
 
 			/* NOT WORKING shows blank page!
 			 * prevent users using the app without internet (not because we hate them but because it will not work)

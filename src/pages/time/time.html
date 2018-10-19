@@ -13,7 +13,15 @@
     </div>
 	<button ion-button (click)="switchParticipation(suggestion.id)" outline item-end>{{ getParticipationString(suggestion.id) }}</button>
   </ion-item>
-
+  <ion-item>
+    <ion-label>
+     busy
+    </ion-label>
+    <div item-content class="participants">
+      {{getParticipants(-1)}}
+    </div>
+	<button ion-button (click)="switchParticipation(-1)" outline item-end>{{ getParticipationString(-1) }}</button>
+  </ion-item>
 </ion-list>
 <br>
 <br>

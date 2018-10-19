@@ -69,6 +69,19 @@ export class FirebaseService {
 			.valueChanges();
 	}
 	
+	updateFCMToken(value){
+		this.afs.doc('participants/'+this.auth.uid)
+		.update({FCMtoken: value})
+		.then(() => {
+			// update successful (document exists)
+		})
+		.catch((error) => {
+			// console.log('Error updating user', error); // (document does not exists)
+			this.afs.doc('participants/'+this.auth.uid)
+			  .set({FCMtoken: value});
+		});
+	}
+	
 	addSuggestion(time) {
 		var uniqueID = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
 		this.afs.collection('suggestions/')

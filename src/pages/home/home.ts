@@ -1,6 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { Tabs, NavController, App, Events } from 'ionic-angular';
 import { Storage } from '@ionic/storage';
+import { FCM } from '@ionic-native/fcm';
 
 import { Global } from '../../services/global';
 import { FirebaseService } from '../../services/firebase.service';
@@ -23,12 +24,13 @@ export class HomePage {
 
 
   constructor( 
-	  public events: Events,
-	  private backend: FirebaseService, 
-	  public global: Global, 
-	  private storage: Storage, 
-	  private app: App, 
-	  public navCtrl: NavController ) {
+	public events: Events,
+	public global: Global, 
+	private storage: Storage, 
+	private app: App, 
+	private backend: FirebaseService,
+	public fcm: FCM,
+	public navCtrl: NavController ) {
 	  events.subscribe('navigate:loginpage', () => {
 		  //we use this so the ion tab controller page (home.ts) will navigate to login page if a tab triggers this.
 		  this.navCtrl.setRoot(LoginPage);
@@ -37,6 +39,14 @@ export class HomePage {
   
     ionViewDidLoad() {	
 				
+		//get push token
+		this.fcm.getToken().then(token => {
+			this.backend.updateFCMToken(token);
+		});
+		
+		//FIXME: make datePool (i.e. company name etc.) configurable
+		this.global.datePool = "IMIS";
+		
 		var initFinished = false; 
 		this.backend.getUser().subscribe(data=>{
 			if (data !== undefined && data.name !== undefined){
