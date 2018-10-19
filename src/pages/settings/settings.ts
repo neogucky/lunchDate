@@ -1,10 +1,8 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import { ToastController } from 'ionic-angular';
+import { ToastController, Events } from 'ionic-angular';
 import { Global } from '../../services/global';
 import { AuthService } from '../../services/auth.service';
 import { FirebaseService } from '../../services/firebase.service';
-import { LoginPage } from '../../pages/login/login';
 import { AlertController } from 'ionic-angular';
 import { FCM } from '@ionic-native/fcm';
 
@@ -17,7 +15,8 @@ export class SettingsPage {
 
 	onEditTimer: any;
 
-	constructor(public navCtrl: NavController, 
+	constructor(
+		public events: Events,
 		private toastCtrl: ToastController, 
 		public global: Global, 
 		private auth: AuthService,  
@@ -95,7 +94,7 @@ export class SettingsPage {
 
 	logout() {
 		this.auth.signOut();
-		this.navCtrl.setRoot(LoginPage);
+		this.events.publish('navigate:loginpage');
 	}
 
 

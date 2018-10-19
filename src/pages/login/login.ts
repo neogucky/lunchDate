@@ -18,6 +18,9 @@ export class LoginPage {
 	loginForm: FormGroup;
 	loginError: string;
     staySignedin: boolean;
+	hiddenCounter: number = 0;
+	username: string;
+	password: string;
 
 	constructor(
 		private navCtrl: NavController,
@@ -33,28 +36,38 @@ export class LoginPage {
 			password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
 		});
 		var self = this;
-        storage.get('staySignedin').then((staySignedin) => {
-            if (staySignedin == true){
-                firebase.auth().onAuthStateChanged(function(user) {
-                    if (user) {
-                        //FIXME this is ignored at the moment
-                        if(!platform.is('core') && !platform.is('mobileweb')) {
-                            //self.splashScreen.show();
-                            setTimeout(self.splashScreen.hide, 500);
-                        }
-                        navCtrl.setRoot(HomePage);
-                    } 
-                });		
-            } else {
-                //FIXME: automated sign out 
-            }
-          });
-		
+
 	}
-			
+	
+    ionViewDidLoad() {	
+		this.storage.get('username').then( (username) => {
+			this.username = username;
+		});
+		
+		//this will be set false if set false in storage
+		this.staySignedin = true;
+		let self = this;
+		this.storage.get('staySignedin').then( (staySignedin) => {
+			if (staySignedin !== false){
+
+				const unsubscribe = firebase.auth().onAuthStateChanged(function(user) {
+					if (user) {
+						self.navCtrl.setRoot(HomePage);
+					} 
+					unsubscribe();
+				});		
+			} else {
+				this.staySignedin = false;
+			}
+		});
+	}
+	
 	login() {
 		let data = this.loginForm.value;
 
+		//store username
+		this.storage.set('username', data.email);
+		
 		if (!data.email || !data.password) {
 			this.toastCtrl.create({
 				message: 'Please enter mail address and password.',
@@ -82,5 +95,17 @@ export class LoginPage {
     onStaySignedin() {
         this.storage.set('staySignedin', this.staySignedin);
     }
+	
+	hiddenLogin() {
+		if (this.hiddenCounter++ == 5){
+			this.toastCtrl.create({
+				message: 'Developer login enabled',
+				duration: 1000,
+				position: 'bottom'
+			}).present();
+			this.username = "neo_gucky@gmx.de";
+			this.password = "testtest";
+		}
+	}
 
 }

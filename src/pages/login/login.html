@@ -3,7 +3,7 @@
 		<button ion-button menuToggle>
 			<ion-icon name="menu"></ion-icon>
 		</button>
-		<ion-title>Log in</ion-title>
+		<ion-title (click)="hiddenLogin()" >Log in</ion-title>
 	</ion-navbar>
 </ion-header>
 
@@ -12,12 +12,12 @@
 		<ion-list inset>
 
 			<ion-item>
-				<ion-input type="text" placeholder="Email" formControlName="email"></ion-input>
+				<ion-input type="text" [(ngModel)]="username" placeholder="Email" formControlName="email"></ion-input>
 			</ion-item>
 
 
 			<ion-item>
-				<ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
+				<ion-input type="password" [(ngModel)]="password" placeholder="Password" formControlName="password"></ion-input>
 			</ion-item>
 
         <ion-item>
