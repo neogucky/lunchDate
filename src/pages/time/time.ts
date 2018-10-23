@@ -63,23 +63,37 @@ export class TimePage {
 
   }
 
+	/*
+	 *	FIXME: cleanup this function (multiple cases + busy / goping is too complicated)
+	 */
    getParticipants(id){
 
 	if (this.participantMap[id] === undefined || this.participantMap[id].length == 0){
-		return "No participants";
+		if (id !== 'busy'){
+			return "No participants";
+		} else {
+			return "Nobody is busy";
+		}
 	}
-
+	
+	var word;
+	if (id !== 'busy'){
+			word = "going";
+		} else {
+			word = "busy";
+		}
+	
 	let participanList = this.participantMap[id].slice();
 
 	if (participanList.length == 1){
-		return participanList[0] + " is going";
+		return participanList[0] + " is " + word;
 	} else if (participanList.length <= 4) {
 		let firstParticipant = participanList.splice(0,1);
-		return participanList.join(', ') + " and " + firstParticipant + " are going";
+		return participanList.join(', ') + " and " + firstParticipant + " are " + word;
 	} else {
 		let participantCount = participanList.length;
 		participanList = participanList.splice(0,3);
-		return participanList.join(', ') + " and " + (participantCount -3) + " others are going";
+		return participanList.join(', ') + " and " + (participantCount -3) + " others are " + word;
 	}
   }
 
@@ -100,7 +114,7 @@ export class TimePage {
 	if (this.participantMap[id] != undefined && this.participantMap[id].includes(this.global.participantName)){
 		this.backend.unparticipate();
 	} else {
-		if (!this.platform.is('core') && !this.platform.is('mobileweb') && this.global.allowReminder){
+		if (!this.platform.is('core') && !this.platform.is('mobileweb') && this.global.allowReminder && id != 'busy'){
 			let suggestion = this.suggestionList.find( item => item.id == id);
 			if (suggestion == undefined){
 				console.log("Too fast error! Suggestion with ID: " + id + " not ready yet. (or it doesn't exist at all...)");

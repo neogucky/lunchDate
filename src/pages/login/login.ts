@@ -31,12 +31,11 @@ export class LoginPage {
 		private platform: Platform,
         private storage: Storage
 	) {
+		console.log(this.platform);
 		this.loginForm = fb.group({
 			email: ['', Validators.compose([Validators.required, Validators.email])],
 			password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
 		});
-		var self = this;
-
 	}
 	
     ionViewDidLoad() {	

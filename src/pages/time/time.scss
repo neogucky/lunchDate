@@ -4,6 +4,10 @@ page-time {
 		position: absolute;
 		margin: 20px 0 10px -100px;
 	}
+	
+	.headingSpacer{
+		height: 130px;
+	}
 
 	.item .label {
 		min-width: 60px;
@@ -28,10 +32,6 @@ page-time {
 
 	h3 {
 		margin-bottom: 60px;
-	}
-
-	ion-content {
-		margin-top: 150px;
 	}
 
 	#addDate.icon,

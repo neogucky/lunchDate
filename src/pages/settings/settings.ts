@@ -5,6 +5,8 @@ import { AuthService } from '../../services/auth.service';
 import { FirebaseService } from '../../services/firebase.service';
 import { AlertController } from 'ionic-angular';
 import { FCM } from '@ionic-native/fcm';
+import { Platform } from 'ionic-angular';
+
 
 
 @Component({
@@ -21,6 +23,7 @@ export class SettingsPage {
 		public global: Global, 
 		private auth: AuthService,  
 		private backend: FirebaseService,
+		private platform: Platform,
 		public alertCtrl: AlertController,
 		public fcm: FCM)		{
 	}
@@ -46,6 +49,10 @@ export class SettingsPage {
 	onAllowPush(){
 		this.backend.updateUserAllowPush(this.global.allowPush);
 
+		if(this.platform.is('core') || this.platform.is('mobileweb')){
+			return;
+		}
+		
 		if (this.global.allowPush){
 			this.fcm.subscribeToTopic(this.global.datePool);
 		} else {

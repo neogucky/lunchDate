@@ -1,3 +1,0 @@
-"C:\Program Files\Java\jdk1.8.0_181\bin\jarsigner.exe"  -verbose -sigalg SHA1withRSA -digestalg SHA1 -keystore ..\..\..\..\..\..\..\androidkey\lunchdatekey.jks  app-release-unsigned.apk  lunchdatekey
-
-"C:\Users\neogu\AppData\Local\Android\Sdk\build-tools\28.0.2\zipalign.exe" -v 4 app-release-unsigned.apk LunchDate.apk

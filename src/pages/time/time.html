@@ -1,5 +1,7 @@
-<img width="200" src="assets/img/app_banner.png">
 <ion-content padding>
+<div class="headingSpacer">
+	<img width="200" src="assets/img/app_banner.png">
+</div>
 
 <h3 *ngIf="suggestionList === undefined || suggestionList.length == 0">Click on <ion-icon (click)="datePicker.open()" color="primary" name="clock"></ion-icon> to tell your collegues when you would like to go for lunch</h3>
 <ion-list>
@@ -18,9 +20,9 @@
      busy
     </ion-label>
     <div item-content class="participants">
-      {{getParticipants(-1)}}
+      {{getParticipants('busy')}}
     </div>
-	<button ion-button (click)="switchParticipation(-1)" outline item-end>{{ getParticipationString(-1) }}</button>
+	<button ion-button (click)="switchParticipation('busy')" outline item-end>{{ getParticipationString('busy') }}</button>
   </ion-item>
 </ion-list>
 <br>

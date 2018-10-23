@@ -1,7 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { Tabs, NavController, App, Events } from 'ionic-angular';
-import { Storage } from '@ionic/storage';
 import { FCM } from '@ionic-native/fcm';
+import { Platform } from 'ionic-angular';
+
 
 import { Global } from '../../services/global';
 import { FirebaseService } from '../../services/firebase.service';
@@ -26,9 +27,9 @@ export class HomePage {
   constructor( 
 	public events: Events,
 	public global: Global, 
-	private storage: Storage, 
 	private app: App, 
 	private backend: FirebaseService,
+	private platform: Platform,
 	public fcm: FCM,
 	public navCtrl: NavController ) {
 	  events.subscribe('navigate:loginpage', () => {
@@ -40,10 +41,12 @@ export class HomePage {
     ionViewDidLoad() {	
 				
 		//get push token
-		this.fcm.getToken().then(token => {
-			this.backend.updateFCMToken(token);
-		});
-		
+		if(!this.platform.is('core') && !this.platform.is('mobileweb')){
+			this.fcm.getToken().then(token => {
+				this.backend.updateFCMToken(token);
+			});
+		}
+			
 		//FIXME: make datePool (i.e. company name etc.) configurable
 		this.global.datePool = "IMIS";
 		
