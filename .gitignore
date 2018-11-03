@@ -30,6 +30,10 @@ plugins/ios.json
 www/
 $RECYCLE.BIN/
 src/services/config.ts
+firebase/functions/lib/*
+.firebase/*.cache
+
+build/*.apk
 
 .DS_Store
 Thumbs.db
