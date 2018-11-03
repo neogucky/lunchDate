@@ -29,11 +29,11 @@ export class SettingsPage {
 	}
 
 	ionViewDidLoad() {
-		if (this.global.allowPush){
-			setTimeout(() => {this.global.allowPush = true;}, 100);
+		if (this.global.user.allowPush){
+			setTimeout(() => {this.global.user.allowPush = true;}, 100);
 		}
-		if (this.global.allowReminder){
-			setTimeout(() => {this.global.allowReminder = true;}, 100);
+		if (this.global.user.allowReminder){
+			setTimeout(() => {this.global.user.allowReminder = true;}, 100);
 		}
 	}
 	
@@ -47,7 +47,7 @@ export class SettingsPage {
 	}
 
 	onAllowPush(){
-		this.backend.updateUserAllowPush(this.global.allowPush);
+		this.backend.updateUserAllowPush(this.global.user.allowPush);
 
 		if(this.platform.is('core') || this.platform.is('mobileweb')){
 			return;
@@ -61,7 +61,7 @@ export class SettingsPage {
 	}
 
 	onAllowReminder(){
-		this.backend.updateUserAllowReminder(this.global.allowReminder);
+		this.backend.updateUserAllowReminder(this.global.user.allowReminder);
 	}
 
 	onAbout(){
@@ -85,15 +85,15 @@ export class SettingsPage {
 
 	private changeName = () => {
         
-        if (this.global.participantName === undefined || this.global.participantName == ''){
+        if (this.global.user.name === undefined || this.global.user.name == ''){
             return;
         }
         
-		this.backend.updateUserName(this.global.participantName);
+		this.backend.updateUserName(this.global.user.name);
 
 		/* always show toast in top as not to overlap the navigation bar */
 		this.toastCtrl.create({
-			message: 'Name was changed to: "'+this.global.participantName+'"',
+			message: 'Name was changed to: "'+this.global.user.name+'"',
 			duration: 3000,
 			position: 'top'
 		}).present();

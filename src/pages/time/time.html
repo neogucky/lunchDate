@@ -3,7 +3,7 @@
 	<img width="200" src="assets/img/app_banner.png">
 </div>
 
-<h3 *ngIf="suggestionList === undefined || suggestionList.length == 0">Click on <ion-icon (click)="datePicker.open()" color="primary" name="clock"></ion-icon> to tell your collegues when you would like to go for lunch</h3>
+<h3 *ngIf="suggestionList === undefined || suggestionList.length == 0">Click on <ion-icon (click)="datePicker.open()" color="primary" name="clock"></ion-icon> to tell your collegues todays lunch time</h3>
 <ion-list>
 
   <ion-item *ngFor="let suggestion of suggestionList">
@@ -11,7 +11,7 @@
      {{suggestion.time.toDate() | date:"HH:mm"}}
     </ion-label>
     <div item-content class="participants">
-      {{getParticipants(suggestion.id)}}
+      {{getParticipants(suggestion.id).simple}} <a (click)="showParticipants(suggestion.id)" *ngIf="getParticipants(suggestion.id).extended !== ''" >{{getParticipants(suggestion.id).extended}}</a>
     </div>
 	<button ion-button (click)="switchParticipation(suggestion.id)" outline item-end>{{ getParticipationString(suggestion.id) }}</button>
   </ion-item>
@@ -20,9 +20,9 @@
      busy
     </ion-label>
     <div item-content class="participants">
-      {{getParticipants('busy')}}
+      {{getParticipants('busy').simple}}
     </div>
-	<button ion-button (click)="switchParticipation('busy')" outline item-end>{{ getParticipationString('busy') }}</button>
+	<button ion-button (click)="switchParticipation('busy')" outline item-end>{{ getParticipationString('busy') }} <a *ngIf="getParticipants('busy').extended !== ''" >{{getParticipants('busy').extended}}</a></button>
   </ion-item>
 </ion-list>
 <br>
@@ -41,7 +41,7 @@
 			[(ngModel)]="selectedTime"></ion-datetime>
 	</ion-item>
 </ion-col>
-	<ion-col (click)="goNow()" width-50>
+	<ion-col (click)="addSuggestionNow()" width-50>
 		<ion-icon color="primary" name="megaphone" id="goNow"></ion-icon>
 	</ion-col>
 

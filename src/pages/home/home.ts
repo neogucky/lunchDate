@@ -53,9 +53,15 @@ export class HomePage {
 		var initFinished = false; 
 		this.backend.getUser().subscribe(data=>{
 			if (data !== undefined && data.name !== undefined){
-				this.global.participantName = data.name;
-				this.global.allowPush = data.allowPush;
-				this.global.allowReminder = data.allowReminder;
+				
+				//activate push & reminder by default
+				if (data.allowPush === undefined){
+					data.allowPush = true;
+				}
+				if (data.allowReminder === undefined){
+					data.allowReminder = true;
+				}
+				this.global.user = data;
 			}
 
 			//run this only once

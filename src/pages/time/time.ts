@@ -36,9 +36,13 @@ export class TimePage {
 
 	let today = new Date();
 
-  	this.suggestionSubscription  = backend.getSuggestions(today).subscribe(data=>{
-        this.suggestionList = data;
-    });
+	//FIXME: What to do if no group? Call function later again!
+	//FIXME: What to do if group deleted?
+	if (this.global.user.group !== undefined) {
+		this.suggestionSubscription  = backend.getSuggestions(today).subscribe(data=>{
+			this.suggestionList = data;
+		});
+	} 
 
 	var self = this;
   	this.dayStamp = today.getDay();
@@ -63,42 +67,69 @@ export class TimePage {
 
   }
 
+	showParticipants(id){
+		let participanList = this.participantMap[id].slice();
+		let lastParticipant = participanList[participanList.length -1];
+		participanList = participanList.splice(0, participanList.length -1);
+				
+		let suggestionTime = this.suggestionList.find( (el) => el.id == id).time.toDate();
+		//FIXME: show this in a dedicated view with better formatting
+		const confirm = this.alertCtrl.create({
+			title: 'Participants for ' +  suggestionTime.toLocaleTimeString(),
+			message: '<span style="color:black!important;">' +
+				participanList.join(', ') + " and " + lastParticipant +
+ 			'</span>',
+			buttons: [
+				{
+					text: 'Close'
+				}
+			]
+		});
+		confirm.present();
+	}
+  
 	/*
-	 *	FIXME: cleanup this function (multiple cases + busy / goping is too complicated)
+	 *	FIXME: cleanup this function (multiple cases + busy/going is too complicated)
 	 */
-   getParticipants(id){
+	getParticipants(id){
 
-	if (this.participantMap[id] === undefined || this.participantMap[id].length == 0){
+		var result = { simple : "", extended : ""}
+	
+		if (this.participantMap[id] === undefined || this.participantMap[id].length == 0){
+			if (id !== 'busy'){
+				result.simple = "No participants";
+			} else {
+				result.simple = "Nobody is busy";
+			}
+			
+			return result;
+		}
+
+		var word;
 		if (id !== 'busy'){
-			return "No participants";
-		} else {
-			return "Nobody is busy";
-		}
-	}
-	
-	var word;
-	if (id !== 'busy'){
-			word = "going";
-		} else {
-			word = "busy";
-		}
-	
-	let participanList = this.participantMap[id].slice();
+				word = "going";
+			} else {
+				word = "busy";
+			}
 
-	if (participanList.length == 1){
-		return participanList[0] + " is " + word;
-	} else if (participanList.length <= 4) {
-		let firstParticipant = participanList.splice(0,1);
-		return participanList.join(', ') + " and " + firstParticipant + " are " + word;
-	} else {
-		let participantCount = participanList.length;
-		participanList = participanList.splice(0,3);
-		return participanList.join(', ') + " and " + (participantCount -3) + " others are " + word;
+		let participanList = this.participantMap[id].slice();
+
+		if (participanList.length == 1){
+			result.simple = participanList[0] + " is " + word;
+		} else if (participanList.length <= 4) {
+			let firstParticipant = participanList.splice(0,1);
+			result.simple = participanList.join(', ') + " and " + firstParticipant + " are " + word;
+		} else {
+			let participantCount = participanList.length;
+			participanList = participanList.splice(0,3);
+			result.simple = participanList.join(', ');
+			result.extended = " and " + (participantCount -3) + " others are " + word;
+		}
+		return result;
 	}
-  }
 
   getParticipationString(id){
-	if (this.participantMap[id] != undefined && this.participantMap[id].includes(this.global.participantName)){
+	if (this.participantMap[id] != undefined && this.participantMap[id].includes(this.global.user.name)){
 		return "Cancel"
 	} else {
 		return "Join"
@@ -111,10 +142,10 @@ export class TimePage {
 		this.localNotifications.clearAll();
 	}
 	
-	if (this.participantMap[id] != undefined && this.participantMap[id].includes(this.global.participantName)){
+	if (this.participantMap[id] != undefined && this.participantMap[id].includes(this.global.user.name)){
 		this.backend.unparticipate();
 	} else {
-		if (!this.platform.is('core') && !this.platform.is('mobileweb') && this.global.allowReminder && id != 'busy'){
+		if (!this.platform.is('core') && !this.platform.is('mobileweb') && this.global.user.allowReminder && id != 'busy'){
 			let suggestion = this.suggestionList.find( item => item.id == id);
 			if (suggestion == undefined){
 				console.log("Too fast error! Suggestion with ID: " + id + " not ready yet. (or it doesn't exist at all...)");
@@ -163,7 +194,7 @@ export class TimePage {
 		
   }
 
-	goNow(){
+	addSuggestionNow(){
 		const confirm = this.alertCtrl.create({
 			title: 'Alert your collegues',
 			message: 'Do you want to ask your collegues to go for lunch in 5 minutes?',
@@ -174,7 +205,7 @@ export class TimePage {
 				{
 					text: 'Ask collegues',
 					handler: () => {
-						this.backend.goNow();
+						this.backend.addSuggestionNow();
 					}
 				}
 			]
