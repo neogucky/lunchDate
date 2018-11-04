@@ -32,6 +32,7 @@ $RECYCLE.BIN/
 src/services/config.ts
 firebase/functions/lib/*
 .firebase/*.cache
+androidkey/*.jks
 
 build/*.apk
 
