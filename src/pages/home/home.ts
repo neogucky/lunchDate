@@ -59,12 +59,13 @@ export class HomePage {
 					data.allowReminder = true;
 				}
 				this.global.user = data;
+			} else {
+				this.global.user = {};
 			}
 
 			//run this only once
 			if (!initFinished){
 				initFinished = true;
-				this.global.user = {};
 				console.log(this.tabs);
 				if (data !== undefined && data.name !== undefined){
 					this.tabs.select(1);
@@ -72,6 +73,8 @@ export class HomePage {
 					this.tabs.select(2);
 				}
 			}
+
+			console.log(this.global.user);
 		});
 
 	}
