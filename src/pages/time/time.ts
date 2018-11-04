@@ -22,12 +22,12 @@ export class TimePage {
 	dayStamp: number;
 
 	@ViewChild('datePicker') datePicker;
-	
+
   constructor(
-	public navCtrl: NavController, 
-	public global: Global, 
+	public navCtrl: NavController,
+	public global: Global,
 	private backend: FirebaseService,
-	private toastCtrl: ToastController, 
+	private toastCtrl: ToastController,
 	private localNotifications: LocalNotifications,
 	public alertCtrl: AlertController,
 	private platform: Platform) {
@@ -36,34 +36,33 @@ export class TimePage {
 
 	let today = new Date();
 
-	//FIXME: What to do if no group? Call function later again!
-	//FIXME: What to do if group deleted?
-	if (this.global.user.group !== undefined) {
-		this.suggestionSubscription  = backend.getSuggestions(today).subscribe(data=>{
-			this.suggestionList = data;
-		});
-	} 
-
 	var self = this;
   	this.dayStamp = today.getDay();
 
 	document.addEventListener("resume", this.onResume.bind(this), false);
 
-	backend.getParticipants().subscribe(data=>{
-        self.participants = data;
-
-		if (self.suggestionList == undefined ){
-			return;
-		}
-		self.participantMap = {};
-
-		self.participants.forEach(function(participant) {
-			if (self.participantMap[participant.suggestionID] === undefined) {
-				self.participantMap[participant.suggestionID] = [];
-			}
-			self.participantMap[participant.suggestionID].push(participant.name);
+	// FIXME: What to do if no group? Call function later again!
+	// FIXME: What to do if group deleted?
+	if (this.global.user.group !== undefined) {
+		this.suggestionSubscription  = backend.getSuggestions(today).subscribe(data=>{
+			this.suggestionList = data;
 		});
-    });
+		backend.getParticipants().subscribe(data=> {
+			self.participants = data;
+
+			if (self.suggestionList == undefined) {
+				return;
+			}
+			self.participantMap = {};
+
+			self.participants.forEach(function (participant) {
+				if (self.participantMap[participant.suggestionID] === undefined) {
+					self.participantMap[participant.suggestionID] = [];
+				}
+				self.participantMap[participant.suggestionID].push(participant.name);
+			});
+		});
+	}
 
   }
 
@@ -71,7 +70,7 @@ export class TimePage {
 		let participanList = this.participantMap[id].slice();
 		let lastParticipant = participanList[participanList.length -1];
 		participanList = participanList.splice(0, participanList.length -1);
-				
+
 		let suggestionTime = this.suggestionList.find( (el) => el.id == id).time.toDate();
 		//FIXME: show this in a dedicated view with better formatting
 		const confirm = this.alertCtrl.create({
@@ -87,21 +86,21 @@ export class TimePage {
 		});
 		confirm.present();
 	}
-  
+
 	/*
 	 *	FIXME: cleanup this function (multiple cases + busy/going is too complicated)
 	 */
 	getParticipants(id){
 
 		var result = { simple : "", extended : ""}
-	
+
 		if (this.participantMap[id] === undefined || this.participantMap[id].length == 0){
 			if (id !== 'busy'){
 				result.simple = "No participants";
 			} else {
 				result.simple = "Nobody is busy";
 			}
-			
+
 			return result;
 		}
 
@@ -137,11 +136,11 @@ export class TimePage {
   }
 
   switchParticipation(id){
-	  
+
 	if(!this.platform.is('core') && !this.platform.is('mobileweb')){
 		this.localNotifications.clearAll();
 	}
-	
+
 	if (this.participantMap[id] != undefined && this.participantMap[id].includes(this.global.user.name)){
 		this.backend.unparticipate();
 	} else {
@@ -174,7 +173,7 @@ export class TimePage {
         var error = false;
         var self = this;
 		if (this.suggestionList !== undefined){
-			this.suggestionList.forEach( 
+			this.suggestionList.forEach(
 				function (suggestion){
 					let suggestionDate = suggestion.time.toDate();
 					if (suggestionDate.getMinutes() == selectedTime.getMinutes()
@@ -189,9 +188,9 @@ export class TimePage {
 
         if (!error){
 			var id = this.backend.addSuggestion(selectedTime);
-            setTimeout(function () {self.switchParticipation(id);}, 500);			
+            setTimeout(function () {self.switchParticipation(id);}, 500);
         }
-		
+
   }
 
 	addSuggestionNow(){

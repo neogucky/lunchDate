@@ -19,9 +19,9 @@ export class SettingsPage {
 
 	constructor(
 		public events: Events,
-		private toastCtrl: ToastController, 
-		public global: Global, 
-		private auth: AuthService,  
+		private toastCtrl: ToastController,
+		public global: Global,
+		private auth: AuthService,
 		private backend: FirebaseService,
 		private platform: Platform,
 		public alertCtrl: AlertController,
@@ -36,7 +36,7 @@ export class SettingsPage {
 			setTimeout(() => {this.global.user.allowReminder = true;}, 100);
 		}
 	}
-	
+
 	//update name when 1 second no input
 	onInput(){
 		if (this.onEditTimer !== undefined){
@@ -52,8 +52,8 @@ export class SettingsPage {
 		if(this.platform.is('core') || this.platform.is('mobileweb')){
 			return;
 		}
-		
-		if (this.global.allowPush){
+
+		if (this.global.user.allowPush){
 			this.fcm.subscribeToTopic(this.global.datePool);
 		} else {
 			this.fcm.unsubscribeFromTopic(this.global.datePool);
@@ -84,11 +84,11 @@ export class SettingsPage {
 	}
 
 	private changeName = () => {
-        
+
         if (this.global.user.name === undefined || this.global.user.name == ''){
             return;
         }
-        
+
 		this.backend.updateUserName(this.global.user.name);
 
 		/* always show toast in top as not to overlap the navigation bar */

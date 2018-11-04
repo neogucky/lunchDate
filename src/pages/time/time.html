@@ -3,7 +3,13 @@
 	<img width="200" src="assets/img/app_banner.png">
 </div>
 
-<h3 *ngIf="suggestionList === undefined || suggestionList.length == 0">Click on <ion-icon (click)="datePicker.open()" color="primary" name="clock"></ion-icon> to tell your collegues todays lunch time</h3>
+    <div *ngIf="this.global.user.group === undefined">
+        <h3>Welcome to Lunch Date! You need to join a group in order to participate in communal lunches.</h3>
+        <p>At the moment this works by using a verified work mail-address or asking the group admin. In the released version you will be able to create and moderate groups using this app.</p>
+    </div>
+
+    <div *ngIf="this.global.user.group !== undefined">
+<h3 *ngIf="suggestionList === undefined || suggestionList.length == 0">Click on <ion-icon (click)="datePicker.open()" color="primary" name="clock"></ion-icon> to tell your colleagues todays lunch time</h3>
 <ion-list>
 
   <ion-item *ngFor="let suggestion of suggestionList">
@@ -35,9 +41,9 @@
 		<ion-datetime  #datePicker
 			text-center
 			(ionChange)="onInputChange()"
-			displayFormat="HH:mm" 
-			hourValues="10,11,12,13,14,15" 
-			minuteValues="0,15,30,45" 
+			displayFormat="HH:mm"
+			hourValues="10,11,12,13,14,15"
+			minuteValues="0,15,30,45"
 			[(ngModel)]="selectedTime"></ion-datetime>
 	</ion-item>
 </ion-col>
@@ -45,4 +51,5 @@
 		<ion-icon color="primary" name="megaphone" id="goNow"></ion-icon>
 	</ion-col>
 
+    </div>
 </ion-content>

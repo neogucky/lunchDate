@@ -51,12 +51,12 @@ export class FirebaseService {
 					.set({allowReminder: value});
 			});
 	}
-	
+
 	getUser() : any {
 		return this.afs.doc<any>('participants/'+this.auth.uid)
 			.valueChanges();
 	}
-	
+
 	updateFCMToken(value){
 		this.afs.doc('participants/'+this.auth.uid)
 		.update({FCMtoken: value})
@@ -69,7 +69,7 @@ export class FirebaseService {
 			  .set({FCMtoken: value});
 		});
 	}
-	
+
 	addSuggestionNow() {
 		let currentTime = new Date();
 		currentTime = new Date( currentTime.getDate() + 300000);
@@ -81,7 +81,7 @@ export class FirebaseService {
 				creator: this.global.user.name});
 		return uniqueID;
 	}
-	
+
 	addSuggestion(time) {
 		var uniqueID = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
 		this.afs.collection('group/'+ this.global.user.group +'/suggestion/')
@@ -92,7 +92,7 @@ export class FirebaseService {
 			  });
 		return uniqueID;
 	}
-	
+
 	getSuggestions(day) : any {
 
 		var start = new Date(day.getTime());
@@ -100,26 +100,29 @@ export class FirebaseService {
 
 		var end = new Date(day.getTime());
 		end.setHours(23,59,59,999);
-	
+
 		if (this.global.user.group === undefined){
 			console.error('Invalid group! Please don\'t do that to me...');
 		}
-	
+
 		return this.afs.collection<any>('group/'+ this.global.user.group +'/suggestion', ref => ref.where('time', '>', start).where('time', '<', end))
 			.valueChanges();
-			
+
 	}
-	
+
 	getParticipants() : any {
+		if (this.global.user.group === undefined) {
+			console.error('user.group is undefined! No participants can be loaded.');
+		}
 		return this.afs.collection<any>('participants', ref => ref.where('group', '==', this.global.user.group))
 			.valueChanges();
 	}
-	
+
 	unparticipate() {
 		this.afs.doc('participants/'+this.auth.uid)
 			  .update({suggestionID: ' '});
 	}
-	
+
 	participate(id) {
 		this.afs.doc('participants/'+this.auth.uid)
 			  .update({suggestionID: id});
