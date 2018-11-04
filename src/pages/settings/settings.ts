@@ -47,6 +47,11 @@ export class SettingsPage {
 	}
 
 	onAllowPush(){
+
+		if (this.global.user.group === undefined){
+			return;
+		}
+
 		this.backend.updateUserAllowPush(this.global.user.allowPush);
 
 		if(this.platform.is('core') || this.platform.is('mobileweb')){
@@ -54,9 +59,9 @@ export class SettingsPage {
 		}
 
 		if (this.global.user.allowPush){
-			this.fcm.subscribeToTopic(this.global.datePool);
+			this.fcm.subscribeToTopic(this.global.user.group);
 		} else {
-			this.fcm.unsubscribeFromTopic(this.global.datePool);
+			this.fcm.unsubscribeFromTopic(this.global.user.group);
 		}
 	}
 

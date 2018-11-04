@@ -20,14 +20,14 @@ export class HomePage {
   tab1Root = MealPage;
   tab2Root = TimePage;
   tab3Root = SettingsPage;
-  
+
   @ViewChild('tabs') tabs: Tabs;
 
 
-  constructor( 
+  constructor(
 	public events: Events,
-	public global: Global, 
-	private app: App, 
+	public global: Global,
+	private app: App,
 	private backend: FirebaseService,
 	private platform: Platform,
 	public fcm: FCM,
@@ -37,23 +37,20 @@ export class HomePage {
 		  this.navCtrl.setRoot(LoginPage);
 	  });
   }
-  
-    ionViewDidLoad() {	
-				
+
+    ionViewDidLoad() {
+
 		//get push token
 		if(!this.platform.is('core') && !this.platform.is('mobileweb')){
 			this.fcm.getToken().then(token => {
 				this.backend.updateFCMToken(token);
 			});
 		}
-			
-		//FIXME: make datePool (i.e. company name etc.) configurable
-		this.global.datePool = "IMIS";
-		
-		var initFinished = false; 
+
+		var initFinished = false;
 		this.backend.getUser().subscribe(data=>{
 			if (data !== undefined && data.name !== undefined){
-				
+
 				//activate push & reminder by default
 				if (data.allowPush === undefined){
 					data.allowPush = true;
@@ -67,6 +64,7 @@ export class HomePage {
 			//run this only once
 			if (!initFinished){
 				initFinished = true;
+				this.global.user = {};
 				console.log(this.tabs);
 				if (data !== undefined && data.name !== undefined){
 					this.tabs.select(1);
@@ -77,7 +75,7 @@ export class HomePage {
 		});
 
 	}
-	
+
 	//FIXME: Workarround for bug where ion-tabs sometimes forgets to highlight correct tab
 	switchedTab(){
 		let id: string;
@@ -88,7 +86,7 @@ export class HomePage {
 			} else {
 				element.removeAttribute('aria-selected')
 			}
-		});		
+		});
 	}
-	
+
 }
