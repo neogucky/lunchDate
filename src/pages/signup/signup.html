@@ -17,12 +17,16 @@
 				<ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
 			</ion-item>
 
+			<ion-item>
+				<ion-input type="password" placeholder="Password" formControlName="password_control"></ion-input>
+			</ion-item>
+
 		</ion-list>
 
 		<div padding-horizontal>
 			<div class="form-error">{{signupError}}</div>
 
-			<button ion-button full type="submit" [disabled]="!form.valid">Sign up</button>
+			<button ion-button full type="submit">Sign up</button>
 		</div>
 	</form>
 </ion-content>

@@ -21,21 +21,34 @@ export class SignupPage {
 	) {
 		this.form = fb.group({
 			email: ['', Validators.compose([Validators.required, Validators.email])],
-			password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
+			password: ['', Validators.compose([Validators.required, Validators.minLength(6)])],
+			password_control: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
 		});
   }
-  
+
   signup() {
 		let data = this.form.value;
 		let self = this;
-        
+
 		let credentials = {
 			email: data.email,
 			password: data.password
 		};
-		
+
+	  if (data.email === '' || data.password === ''){
+		  this.signupError = "Please enter your mail address and password!";
+		  console.log(this.signupError);
+		  return;
+	  }
+
+	  if (data.password !== data.password_control){
+		  this.signupError = "Please enter the same password in both fields!";
+		  console.log(this.signupError);
+		  return;
+	  }
+
 		this.global.registeredNewUser = true;
-		
+
 		this.auth.signUp(credentials).then(
 			() => {
                 self.auth.sendEmailVerification();

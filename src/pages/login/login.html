@@ -1,9 +1,9 @@
 <ion-header>
-	<ion-navbar>
+	<ion-navbar (click)="hiddenLogin()">
 		<button ion-button menuToggle>
 			<ion-icon name="menu"></ion-icon>
 		</button>
-		<ion-title (click)="hiddenLogin()" >Log in</ion-title>
+		<ion-title>Log in</ion-title>
 	</ion-navbar>
 </ion-header>
 
@@ -24,15 +24,15 @@
           <ion-label color="primary">Stay signed in</ion-label>
           <ion-toggle  [ngModelOptions]="{standalone: true}" (ionChange)="onStaySignedin()" [(ngModel)]="staySignedin"></ion-toggle>
         </ion-item>
-            
+
 		</ion-list>
 
 
-        
+
 		<div padding-horizontal>
 			<div class="form-error">{{loginError}}</div>
 
-			<button ion-button full type="submit" [disabled]="!loginForm.valid">Log in</button>
+			<button ion-button full type="submit">Log in</button>
 			<div class="login-footer">
 				<p>
 					<a style="display:none;" href="#">Forgot password?</a>
