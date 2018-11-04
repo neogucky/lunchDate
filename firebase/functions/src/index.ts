@@ -16,7 +16,7 @@ exports.autoAddUsers = functions.https.onRequest((req, res) => {
 	let groupID;
 
 	admin.auth().listUsers().then(function(listUsersResult) {
-				
+
 		listUsersResult.users.forEach(function(user) {
 			const mailMatch = user.email.split("@")[1];
 			console.log("Trying to find: " + mailMatch);
@@ -24,11 +24,11 @@ exports.autoAddUsers = functions.https.onRequest((req, res) => {
 			db.collection('group').where('mailMatch', '==', mailMatch).get()
 				.then(snapshot => {
 				  snapshot.forEach(doc => {
-					//every group that automatically adds the users mail   
+					//every group that automatically adds the users mail
 					const group = doc.data();
 					groupID = doc.id;
 					roles.push({ UID: user.uid, role: "moderator"});
-					
+
 					db.collection('participants').doc(user.uid).set({ group : doc.id }, {merge: true}).catch(err => {
 					  console.error('Error setting users group', err);
 					});
@@ -47,12 +47,12 @@ exports.autoAddUsers = functions.https.onRequest((req, res) => {
 	}).catch(err => {
 	  console.error('Error getting users', err);
 	});
-	
+
 });
 
 
 /*
- * 	try to add user to a group if the mail adress matches 
+ * 	try to add user to a group if the mail adress matches
  */
 exports.autoAddUser = functions.auth.user().onCreate((user) => {
 
@@ -63,15 +63,15 @@ exports.autoAddUser = functions.auth.user().onCreate((user) => {
 		db.collection('group').where('mailMatch', '==', mailMatch).get()
 			.then(snapshot => {
 			  snapshot.forEach(doc => {
-				//every group that automatically adds the users mail   
+				//every group that automatically adds the users mail
 				const group = doc.data();
 				let roles = group.roles;
 				roles.push({ UID: user.uid, role: "moderator"});
 				db.collection('group').doc(doc.id).set({ roles : roles }, {merge: true}).catch(err => {
 				  console.error('Error setting group roles', err);
 				});
-				
-				db.collection('participants').doc(user.uid).set({ group : doc.id }, {merge: true}).then(() => { 
+
+				db.collection('participants').doc(user.uid).set({ group : doc.id }, {merge: true}).then(() => {
 					resolve();
 				}).catch(err => {
 				  console.error('Error setting users group', err);
@@ -81,29 +81,29 @@ exports.autoAddUser = functions.auth.user().onCreate((user) => {
 			  console.error('Error getting documents', err);
 			});
 	});
-	
+
 	return defer;
 });
 
 exports.newLunchDate = functions.firestore
-    .document('suggestions/{suggestionId}')
+    .document('group/{groupId}/suggestion/{suggestionId}')
     .onCreate((change, context) => {
-   
+
     const data = change.data();
 	let payload;
-	
+
 	const options = {
         priority: "high",
         timeToLive: 60*60*2
     };
-	
+
 	if (data.type === undefined || data.type !== 'now'){
-				
+
 		//assuming datatype 'time' with fallback to earlier versions without type
 		const time = data.time.toDate();
-		//FIXME: DST needs +2 
+		//FIXME: DST needs +2
 		const timeFormatted = (time.getHours() + 1) + ":" + time.getMinutes();
-		
+
 		payload = {
 		  notification: {
 			  title: 'Lunch at ' + timeFormatted,
@@ -127,15 +127,15 @@ exports.newLunchDate = functions.firestore
 		}
 	}
 
-	return pushToAll(payload);
+	return pushToGroup(payload, context.params.groupId);
 });
 
-function loadUsers() {
+function loadUsers(group) {
 	console.log('send push to:');
 	const participantsRef = db.collection('participants');
 	const defer = new Promise((resolve, reject) => {
 		const users = [];
-		participantsRef.where('allowPush', '==', true).get()
+		participantsRef.where('allowPush', '==', true).where('group', '==', group).get()
 		.then(snapshot => {
 		  snapshot.forEach(doc => {
 			const participant = doc.data();
@@ -156,19 +156,19 @@ function loadUsers() {
 }
 
 //sends a push notifications to all users that have not opted out
-function pushToAll(payload){
-	
-	return loadUsers().then((users : any) => {
-        const tokens = [];
-        for (let it in users) {
-            tokens.push(users[it].FCMtoken);
-        }
-		
+function pushToGroup(payload, group){
+
+	return loadUsers(group).then((users : any) => {
+      const tokens = [];
+      for (let it in users) {
+          tokens.push(users[it].FCMtoken);
+      }
+
 		if (tokens === undefined || tokens.length === 0){
 			console.error('No users selcted to send push to');
 			return new Promise((resolve, reject) => {resolve()});
-		} 
-		
+		}
+
         return admin.messaging().sendToDevice(tokens, payload);
     });
 
