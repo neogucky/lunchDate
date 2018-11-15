@@ -49,10 +49,6 @@ export class TimePage {
 		});
 		backend.getParticipants().subscribe(data=> {
 			self.participants = data;
-
-			if (self.suggestionList == undefined) {
-				return;
-			}
 			self.participantMap = {};
 
 			self.participants.forEach(function (participant) {
