@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
-import { Platform } from 'ionic-angular';
+import { Platform, AlertController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginPage } from '../pages/login/login';
 import { AuthService } from '../services/auth.service';
+import { Network } from '@ionic-native/network';
 
 import { Global } from '../services/global';
 
@@ -12,61 +13,74 @@ import { HomePage } from '../pages/home/home';
   templateUrl: 'app.html'
 })
 export class MyApp {
-  rootPage:any = LoginPage;
+  	rootPage:any = LoginPage;
+	noInternetAlert:any;
 
-  constructor( private platform: Platform, 
-				private statusBar: StatusBar, 
-				private splashScreen: SplashScreen, 
-				private auth: AuthService,
+  constructor( private platform: Platform,
+				private statusBar: StatusBar,
+				private splashScreen: SplashScreen,
+			   	private network: Network,
+			   	public alertCtrl: AlertController,
+			   	private auth: AuthService,
 				public global: Global) {
     platform.ready().then(() => {
 		// Okay, so the platform is ready and our plugins are available.
 		// Here you can do any higher level native things you might need.
-		statusBar.styleDefault();	  
-		
+		statusBar.styleDefault();
+		let self = this;
 		if(platform.is('core') || platform.is('mobileweb')) {
 			console.log("Platform is core or is mobile web");
 		} else {
 
-			/* NOT WORKING shows blank page!
+			/*
 			 * prevent users using the app without internet (not because we hate them but because it will not work)
-
-			let offline = false;
+			*/
+			global.offline = false;
 			// watch network for a disconnect
 			let disconnectSubscription = this.network.onDisconnect().subscribe(() => {
-				offline = true;
-				const alert = this.alertCtrl.create({
-					title: 'No Internet',
-					message: 'You need a connection to the internet for this app to work. Restart the app if this message is wrong.',
-					buttons: [
-						{
-							text: 'Retry',
-							handler: () => {
-								if (offline) {
-									//reopen this dialog
-									alert.present();
-								}
-							}
-						}
-					]
-				});
-				alert.present();
-
-				// watch network for a connection
-				let connectSubscription = this.network.onConnect().subscribe(() => {
-					//dismiss dialog
-					alert.dismiss();
-
-					connectSubscription.unsubscribe();
-				});
-
+				console.log('internet lost');
+				self.global.offline = true;
+				self.showInternetWarning();
 			});
-			 */
 
+			// watch network for a connection
+			let connectSubscription = self.network.onConnect().subscribe(() => {
+				if (self.global.offline){
+					//dismiss dialog
+					self.global.offline = false;
+					console.log('internet reclaimed');
+
+					if (self.noInternetAlert !== undefined) {
+						self.noInternetAlert.dismiss();
+					}
+				}
+			});
+
+			let changeSubscription = self.network.onchange().subscribe(() => {
+				console.log(self.network);
+			});
 		}
 	});
   }
-  
+	showInternetWarning(){
+		let self = this;
+		if (self.global.offline) {
+			self.noInternetAlert = this.alertCtrl.create({
+				title: 'No Internet',
+				message: 'You need a connection to the internet for this app to work. Restart the app if you belief you have internet.',
+				buttons: [
+					{
+						text: 'Retry',
+						handler: () => {
+							this.showInternetWarning();
+						}
+					}
+				]
+			});
+			self.noInternetAlert.present();
+		}
+	}
+
 	initializeApp() {
 		this.platform.ready().then(() => {
 			this.statusBar.styleDefault();
@@ -86,7 +100,7 @@ export class MyApp {
 		  }
 		);
 	}
-  
+
 
 }
 

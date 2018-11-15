@@ -3,6 +3,8 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
+import { Network } from '@ionic-native/network';
+
 
 import { MealPage } from '../pages/meal/meal';
 import { TimePage } from '../pages/time/time';
@@ -59,13 +61,14 @@ import { FCM } from '@ionic-native/fcm';
   ],
   providers: [
     StatusBar,
-    SplashScreen, 
+    SplashScreen,
 	Global,
 	AngularFireAuth,
 	AuthService,
 	FirebaseService,
 	FCM,
 	LocalNotifications,
+	  Network,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
