@@ -4,6 +4,7 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { Network } from '@ionic-native/network';
+import { AppVersion } from '@ionic-native/app-version';
 
 
 import { MealPage } from '../pages/meal/meal';
@@ -32,44 +33,45 @@ import { IonicStorageModule } from '@ionic/storage';
 import { FCM } from '@ionic-native/fcm';
 
 @NgModule({
-  declarations: [
-    MyApp,
-    HomePage,
-	MealPage,
-	TimePage,
-	SettingsPage,
-	LoginPage,
-	SignupPage
-  ],
-  imports: [
-    BrowserModule,
-    IonicModule.forRoot(MyApp),
-	AngularFireModule.initializeApp(firebaseConfig.fire),
-	AngularFirestoreModule,
-	IonicStorageModule.forRoot()
+	declarations: [
+		MyApp,
+		HomePage,
+		MealPage,
+		TimePage,
+		SettingsPage,
+		LoginPage,
+		SignupPage
+	],
+	imports: [
+		BrowserModule,
+		IonicModule.forRoot(MyApp),
+		AngularFireModule.initializeApp(firebaseConfig.fire),
+		AngularFirestoreModule,
+		IonicStorageModule.forRoot()
 
-  ],
-  bootstrap: [IonicApp],
-  entryComponents: [
-    MyApp,
-    HomePage,
-	MealPage,
-	TimePage,
-	SettingsPage,
-	LoginPage,
-	SignupPage
-  ],
-  providers: [
-    StatusBar,
-    SplashScreen,
-	Global,
-	AngularFireAuth,
-	AuthService,
-	FirebaseService,
-	FCM,
-	LocalNotifications,
-	  Network,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
-  ]
+	],
+	bootstrap: [IonicApp],
+	entryComponents: [
+		MyApp,
+		HomePage,
+		MealPage,
+		TimePage,
+		SettingsPage,
+		LoginPage,
+		SignupPage
+	],
+	providers: [
+		StatusBar,
+		SplashScreen,
+		Global,
+		AngularFireAuth,
+		AuthService,
+		FirebaseService,
+		FCM,
+		LocalNotifications,
+		Network,
+		AppVersion,
+		{provide: ErrorHandler, useClass: IonicErrorHandler}
+	]
 })
 export class AppModule {}

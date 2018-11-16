@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Tabs, NavController, App, Events } from 'ionic-angular';
 import { FCM } from '@ionic-native/fcm';
 import { Platform } from 'ionic-angular';
+import { SplashScreen } from '@ionic-native/splash-screen';
 
 
 import { Global } from '../../services/global';
@@ -31,6 +32,7 @@ export class HomePage {
 	private backend: FirebaseService,
 	private platform: Platform,
 	public fcm: FCM,
+	public splashScreen: SplashScreen,
 	public navCtrl: NavController ) {
 	  events.subscribe('navigate:loginpage', () => {
 		  //we use this so the ion tab controller page (home.ts) will navigate to login page if a tab triggers this.
@@ -65,6 +67,10 @@ export class HomePage {
 
 			//run this only once
 			if (!initFinished){
+				setTimeout(() => {
+					this.splashScreen.hide();
+					console.log('end splash autologin');
+				}, 1000);
 				initFinished = true;
 				console.log(this.tabs);
 				if (data !== undefined && data.name !== undefined){

@@ -20,10 +20,10 @@
 				<ion-input type="password" [(ngModel)]="password" placeholder="Password" formControlName="password"></ion-input>
 			</ion-item>
 
-        <ion-item>
-          <ion-label color="primary">Stay signed in</ion-label>
-          <ion-toggle  [ngModelOptions]="{standalone: true}" (ionChange)="onStaySignedin()" [(ngModel)]="staySignedin"></ion-toggle>
-        </ion-item>
+			<ion-item>
+				<ion-label color="primary">Stay signed in</ion-label>
+				<ion-toggle  [ngModelOptions]="{standalone: true}" (ionChange)="onStaySignedin()" [(ngModel)]="staySignedin"></ion-toggle>
+			</ion-item>
 
 		</ion-list>
 
@@ -47,4 +47,5 @@
 			Sign up
 		</button>
 	</ion-list>
+	<p class="version">{{versionNumber}}</p>
 </ion-content>

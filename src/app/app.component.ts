@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { Platform, AlertController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
-import { SplashScreen } from '@ionic-native/splash-screen';
 import { LoginPage } from '../pages/login/login';
 import { AuthService } from '../services/auth.service';
 import { Network } from '@ionic-native/network';
@@ -18,7 +17,6 @@ export class MyApp {
 
   constructor( private platform: Platform,
 				private statusBar: StatusBar,
-				private splashScreen: SplashScreen,
 			   	private network: Network,
 			   	public alertCtrl: AlertController,
 			   	private auth: AuthService,
@@ -26,7 +24,6 @@ export class MyApp {
     platform.ready().then(() => {
 		// Okay, so the platform is ready and our plugins are available.
 		// Here you can do any higher level native things you might need.
-		statusBar.styleDefault();
 		let self = this;
 		if(platform.is('core') || platform.is('mobileweb')) {
 			console.log("Platform is core or is mobile web");
@@ -85,20 +82,6 @@ export class MyApp {
 		this.platform.ready().then(() => {
 			this.statusBar.styleDefault();
 		});
-
-		this.auth.afAuth.authState
-		.subscribe(
-		  user => {
-			if (user) {
-			  this.rootPage = HomePage;
-			} else {
-			  this.rootPage = LoginPage;
-			}
-		  },
-		  () => {
-			this.rootPage = LoginPage;
-		  }
-		);
 	}
 
 
