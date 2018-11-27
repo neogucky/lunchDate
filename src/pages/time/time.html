@@ -1,55 +1,60 @@
 <ion-content padding>
-<div class="headingSpacer">
-	<img width="200" src="assets/img/app_banner.png">
-</div>
+  <div class="headingSpacer">
+    <img width="200" src="assets/img/app_banner.png">
+  </div>
 
-    <div *ngIf="this.global.user.group === undefined">
-        <h3>{{ 'TIME.WELCOME' | translate }}</h3>
-        <p>{{ 'TIME.WELCOME_EXPLANATION' | translate }}</p>
-    </div>
+  <div *ngIf="this.global.user.group === undefined">
+    <h3>{{ 'TIME.WELCOME' | translate }}</h3>
+    <p>{{ 'TIME.WELCOME_EXPLANATION' | translate }}</p>
+  </div>
 
-    <div *ngIf="this.global.user.group !== undefined">
-<h3 *ngIf="suggestionList === undefined || suggestionList.length == 0">{{ 'TIME.CREATETEXT_1' | translate }} <ion-icon (click)="datePicker.open()" color="primary" name="clock"></ion-icon> {{ 'TIME.CREATETEXT_2' | translate }}</h3>
-<ion-list>
+  <div *ngIf="this.global.user.group !== undefined">
+    <h3 *ngIf="suggestionList === undefined || suggestionList.length == 0">{{ 'TIME.CREATETEXT_1' | translate }}
+      <ion-icon (click)="datePicker.open()" color="primary" name="clock"></ion-icon>
+      {{ 'TIME.CREATETEXT_2' | translate }}</h3>
+    <ion-list>
 
-  <ion-item *ngFor="let suggestion of suggestionList">
-    <ion-label>
-     {{suggestion.time.toDate() | date:"HH:mm"}}
-    </ion-label>
-    <div item-content class="participants">
-      {{getParticipants(suggestion.id).simple}} <a (click)="showParticipants(suggestion.id)" *ngIf="getParticipants(suggestion.id).extended !== ''" >{{getParticipants(suggestion.id).extended}}</a>
-    </div>
-	<button ion-button (click)="switchParticipation(suggestion.id)" outline item-end>{{ getParticipationString(suggestion.id) }}</button>
-  </ion-item>
-  <ion-item>
-    <ion-label>
-      <ion-icon name="close"></ion-icon>
-	 </ion-label>
-    <div item-content class="participants">
-      {{getParticipants('busy').simple}}
-    </div>
-	<button ion-button (click)="switchParticipation('busy')" outline item-end>{{ getParticipationString('busy') }} <a *ngIf="getParticipants('busy').extended !== ''" >{{getParticipants('busy').extended}}</a></button>
-  </ion-item>
-</ion-list>
-<br>
-<br>
+      <ion-item *ngFor="let suggestion of suggestionList">
+        <ion-label>
+          {{suggestion.time.toDate() | date:"HH:mm"}}
+        </ion-label>
+        <div item-content class="participants">
+          {{getParticipants(suggestion.id).simple}} <a (click)="showParticipants(suggestion.id)"
+                                                       *ngIf="getParticipants(suggestion.id).extended !== ''">{{getParticipants(suggestion.id).extended}}</a>
+        </div>
+        <button ion-button (click)="switchParticipation(suggestion.id)" outline
+                item-end>{{ getParticipationString(suggestion.id) }}</button>
+      </ion-item>
+      <ion-item>
+        <ion-label>
+          <ion-icon name="close"></ion-icon>
+        </ion-label>
+        <div item-content class="participants">
+          {{getParticipants('busy').simple}}
+        </div>
+        <button ion-button (click)="switchParticipation('busy')" outline item-end>{{ getParticipationString('busy') }}
+          <a *ngIf="getParticipants('busy').extended !== ''">{{getParticipants('busy').extended}}</a></button>
+      </ion-item>
+    </ion-list>
+    <br>
+    <br>
 
-<ion-col (click)="datePicker.open()" width-50>
-	<ion-icon color="primary" name="clock" id="addDate"></ion-icon>
+    <ion-col (click)="datePicker.open()" width-50>
+      <ion-icon color="primary" name="clock" id="addDate"></ion-icon>
 
-	<ion-item no-lines hidden="true">
-		<ion-datetime  #datePicker
-			text-center
-			(ionChange)="onInputChange()"
-			displayFormat="HH:mm"
-			hourValues="10,11,12,13,14,15"
-			minuteValues="0,15,30,45"
-			[(ngModel)]="selectedTime"></ion-datetime>
-	</ion-item>
-</ion-col>
-	<ion-col (click)="addSuggestionNow()" width-50>
-		<ion-icon color="primary" name="megaphone" id="goNow"></ion-icon>
-	</ion-col>
+      <ion-item no-lines hidden="true">
+        <ion-datetime #datePicker
+                      text-center
+                      (ionChange)="onInputChange()"
+                      displayFormat="HH:mm"
+                      hourValues="10,11,12,13,14,15"
+                      minuteValues="0,15,30,45"
+                      [(ngModel)]="selectedTime"></ion-datetime>
+      </ion-item>
+    </ion-col>
+    <ion-col (click)="addSuggestionNow()" width-50>
+      <ion-icon color="primary" name="megaphone" id="goNow"></ion-icon>
+    </ion-col>
 
-    </div>
+  </div>
 </ion-content>

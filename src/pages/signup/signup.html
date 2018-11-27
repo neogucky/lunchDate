@@ -1,33 +1,35 @@
 <ion-header>
-	<ion-navbar>
-		<ion-title>Sign up</ion-title>
-	</ion-navbar>
+  <ion-navbar>
+    <ion-title>Sign up</ion-title>
+  </ion-navbar>
 </ion-header>
 
 <ion-content>
 
-	<form (ngSubmit)="signup()" [formGroup]="form">
-		<ion-list inset>
+  <form (ngSubmit)="signup()" [formGroup]="form">
+    <ion-list inset>
 
       <div padding-vertical>
         <h4>{{'SIGNUP.EXPLANATION' | translate}}</h4>
       </div>
 
-			<ion-item>
-				<ion-input type="text" placeholder="{{'SIGNUP.WORKMAIL' | translate}}" formControlName="email"></ion-input>
-			</ion-item>
+      <ion-item>
+        <ion-input type="text" placeholder="{{'SIGNUP.WORKMAIL' | translate}}" formControlName="email"></ion-input>
+      </ion-item>
 
-			<ion-item>
-				<ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
-			</ion-item>
+      <ion-item>
+        <ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
+      </ion-item>
 
-		</ion-list>
+    </ion-list>
 
-		<div padding-horizontal>
-			<button ion-button full type="submit">{{ 'SIGNUP.SIGNUP' | translate}}</button>
-		</div>
-    <div padding>
-      <div class="form-error" *ngIf="signupError !== ''"><ion-icon color="primary" name="warning"></ion-icon> {{signupError}}</div>
+    <div padding-horizontal>
+      <button ion-button full type="submit">{{ 'SIGNUP.SIGNUP' | translate}}</button>
     </div>
-	</form>
+    <div padding>
+      <div class="form-error" *ngIf="signupError !== ''">
+        <ion-icon color="primary" name="warning"></ion-icon>
+        {{signupError}}</div>
+    </div>
+  </form>
 </ion-content>
