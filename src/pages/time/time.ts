@@ -7,6 +7,7 @@ import { LocalNotifications } from '@ionic-native/local-notifications';
 import { Platform } from 'ionic-angular';
 import { AlertController } from 'ionic-angular';
 import * as moment from 'moment';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'page-time',
@@ -22,6 +23,23 @@ export class TimePage {
 	dayStamp: number;
 
 	@ViewChild('datePicker') datePicker;
+	
+	//language (async loading)
+	LANGUAGE: any = {
+		PARTICIPANTS_TITLE: "TIME.PARTICIPANTS_TITLE",
+		LIST_CONCAT: "TIME.LIST_CONCAT",
+		LIST_END_SINGULAR: "TIME.LIST_END_SINGULAR",
+		LIST_END_PLURAL: "TIME.LIST_END_PLURAL",
+		LIST_END_COUNT: "TIME.LIST_END_COUNT",
+		PARTICIPANTS_CLOSE: "TIME.PARTICIPANTS_CLOSE",
+		LUNCHER_NOBODY: "TIME.LUNCHER_NOBODY",
+		BUSY_NOBODY: "TIME.BUSY_NOBODY",
+		BUSY: "TIME.BUSY",
+		GOING: "TIME.GOING",
+    CANCEL: "TIME.CANCEL",
+    JOIN: "TIME.JOIN"
+	}
+
 
   constructor(
 	public navCtrl: NavController,
@@ -30,7 +48,8 @@ export class TimePage {
 	private toastCtrl: ToastController,
 	private localNotifications: LocalNotifications,
 	public alertCtrl: AlertController,
-	private platform: Platform) {
+	private platform: Platform,
+	private translate: TranslateService) {
 
 	this.participantMap = {};
 
@@ -38,6 +57,17 @@ export class TimePage {
 
 	var self = this;
   	this.dayStamp = today.getDay();
+	
+	//Load language
+	for (var key in self.LANGUAGE) {
+		translate.get(self.LANGUAGE[key]).subscribe(
+		  value => {
+			// value is our translated string
+			self.LANGUAGE[key] = value;
+		  }
+		)
+	}
+	
 
 	document.addEventListener("resume", this.onResume.bind(this), false);
 
@@ -70,13 +100,13 @@ export class TimePage {
 		let suggestionTime = this.suggestionList.find( (el) => el.id == id).time.toDate();
 		//FIXME: show this in a dedicated view with better formatting
 		const confirm = this.alertCtrl.create({
-			title: 'Participants for ' +  suggestionTime.toLocaleTimeString(),
+			title: this.LANGUAGE['PARTICIPANTS_TITLE'] + " " + suggestionTime.toLocaleTimeString(),
 			message: '<span style="color:black!important;">' +
-				participanList.join(', ') + " and " + lastParticipant +
+				participanList.join(', ') + " " + this.LANGUAGE['LIST_CONCAT'] + " " + lastParticipant +
  			'</span>',
 			buttons: [
 				{
-					text: 'Close'
+					text: this.LANGUAGE['PARTICIPANTS_CLOSE']
 				}
 			]
 		});
@@ -92,9 +122,9 @@ export class TimePage {
 
 		if (this.participantMap[id] === undefined || this.participantMap[id].length == 0){
 			if (id !== 'busy'){
-				result.simple = "No participants";
+				result.simple = this.LANGUAGE['LUNCHER_NOBODY'];
 			} else {
-				result.simple = "Nobody is busy";
+				result.simple = this.LANGUAGE['BUSY_NOBODY'];
 			}
 
 			return result;
@@ -102,32 +132,32 @@ export class TimePage {
 
 		var word;
 		if (id !== 'busy'){
-				word = "going";
+				word = this.LANGUAGE['GOING'];
 			} else {
-				word = "busy";
+				word = this.LANGUAGE['BUSY'];
 			}
 
 		let participanList = this.participantMap[id].slice();
 
 		if (participanList.length == 1){
-			result.simple = participanList[0] + " is " + word;
+			result.simple = participanList[0] + " " + this.LANGUAGE['LIST_END_SINGULAR'] + " " + word;
 		} else if (participanList.length <= 4) {
 			let firstParticipant = participanList.splice(0,1);
-			result.simple = participanList.join(', ') + " and " + firstParticipant + " are " + word;
+			result.simple = participanList.join(', ') + " " + this.LANGUAGE['LIST_CONCAT'] + " " + firstParticipant + " " + this.LANGUAGE['LIST_END_PLURAL'] + " " + word;
 		} else {
 			let participantCount = participanList.length;
 			participanList = participanList.splice(0,3);
 			result.simple = participanList.join(', ');
-			result.extended = " and " + (participantCount -3) + " others are " + word;
+			result.extended = " " + this.LANGUAGE['LIST_CONCAT'] + " " + (participantCount -3) + " " + this.LANGUAGE['LIST_END_COUNT'] + " " + word;
 		}
 		return result;
 	}
 
   getParticipationString(id){
 	if (this.participantMap[id] != undefined && this.participantMap[id].includes(this.global.user.name)){
-		return "Cancel"
+		return this.LANGUAGE['CANCEL'];
 	} else {
-		return "Join"
+		return this.LANGUAGE['JOIN'];
 	}
   }
 

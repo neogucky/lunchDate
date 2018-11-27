@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { Platform, AlertController } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { LoginPage } from '../pages/login/login';
-import { AuthService } from '../services/auth.service';
 import { Network } from '@ionic-native/network';
 
-import { Global } from '../services/global';
+import { TranslateService } from '@ngx-translate/core';
 
-import { HomePage } from '../pages/home/home';
+import { Global } from '../services/global';
+import {Storage} from "@ionic/storage";
+
 @Component({
   templateUrl: 'app.html'
 })
@@ -19,8 +20,9 @@ export class MyApp {
 				private statusBar: StatusBar,
 			   	private network: Network,
 			   	public alertCtrl: AlertController,
-			   	private auth: AuthService,
-				public global: Global) {
+				public global: Global,
+        private storage: Storage,
+				private translate: TranslateService) {
     platform.ready().then(() => {
 		// Okay, so the platform is ready and our plugins are available.
 		// Here you can do any higher level native things you might need.
@@ -34,14 +36,14 @@ export class MyApp {
 			*/
 			global.offline = false;
 			// watch network for a disconnect
-			let disconnectSubscription = this.network.onDisconnect().subscribe(() => {
+			this.network.onDisconnect().subscribe(() => {
 				console.log('internet lost');
 				self.global.offline = true;
 				self.showInternetWarning();
 			});
 
 			// watch network for a connection
-			let connectSubscription = self.network.onConnect().subscribe(() => {
+			self.network.onConnect().subscribe(() => {
 				if (self.global.offline){
 					//dismiss dialog
 					self.global.offline = false;
@@ -52,11 +54,22 @@ export class MyApp {
 					}
 				}
 			});
-
-			let changeSubscription = self.network.onchange().subscribe(() => {
-				console.log(self.network);
-			});
 		}
+
+		//load global object
+    storage.get('language').then( (language) => {
+      if (language !== undefined && language !== null && language !== ''){
+        global.language = language;
+        translate.use(language);
+      } else {
+        global.language = translate.getDefaultLang();
+      }
+    });
+
+		console.log("System language is: " + navigator.language);
+    //substring in order to convert "en-US" to "en" etc.
+    translate.setDefaultLang(navigator.language.substring(0,2));
+
 	});
   }
 	showInternetWarning(){

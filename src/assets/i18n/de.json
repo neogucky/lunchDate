@@ -1,0 +1,50 @@
+{
+	"NOTEPAD_PLUS_PLUS": "Notepad++ ist eine scheiß Software",
+
+  "MEAL": "Gericht",
+  "LUNCHTIME": "LunchTime",
+  "SETTINGS": "Einstellungen",
+
+  "LOGIN.TITLE": "Login",
+	"LOGIN.REMEMBER": "Eingeloggt bleiben",
+	"LOGIN.LOGIN": "Einloggen",
+	"LOGIN.SIGNUP_HINT": "Für neue Nutzer ist eine Registrierung nötig.",
+	"LOGIN.SIGNUP": "Registrieren",
+
+  "SIGNUP.SIGNUP": "Registrieren",
+  "SIGNUP.MISSING_INFO_ERROR": "Du musst eine Mailadresse und ein sicheres Passwort eingeben!",
+  "SIGNUP.WORKMAIL": "Arbeits E-Mail",
+
+  "TIME.WELCOME": "Willkommen bei Lunch Date! Du musst einer Gruppe beitreten um Termine vorschlagen und sehen zu können",
+  "TIME.WELCOME_EXPLANATION": "Derzeit passiert dies über deine Arbeits-Mail-Adresse. Schreibe uns über lunchdate@new-media-design.net wenn du Hilfe benötigst.",
+  "TIME.CREATETEXT_1": "Klicke auf",
+  "TIME.CREATETEXT_2": "um einen Essens-Termin für heute vorzuschlagen",
+  "TIME.PARTICIPANTS_TITLE":  "Teilnehmer für",
+  "TIME.LIST_CONCAT":  "und",
+  "TIME.LIST_END_SINGULAR":  "ist",
+  "TIME.LIST_END_PLURAL":  "sind",
+  "TIME.LIST_END_COUNT":  "andere sind",
+  "TIME.PARTICIPANTS_CLOSE":  "schließen",
+  "TIME.LUNCHER_NOBODY":  "Keine Teilnehmer",
+  "TIME.BUSY_NOBODY": "Niemand hat abgesagt",
+  "TIME.BUSY":  "nicht verfügbar",
+  "TIME.GOING": "dabei",
+  "TIME.CANCEL":  "Absagen",
+  "TIME.JOIN":  "Zusagen",
+  "TIME.BUSY_CANCEL":  "Nein",
+  "TIME.BUSY_JOIN":  "Ja",
+
+  "MEAL.TITLE": "Unter Bearbeitung",
+  "MEAL.EXPLANATION": "Geplantes Feature: Hier kannst du durch swipen das für dich passenste Gericht finden.",
+
+  "SETTINGS.LOGOUT": "ausloggen",
+  "SETTINGS.NAME": "Dein Name",
+  "SETTINGS.ADD_NAME": "Bitte Name eingeben",
+  "SETTINGS.NEED_NAME": "Um Lunch Date nutzen zu können benötigst du einen öffentlichen Namen.",
+  "SETTINGS.NEW_NOTIFICATION": "Benachrichtigung bei neuer Zeit",
+  "SETTINGS.START_NOTIFICATION": "Erinnerung bevor es los geht",
+  "SETTINGS.ABOUT": "Über Lunch Date",
+  "SETTINGS.ABOUT_TITLE": "<b>Lunch Date</b> <span style=\"color:grey\">[luhnch deyt]</span><br>",
+  "SETTINGS.ABOUT_TEXT": "Nomen<br> <i>aus dem Englischen</i><br><br> 1. Eine Frucht<br> 2. Eine Absprache zu einem gemeinsammen Essen",
+  "SETTINGS.LANGUAGE": "Sprache"
+}

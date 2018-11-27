@@ -9,24 +9,25 @@
 	<form (ngSubmit)="signup()" [formGroup]="form">
 		<ion-list inset>
 
+      <div padding-vertical>
+        <h4>{{'SIGNUP.EXPLANATION' | translate}}</h4>
+      </div>
+
 			<ion-item>
-				<ion-input type="text" placeholder="Email" formControlName="email"></ion-input>
+				<ion-input type="text" placeholder="{{'SIGNUP.WORKMAIL' | translate}}" formControlName="email"></ion-input>
 			</ion-item>
 
 			<ion-item>
 				<ion-input type="password" placeholder="Password" formControlName="password"></ion-input>
 			</ion-item>
 
-			<ion-item>
-				<ion-input type="password" placeholder="Password" formControlName="password_control"></ion-input>
-			</ion-item>
-
 		</ion-list>
 
 		<div padding-horizontal>
-			<div class="form-error">{{signupError}}</div>
-
-			<button ion-button full type="submit">Sign up</button>
+			<button ion-button full type="submit">{{ 'SIGNUP.SIGNUP' | translate}}</button>
 		</div>
+    <div padding>
+      <div class="form-error" *ngIf="signupError !== ''"><ion-icon color="primary" name="warning"></ion-icon> {{signupError}}</div>
+    </div>
 	</form>
 </ion-content>

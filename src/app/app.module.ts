@@ -6,6 +6,9 @@ import { StatusBar } from '@ionic-native/status-bar';
 import { Network } from '@ionic-native/network';
 import { AppVersion } from '@ionic-native/app-version';
 
+import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 import { MealPage } from '../pages/meal/meal';
 import { TimePage } from '../pages/time/time';
@@ -32,6 +35,10 @@ import { IonicStorageModule } from '@ionic/storage';
 
 import { FCM } from '@ionic-native/fcm';
 
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, '/assets/i18n/', '.json');
+}
+
 @NgModule({
 	declarations: [
 		MyApp,
@@ -47,8 +54,15 @@ import { FCM } from '@ionic-native/fcm';
 		IonicModule.forRoot(MyApp),
 		AngularFireModule.initializeApp(firebaseConfig.fire),
 		AngularFirestoreModule,
-		IonicStorageModule.forRoot()
-
+		IonicStorageModule.forRoot(),
+		HttpClientModule,
+		TranslateModule.forRoot({
+		  loader: {
+			provide: TranslateLoader,
+			useFactory: (HttpLoaderFactory),
+			deps: [HttpClient]
+		  }
+		})
 	],
 	bootstrap: [IonicApp],
 	entryComponents: [
@@ -74,4 +88,5 @@ import { FCM } from '@ionic-native/fcm';
 		{provide: ErrorHandler, useClass: IonicErrorHandler}
 	]
 })
+
 export class AppModule {}

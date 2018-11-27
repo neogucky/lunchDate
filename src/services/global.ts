@@ -5,4 +5,5 @@ export class Global {
   public user:any;
   public registeredNewUser: boolean;
   public offline: boolean;
+  public language: string;
 }

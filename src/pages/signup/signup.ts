@@ -10,7 +10,7 @@ import { Global } from '../../services/global';
 	templateUrl: './signup.html'
 })
 export class SignupPage {
-	signupError: string;
+	signupError: string = '';
 	form: FormGroup;
 
 	constructor(
@@ -21,8 +21,7 @@ export class SignupPage {
 	) {
 		this.form = fb.group({
 			email: ['', Validators.compose([Validators.required, Validators.email])],
-			password: ['', Validators.compose([Validators.required, Validators.minLength(6)])],
-			password_control: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
+			password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
 		});
   }
 
@@ -37,13 +36,6 @@ export class SignupPage {
 
 	  if (data.email === '' || data.password === ''){
 		  this.signupError = "Please enter your mail address and password!";
-		  console.log(this.signupError);
-		  return;
-	  }
-
-	  if (data.password !== data.password_control){
-		  this.signupError = "Please enter the same password in both fields!";
-		  console.log(this.signupError);
 		  return;
 	  }
 

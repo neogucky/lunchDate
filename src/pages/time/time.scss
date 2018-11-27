@@ -10,9 +10,10 @@ page-time {
 	}
 
 	.item .label {
-		min-width: 60px;
-        max-width: 60px;
+		min-width: 56px;
+        max-width: 56px;
 		font-size: large;
+    text-align: center;
 	}
 
     div.participants {
@@ -23,7 +24,6 @@ page-time {
 
 	button.item-button.button.button-md.button-outline.button-outline-md {
 		min-width: 60px;
-		width: 60px;
 		margin-left: 20px;
 	}
 

@@ -1,0 +1,51 @@
+{
+  "NOTEPAD_PLUS_PLUS": "Notepad++ sucks",
+
+  "MEAL": "meal",
+  "LUNCHTIME": "LunchTime",
+  "SETTINGS": "Settings",
+
+  "LOGIN.TITLE": "Login",
+	"LOGIN.REMEMBER": "Stay signed in",
+	"LOGIN.LOGIN": "LOG IN",
+	"LOGIN.SIGNUP_HINT": "If you're a new user, please sign up.",
+	"LOGIN.SIGNUP": "SIGN UP",
+
+  "SIGNUP.SIGNUP": "Sign up",
+  "SIGNUP.MISSING_INFO_ERROR": "Please enter your mail address and password!",
+  "SIGNUP.WORKMAIL": "Work-Mail",
+  "SIGNUP.EXPLANATION": "You need to use a mail-domain which is shared by your collegues in order to be matched to the same group.",
+
+  "TIME.WELCOME": "Welcome to Lunch Date! You need to join a group in order to participate in communal lunches.",
+  "TIME.WELCOME_EXPLANATION": "At the moment this works by using a verified work mail-address or asking the group admin. In the released version you will be able to create and moderate groups using this app.",
+  "TIME.CREATETEXT_1": "Click on",
+  "TIME.CREATETEXT_2": "to tell your colleagues todays lunch time",
+  "TIME.PARTICIPANTS_TITLE":  "Participants for",
+  "TIME.LIST_CONCAT":  "and",
+  "TIME.LIST_END_SINGULAR":  "is",
+  "TIME.LIST_END_PLURAL":  "are",
+  "TIME.LIST_END_COUNT":  "others are",
+  "TIME.PARTICIPANTS_CLOSE":  "close",
+  "TIME.LUNCHER_NOBODY":  "No participants",
+  "TIME.BUSY_NOBODY": "Nobody is busy",
+  "TIME.BUSY":  "not available",
+  "TIME.GOING": "going",
+  "TIME.CANCEL":  "Cancel",
+  "TIME.JOIN":  "Join",
+  "TIME.BUSY_CANCEL":  "Cancel",
+  "TIME.BUSY_JOIN":  "Join",
+
+  "MEAL.TITLE": "Under Construction",
+  "MEAL.EXPLANATION": "Planned feature: swipe to find todays most suitable meal",
+
+  "SETTINGS.LOGOUT": "log out",
+  "SETTINGS.NAME": "Your name",
+  "SETTINGS.ADD_NAME": "Please add a name",
+  "SETTINGS.NEED_NAME": "You need to choose a public name in order to select a lunch date.",
+  "SETTINGS.NEW_NOTIFICATION": "New time notification",
+  "SETTINGS.START_NOTIFICATION": "Lunch starts notification",
+  "SETTINGS.ABOUT": "About Lunch Date",
+  "SETTINGS.ABOUT_TITLE": "<b>Lunch Date</b> <span style=\"color:grey\">[luhnch deyt]</span><br>",
+  "SETTINGS.ABOUT_TEXT": "noun<br> 1. A fruit that is traditionally shared with coworkers at lunchtime.<br> 2. A set time to meet people for lunch.",
+  "SETTINGS.LANGUAGE": "Language"
+}

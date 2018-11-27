@@ -6,8 +6,8 @@ import { FirebaseService } from '../../services/firebase.service';
 import { AlertController } from 'ionic-angular';
 import { FCM } from '@ionic-native/fcm';
 import { Platform } from 'ionic-angular';
-
-
+import {TranslateService} from "@ngx-translate/core";
+import {Storage} from "@ionic/storage";
 
 @Component({
   selector: 'page-settings',
@@ -17,7 +17,15 @@ export class SettingsPage {
 
 	onEditTimer: any;
 
-	constructor(
+  //language (async loading)
+  LANGUAGE: any = {
+    ABOUT: "SETTINGS.ABOUT",
+    ABOUT_TITLE: "SETTINGS.ABOUT_TITLE",
+    ABOUT_TEXT: "SETTINGS.ABOUT_TEXT"
+  }
+
+
+  constructor(
 		public events: Events,
 		private toastCtrl: ToastController,
 		public global: Global,
@@ -25,7 +33,20 @@ export class SettingsPage {
 		private backend: FirebaseService,
 		private platform: Platform,
 		public alertCtrl: AlertController,
-		public fcm: FCM)		{
+		public fcm: FCM,
+    private translate: TranslateService,
+   private storage: Storage)		{
+
+    console.log(this.global.language);
+    //Load language
+      for (var key in this.LANGUAGE) {
+        translate.get(this.LANGUAGE[key]).subscribe(
+          value => {
+            // value is our translated string
+            this.LANGUAGE[key] = value;
+          }
+        )
+      }
 	}
 
 	ionViewDidLoad() {
@@ -69,15 +90,18 @@ export class SettingsPage {
 		this.backend.updateUserAllowReminder(this.global.user.allowReminder);
 	}
 
+  onLanguageChange() {
+    this.storage.set('language', this.global.language);
+    this.translate.use(this.global.language);
+  }
+
 	onAbout(){
-		//FIXME: show this in a dedicated view with better formatting
+    //FIXME: show this in a dedicated view with better formatting
 		const confirm = this.alertCtrl.create({
-			title: 'About Lunch Date',
+			title: this.LANGUAGE['ABOUT'],
 			message: '<span style="color:black">' +
-			'<b>Lunch Date</b> <span style="color:grey">[luhnch deyt]</span><br>' +
-			'noun<br>' +
-			'1. A fruit that is traditionally shared with coworkers at lunchtime.<br>' +
-			'2. A set time to meet people for lunch.' +
+        this.LANGUAGE['ABOUT_TITLE'] +
+        this.LANGUAGE['ABOUT_TEXT'] +
 			'</span>',
 			buttons: [
 				{
