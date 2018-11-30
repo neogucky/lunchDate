@@ -21,7 +21,8 @@ export class SettingsPage {
   LANGUAGE: any = {
     ABOUT: "SETTINGS.ABOUT",
     ABOUT_TITLE: "SETTINGS.ABOUT_TITLE",
-    ABOUT_TEXT: "SETTINGS.ABOUT_TEXT"
+    ABOUT_TEXT: "SETTINGS.ABOUT_TEXT",
+    NAME_CHANGED: "SETTINGS.NAME_CHANGED"
   }
 
 
@@ -126,7 +127,7 @@ export class SettingsPage {
 
     /* always show toast in top as not to overlap the navigation bar */
     this.toastCtrl.create({
-      message: 'Name was changed to: "' + this.global.user.name + '"',
+      message: this.LANGUAGE['NAME_CHANGED'] + ' "' + this.global.user.name + '"',
       duration: 3000,
       position: 'top'
     }).present();

@@ -90,7 +90,7 @@ exports.newLunchDate = functions.firestore
     .onCreate((change, context) => {
 
     const data = change.data();
-	let payload;
+	let payload = {};
 
 	const options = {
         priority: "high",
@@ -102,36 +102,70 @@ exports.newLunchDate = functions.firestore
 		//assuming datatype 'time' with fallback to earlier versions without type
 		const time = data.time.toDate();
 		//FIXME: DST needs +2
-		const timeFormatted = (time.getHours() + 1) + ":" + time.getMinutes();
+    const timeFormatted = padZero(time.getHours() + 1) + ":" + padZero(time.getMinutes());
 
-		payload = {
-		  notification: {
-			  title: 'Lunch at ' + timeFormatted,
-			  body: 'New lunch date available at ' + timeFormatted,
-			  icon: 'icon',
-			  badge: '1',
-			  sound: 'default'
-		  }
-		}
+    payload['en'] = {
+      notification: {
+        title: 'Lunch at ' + timeFormatted,
+        body: 'New lunch date available at ' + timeFormatted,
+        icon: 'icon',
+        badge: '1',
+        sound: 'default'
+      }
+    }
+
+    payload['de'] = {
+      notification: {
+        title: 'Mittagessen um ' + timeFormatted,
+        body: 'Gib deinen Kollegen bescheid, ob dir ' + timeFormatted + ' passt',
+        icon: 'icon',
+        badge: '1',
+        sound: 'default'
+      }
+    }
 	} else {
 		//don't show this for a long time
 		options.timeToLive = 60*15;
-		payload = {
-		  notification: {
-			  title: 'Hungry?',
-			  body: data.creator + ' wants to go for lunch in 5 minutes',
-			  icon: 'icon',
-			  badge: '1',
-			  sound: 'default'
-		  }
-		}
+    payload['en'] = {
+      notification: {
+        title: 'Hungry?',
+        body: data.creator + ' wants to go for lunch in 5 minutes',
+        icon: 'icon',
+        badge: '1',
+        sound: 'default'
+      }
+    }
+
+    payload['de'] = {
+      notification: {
+        title: 'Hungrig?',
+        body: data.creator + ' möchte in 5 Minutes zum Essen gehen',
+        icon: 'icon',
+        badge: '1',
+        sound: 'default'
+      }
+    }
 	}
 
-	return pushToGroup(payload, context.params.groupId);
+	pushToGroup(payload['de'], context.params.groupId, 'de').then(
+    () => {
+      return pushToGroup(payload['en'], context.params.groupId, 'en');
+      }
+  ).catch(err => {
+    console.log('Error in pushToGroup', err);
+  });
+
 });
 
-function loadUsers(group) {
-	console.log('send push to:');
+function padZero(value) {
+  let s = value + '';
+  return s.length >= 2 ? s : new Array(2 - s.length + 1).join('0') + s;
+}
+
+function loadUsers(group, language) {
+
+  const defaultLanguage = 'en';
+
 	const participantsRef = db.collection('participants');
 	const defer = new Promise((resolve, reject) => {
 		const users = [];
@@ -140,7 +174,7 @@ function loadUsers(group) {
 		  snapshot.forEach(doc => {
 			const participant = doc.data();
 			//FIXME: (participant.busyUntil === undefined || participant.busyUntil.seconds < now.getSeconds())
-			if (participant.FCMtoken !== undefined && (participant.suggestionID !== -1)){
+			if (participant.FCMtoken !== undefined && (participant.suggestionID !== -1) && (participant.language == language || (participant.language == undefined && language == defaultLanguage))){
 				console.log(participant.name);
 				users.push(participant);
 			}
@@ -156,9 +190,9 @@ function loadUsers(group) {
 }
 
 //sends a push notifications to all users that have not opted out
-function pushToGroup(payload, group){
+function pushToGroup(payload, group, language){
 
-	return loadUsers(group).then((users : any) => {
+	return loadUsers(group, language).then((users : any) => {
       const tokens = [];
       for (let it in users) {
           tokens.push(users[it].FCMtoken);
@@ -168,7 +202,7 @@ function pushToGroup(payload, group){
 			console.error('No users selcted to send push to');
 			return new Promise((resolve, reject) => {resolve()});
 		}
-
+        console.log('sending push to users with language: ' + language);
         return admin.messaging().sendToDevice(tokens, payload);
     });
 

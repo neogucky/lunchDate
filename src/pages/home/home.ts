@@ -71,14 +71,22 @@ export class HomePage {
           this.splashScreen.hide();
           console.log('end splash autologin');
         }, 1000);
+
+        //FIXME: this should be done only once when first setting the language
+        this.backend.setLanguage(this.global.language);
+
         initFinished = true;
-        console.log(this.tabs);
         if (data !== undefined && data.name !== undefined) {
           this.tabs.select(1);
         } else {
           this.tabs.select(2);
         }
       }
+
+      //get group
+      this.backend.getGroup().subscribe(data => {
+        this.global.group = data;
+      });
 
       console.log(this.global.user);
     });

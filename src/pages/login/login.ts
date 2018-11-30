@@ -10,6 +10,7 @@ import {Platform} from 'ionic-angular';
 import firebase from 'firebase/app';
 import {Storage} from '@ionic/storage';
 import {AppVersion} from '@ionic-native/app-version';
+import {Global} from "../../services/global";
 
 @Component({
   selector: 'page-login',
@@ -32,6 +33,7 @@ export class LoginPage {
     private fb: FormBuilder,
     private platform: Platform,
     private storage: Storage,
+    public global: Global,
     private appVersion: AppVersion
   ) {
     console.log(this.platform);
@@ -50,7 +52,7 @@ export class LoginPage {
     this.staySignedin = true;
     let self = this;
     this.storage.get('staySignedin').then((staySignedin) => {
-      if (staySignedin !== false) {
+      if (staySignedin !== false && !this.global.offline) {
 
         const unsubscribe = firebase.auth().onAuthStateChanged((user) => {
           if (user) {
@@ -72,7 +74,7 @@ export class LoginPage {
       }
     });
 
-    var dummyVersion = "~0.5.1";
+    var dummyVersion = "~0.7.0";
     this.versionNumber = 'version ' + dummyVersion;
     if (this.platform.is('cordova')) {
       this.appVersion.getVersionNumber().then((s) => {

@@ -52,10 +52,15 @@ export class FirebaseService {
 			});
 	}
 
-	getUser() : any {
-		return this.afs.doc<any>('participants/'+this.auth.uid)
-			.valueChanges();
-	}
+  getUser() : any {
+    return this.afs.doc<any>('participants/'+this.auth.uid)
+      .valueChanges();
+  }
+
+  getGroup() : any {
+    return this.afs.doc<any>('group/'+this.global.user.group)
+      .valueChanges();
+  }
 
 	updateFCMToken(value){
 		this.afs.doc('participants/'+this.auth.uid)
@@ -127,4 +132,9 @@ export class FirebaseService {
 		this.afs.doc('participants/'+this.auth.uid)
 			  .update({suggestionID: id});
 	}
+
+	setLanguage(language: string) {
+    this.afs.doc('participants/'+this.auth.uid)
+      .update({language: language});
+  }
 }

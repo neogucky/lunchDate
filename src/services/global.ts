@@ -6,4 +6,5 @@ export class Global {
   public registeredNewUser: boolean;
   public offline: boolean;
   public language: string;
+  public group: any = { name: 'none', roles: []};
 }

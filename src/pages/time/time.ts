@@ -31,13 +31,18 @@ export class TimePage {
     LIST_END_SINGULAR: "TIME.LIST_END_SINGULAR",
     LIST_END_PLURAL: "TIME.LIST_END_PLURAL",
     LIST_END_COUNT: "TIME.LIST_END_COUNT",
-    PARTICIPANTS_CLOSE: "TIME.PARTICIPANTS_CLOSE",
+    CLOSE: "GLOBAL.CLOSE",
     LUNCHER_NOBODY: "TIME.LUNCHER_NOBODY",
     BUSY_NOBODY: "TIME.BUSY_NOBODY",
     BUSY: "TIME.BUSY",
     GOING: "TIME.GOING",
     CANCEL: "TIME.CANCEL",
-    JOIN: "TIME.JOIN"
+    JOIN: "TIME.JOIN",
+    SHOUT_TITLE: "TIME.SHOUT_TITLE",
+    SHOUT_TEXT: "TIME.SHOUT_TEXT",
+    SHOUT_CONFIRM: "TIME.SHOUT_CONFIRM",
+    SHOUT_CANCEL: "TIME.SHOUT_CANCEL",
+    MEET_REMINDER: "TIME.MEET_REMINDER"
   }
 
 
@@ -67,7 +72,6 @@ export class TimePage {
         }
       )
     }
-
 
     document.addEventListener("resume", this.onResume.bind(this), false);
 
@@ -106,7 +110,7 @@ export class TimePage {
         '</span>',
       buttons: [
         {
-          text: this.LANGUAGE['PARTICIPANTS_CLOSE']
+          text: this.LANGUAGE['CLOSE']
         }
       ]
     });
@@ -223,14 +227,14 @@ export class TimePage {
 
   addSuggestionNow() {
     const confirm = this.alertCtrl.create({
-      title: 'Alert your collegues',
-      message: 'Do you want to ask your collegues to go for lunch in 5 minutes?',
+      title: this.LANGUAGE['SHOUT_TITLE'],
+      message: this.LANGUAGE['SHOUT_TEXT'],
       buttons: [
         {
-          text: 'Cancel'
+          text: this.LANGUAGE['SHOUT_CANCEL']
         },
         {
-          text: 'Ask collegues',
+          text: this.LANGUAGE['SHOUT_CONFIRM'],
           handler: () => {
             this.backend.addSuggestionNow();
           }

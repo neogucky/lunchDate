@@ -5,6 +5,11 @@
   "LUNCHTIME": "LunchTime",
   "SETTINGS": "Settings",
 
+  "GLOBAL.INTERNET_TITLE": "No Internet",
+  "GLOBAL.INTERNET_TEXT": "You need a connection to the internet for this app to work. Restart the app if you belief you have internet.",
+  "GLOBAL.INTERNET_RETRY": "Retry",
+  "GLOBAL.CLOSE": "close",
+
   "LOGIN.TITLE": "Login",
 	"LOGIN.REMEMBER": "Stay signed in",
 	"LOGIN.LOGIN": "LOG IN",
@@ -25,7 +30,6 @@
   "TIME.LIST_END_SINGULAR":  "is",
   "TIME.LIST_END_PLURAL":  "are",
   "TIME.LIST_END_COUNT":  "others are",
-  "TIME.PARTICIPANTS_CLOSE":  "close",
   "TIME.LUNCHER_NOBODY":  "No participants",
   "TIME.BUSY_NOBODY": "Nobody is busy",
   "TIME.BUSY":  "not available",
@@ -34,6 +38,11 @@
   "TIME.JOIN":  "Join",
   "TIME.BUSY_CANCEL":  "Cancel",
   "TIME.BUSY_JOIN":  "Join",
+  "TIME.SHOUT_TITLE": "Alert your collegues",
+  "TIME.SHOUT_TEXT": "Do you want to ask your collegues to go for lunch in 5 minutes?",
+  "TIME.SHOUT_CONFIRM": "Ask collegues",
+  "TIME.SHOUT_CANCEL": "Cancel",
+  "TIME.MEET_REMINDER": "Meetup for lunch in 5 minutes!",
 
   "MEAL.TITLE": "Under Construction",
   "MEAL.EXPLANATION": "Planned feature: swipe to find todays most suitable meal",
@@ -47,5 +56,7 @@
   "SETTINGS.ABOUT": "About Lunch Date",
   "SETTINGS.ABOUT_TITLE": "<b>Lunch Date</b> <span style=\"color:grey\">[luhnch deyt]</span><br>",
   "SETTINGS.ABOUT_TEXT": "noun<br> 1. A fruit that is traditionally shared with coworkers at lunchtime.<br> 2. A set time to meet people for lunch.",
-  "SETTINGS.LANGUAGE": "Language"
+  "SETTINGS.LANGUAGE": "Language",
+  "SETTINGS.MEMBERS": "Members",
+  "SETTINGS.NAME_CHANGED": "Name was changed to:"
 }

@@ -10,6 +10,8 @@
       <br>
       {{auth.getEmail()}}
       <br>
+      {{ global.group.name }} ({{ this.global.group.roles.length }} {{ 'SETTINGS.MEMBERS' | translate}})
+      <br>
       <a (click)="logout()">{{'SETTINGS.LOGOUT' | translate}}</a>
     </div>
     <div class="clear"></div>
