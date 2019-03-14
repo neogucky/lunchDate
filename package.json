@@ -26,7 +26,7 @@
     "@ionic-native/fcm": "^4.15.0",
     "@ionic-native/local-notifications": "^4.15.0",
     "@ionic-native/network": "^4.17.0",
-    "@ionic-native/push": "^4.13.0",
+    "@ionic-native/push": "^4.18.0",
     "@ionic-native/splash-screen": "~4.12.0",
     "@ionic-native/status-bar": "~4.12.0",
     "@ionic/pro": "2.0.3",
@@ -34,9 +34,8 @@
     "@ngx-translate/core": "^9.1.1",
     "@ngx-translate/http-loader": "^2.0.1",
     "@ultimate/ngxerrors": "^1.4.0",
-    "cordova-android": "7.1.4",
     "cordova-browser": "5.0.4",
-    "cordova-ios": "^4.5.5",
+    "cordova-ios": "4.5.5",
     "cordova-plugin-app-version": "0.1.9",
     "cordova-plugin-badge": "0.8.7",
     "cordova-plugin-device": "^2.0.2",
@@ -84,7 +83,7 @@
     },
     "platforms": [
       "browser",
-      "android"
+      "ios"
     ]
   }
 }
