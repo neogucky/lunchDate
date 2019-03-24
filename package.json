@@ -50,7 +50,7 @@
     "cordova-plugin-whitelist": "^1.3.3",
     "cordova-sqlite-storage": "^2.6.0",
     "cordova-support-google-services": "^1.3.1",
-    "firebase": "^5.9.0",
+    "firebase": "^5.9.1",
     "ionic-angular": "3.9.2",
     "ionicons": "3.0.0",
     "moment": "^2.24.0",
@@ -63,7 +63,7 @@
   "devDependencies": {
     "@ionic/app-scripts": "3.2.3",
     "@ionic/lab": "1.0.9",
-    "typescript": "~2.6.2"
+    "typescript": "^2.8.4"
   },
   "description": "An Ionic project",
   "cordova": {
