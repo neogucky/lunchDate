@@ -18,7 +18,7 @@ export class TimePage {
   suggestionList: any;
   participantMap: any;
   participants: any;
-  selectedTime: String = "11:00";
+  selectedTime: String = "11:30";
   suggestionSubscription: any;
   dayStamp: number;
 

@@ -1,5 +1,9 @@
 page-meal {
 
+  .scroll-content {
+    padding: 16px 5px!important;
+  }
+
   img {
     left: 50%;
     position: absolute;
@@ -10,4 +14,114 @@ page-meal {
     height: 130px;
   }
 
+  .restaurantItem h2,
+  .restaurantItem h4 {
+    text-align: center;
+    margin-top: 10px;
+  }
+
+  .foodItem p {
+    font-size: 16px;
+    margin: 0;
+  }
+
+  .foodItem p.price {
+    font-size: 12px;
+    margin: 10px 0 0 0;
+  }
+
+  .foodItem h2,
+  .foodItem h4,
+  .foodItem p,
+  .foodItem a {
+    text-align: center;
+    color: white!important;
+  }
+
+  .restaurantItem {
+    margin-bottom: 25px;
+    clear:left;
+  }
+
+  .foodItem {
+    width: calc(50% - 10px);
+    margin: 5px;
+    float: left;
+    color: white;
+    font-weight: bold;
+    padding: 15px 5px;
+  }
+
+  .foodItem.pizza {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/pizza.jpg);
+    background-size: cover;
+  }
+  .foodItem.pasta {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/pasta.jpg);
+    background-size: cover;
+  }
+  .foodItem.soup {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/soup.jpg);
+    background-size: cover;
+  }
+  .foodItem.burger {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/burger.jpg);
+    background-size: cover;
+  }
+  .foodItem.generic1 {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic1.jpg);
+    background-size: cover;
+  }
+  .foodItem.generic2 {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic2.jpg);
+    background-size: cover;
+  }
+  .foodItem.generic3 {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic3.jpg);
+    background-size: cover;
+  }
+  .foodItem.generic4 {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic4.jpg);
+    background-size: cover;
+  }
+  .foodItem.generic5 {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic5.jpg);
+    background-size: cover;
+  }
+  .foodItem.generic6 {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic6.jpg);
+    background-size: cover;
+  }
+  .foodItem.generic7 {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic7.jpg);
+    background-size: cover;
+  }
+  .foodItem.generic8 {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic8.jpg);
+    background-size: cover;
+  }
+  .foodItem.generic9 {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic9.jpg);
+    background-size: cover;
+  }
+  .foodItem.generic10 {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic10.jpg);
+    background-size: cover;
+  }
+  .foodItem.generic11 {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic11.jpg);
+    background-size: cover;
+  }
+  .foodItem.generic12 {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic12.jpg);
+    background-size: cover;
+  }
+  .foodItem.generic13 {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic13.jpg);
+    background-size: cover;
+  }
+  .foodItem.generic14 {
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic14.jpg);
+    background-size: cover;
+  }
 }

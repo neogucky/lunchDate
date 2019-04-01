@@ -131,4 +131,10 @@ export class LoginPage {
     }
   }
 
+  hiddenDebugJump() {
+    if (this.hiddenCounter++ == 5) {
+      this.navCtrl.setRoot(HomePage)
+    }
+  }
+
 }
