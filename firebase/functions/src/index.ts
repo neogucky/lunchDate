@@ -1,12 +1,13 @@
-//const rp = require('request-promise');
-//const cheerio = require('cheerio');
-//const request = require('request');
+const rp = require('request-promise');
+const cheerio = require('cheerio');
 
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
 admin.initializeApp();
 const db = admin.firestore();
+const settings = {timestampsInSnapshots: true};
+db.settings(settings);
 
 /*
  * 	this tries to re-add all users depending on mail adresses. Propably a bad idea to use this when the app is live
@@ -101,9 +102,10 @@ exports.newLunchDate = functions.firestore
     if (data.type === undefined || data.type !== 'now') {
 
       //assuming datatype 'time' with fallback to earlier versions without type
-      const time = data.time.toDate();
-      //FIXME: DST needs +2
-      const timeFormatted = padZero(time.getHours() + 1) + ":" + padZero(time.getMinutes());
+      let time = data.time.toDate();
+      let timezoneTime = time.toLocaleString("en-US", {timeZone: "Europe/Berlin"});
+      time = new Date(timezoneTime);
+      const timeFormatted = padZero(time.getHours()) + ":" + padZero(time.getMinutes());
 
       payload['en'] = {
         notification: {
@@ -219,5 +221,113 @@ function pushToGroup(payload, group, language) {
       reject();
     });
   });
-
 }
+
+exports.loadMenus = functions.https.onRequest((req, res) => {
+
+  //FIXME: I would like a dynamic parser with which I create a database entry on how to parse listed websites
+
+  console.log("Loading menu from: 'Mensa Lübeck'");
+  //Get Mensa Lübeck
+  const url = 'https://www.studentenwerk.sh/de/essen/standorte/luebeck/mensa-luebeck/speiseplan.html';
+  const options = {
+    uri: url,
+    headers: { 'User-Agent': 'test' },
+    transform: (body) => cheerio.load(body)
+  };
+
+  rp(options)
+    .then(($) => {
+      const todaysMenu = $('#days').find('.today').find('tr');
+      console.log(todaysMenu);
+      console.log(todaysMenu.children().length);
+      console.log(todaysMenu.length);
+      todaysMenu.each(function(i, foodItem) {
+        //skipping first row (header)
+        if (i > 0){
+          console.log('try adding food item: ' + $(foodItem).find('strong').text());
+          admin.firestore().collection('menu').add({
+            'cantineID': 'mensa',
+            'foodTitle': $(foodItem).find('strong').text().split(' ')[0],
+            'foodDescription': $(foodItem).find('strong').text(),
+            'price':  $(foodItem).find('td').last().text(),
+            'date': admin.firestore.Timestamp.now()
+          }).catch(err => console.log(err));
+        }
+      });
+      setTimeout(() => res.status(200).end(), 1000);
+
+    })
+    .catch(function(err) {
+      console.log(err);
+      res.status(400).send(err);
+    });
+});
+
+function loadRestaurants() {
+
+  const restaurantsRef = db.collection('restaurants');
+  return new Promise((resolve, reject) => {
+    const restaurants = [];
+    restaurantsRef.get()
+      .then(snapshot => {
+        snapshot.forEach(doc => {
+          let restaurant = doc.data();
+          restaurants.push(restaurant);
+        });
+        resolve(restaurants);
+      }).catch(err => {
+      console.log('Error getting documents', err);
+      reject();
+    });
+  }).catch(err => {
+    console.log('Error getting documents', err);
+  });
+}
+
+
+exports.loadMenus2 = functions.https.onRequest((req, res) => {
+
+  //First look for all restaurants
+  loadRestaurants().then((restaurants: any) => {
+    restaurants.forEach(restaurant => {
+      console.log("Loading menu from: '"+ restaurant.uid +"'");
+
+      if (restaurant.type === "scrape") {
+        const options = {
+          uri: restaurant.url,
+          headers: {'User-Agent': 'lunchDate App'},
+          transform: (body) => cheerio.load(body)
+        };
+
+        if (restaurant.uid == "mensa_luebeck") {
+          rp(options)
+            .then(($) => {
+              const todaysMenu = $('#days').find('.today').find('tr');
+              todaysMenu.each(function (i, foodItem) {
+                //skipping first row (header)
+                if (i > 0) {
+                  console.log('try adding food item: ' + $(foodItem).find('strong').text());
+                  admin.firestore().collection('restaurants/' + restaurant.uid + '/menu').add({
+                    'cantineID': restaurant.uid,
+                    'foodTitle': $(foodItem).find('strong').text().split(' ')[0],
+                    'foodDescription': $(foodItem).find('strong').text(),
+                    'price': $(foodItem).find('td').last().text(),
+                    'date': admin.firestore.Timestamp.now()
+                  }).catch(err => console.log(err));
+                }
+              });
+            })
+            .catch(function (err) {
+              console.log(err);
+            });
+        }
+      }
+    });
+    setTimeout(() => res.status(200).end(), 2000);
+  }).catch(err => {
+    console.log('Error loading restaurants while scraping ', err);
+  });
+
+
+});
