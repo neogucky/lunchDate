@@ -61,29 +61,58 @@ exports.autoAddUser = functions.auth.user().onCreate((user) => {
   const mailMatch = user.email.split("@")[1];
   console.log("Trying to find: " + mailMatch);
 
+  let foundMail = false;
   const defer = new Promise((resolve, reject) => {
     db.collection('group').where('mailMatch', '==', mailMatch).get()
       .then(snapshot => {
         snapshot.forEach(doc => {
           //every group that automatically adds the users mail
+          foundMail = true;
           const group = doc.data();
           let roles = group.roles;
-          roles.push({UID: user.uid, role: "moderator"});
+          roles.push({UID: user.uid, role: "member"});
           db.collection('group').doc(doc.id).set({roles: roles}, {merge: true}).catch(err => {
             console.error('Error setting group roles', err);
-          });
-
-          db.collection('participants').doc(user.uid).set({group: doc.id}, {merge: true}).then(() => {
-            resolve();
-          }).catch(err => {
-            console.error('Error setting users group', err);
-          });
+          }).then(() => {
+            db.collection('participants').doc(user.uid).set({group: doc.id}).then(() => {
+              resolve();
+            }).catch(err => {
+              console.error('Error setting users group', err);
+            });
+          }).catch(err => console.log(err));
         });
+        if (!foundMail) {
+          console.log('Mail address not matching existing addresses');
+          const blockedDomains = ["gmx.de", "gmx.net", "web.de", "t-online.de", "outlook.de", "outlook.com", "aol.de", "aol.com", "freenet.de", "gmail.com", "gmail.de", "googlemail.de", "googlemail.com", "yahoo.de", "yahoo.com", "icloud.de", "icloud.com"];
+          //don't create groups for common mail-domains
+          if (!blockedDomains.includes(mailMatch)) {
+            //create new group
+            console.log("creating new group for domain: " + mailMatch);
+            let roles = [];
+            roles.push({UID: user.uid, role: "administrator"});
+            db.collection('group').doc(mailMatch).set({
+              'roles': roles,
+              'name': mailMatch,
+              'mailMatch': mailMatch,
+              'creator': user.uid,
+              'info': '',
+              'createdAt': admin.firestore.Timestamp.now()
+            }).catch(err => console.log(err))
+              .then(() => {
+                db.collection('participants').doc(user.uid).set({group: mailMatch, name: ''}).then(() => {
+                  resolve();
+                }).catch(err => {
+                  console.error('Error setting users group', err);
+                });
+              }).catch(err => console.log(err));
+          } else {
+            console.log('Mail adress not valid (common domain)');
+          }
+        }
       }).catch(err => {
       console.error('Error getting documents', err);
     });
   });
-
   return defer;
 });
 
@@ -137,7 +166,7 @@ exports.newLunchDate = functions.firestore
           badge: '1',
           sound: 'default'
         }
-      }
+      };
 
       payload['de'] = {
         notification: {
@@ -199,9 +228,6 @@ function pushToGroup(payload, group, language) {
     loadUsers(group, language).then((users: any) => {
       const tokens = [];
       for (let it in users) {
-        if (users[it].name == 'Marcel') {
-          console.log('Marcel');
-        }
         tokens.push(users[it].FCMtoken);
       }
 
@@ -239,9 +265,6 @@ exports.loadMenus = functions.https.onRequest((req, res) => {
   rp(options)
     .then(($) => {
       const todaysMenu = $('#days').find('.today').find('tr');
-      console.log(todaysMenu);
-      console.log(todaysMenu.children().length);
-      console.log(todaysMenu.length);
       todaysMenu.each(function(i, foodItem) {
         //skipping first row (header)
         if (i > 0){
@@ -308,7 +331,7 @@ exports.loadMenus2 = functions.https.onRequest((req, res) => {
                 //skipping first row (header)
                 if (i > 0) {
                   console.log('try adding food item: ' + $(foodItem).find('strong').text());
-                  admin.firestore().collection('restaurants/' + restaurant.uid + '/menu').add({
+                  db.collection('restaurants/' + restaurant.uid + '/menu').add({
                     'cantineID': restaurant.uid,
                     'foodTitle': $(foodItem).find('strong').text().split(' ')[0],
                     'foodDescription': $(foodItem).find('strong').text(),
