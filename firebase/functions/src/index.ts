@@ -14,7 +14,7 @@ db.settings(settings);
  */
 exports.autoAddUsers = functions.https.onRequest((req, res) => {
 
-  let roles = [];
+  const roles = [];
   let groupID;
 
   admin.auth().listUsers().then(function (listUsersResult) {
@@ -62,14 +62,14 @@ exports.autoAddUser = functions.auth.user().onCreate((user) => {
   console.log("Trying to find: " + mailMatch);
 
   let foundMail = false;
-  const defer = new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     db.collection('group').where('mailMatch', '==', mailMatch).get()
       .then(snapshot => {
         snapshot.forEach(doc => {
           //every group that automatically adds the users mail
           foundMail = true;
           const group = doc.data();
-          let roles = group.roles;
+          const roles = group.roles;
           roles.push({UID: user.uid, role: "member"});
           db.collection('group').doc(doc.id).set({roles: roles}, {merge: true}).catch(err => {
             console.error('Error setting group roles', err);
@@ -88,7 +88,7 @@ exports.autoAddUser = functions.auth.user().onCreate((user) => {
           if (!blockedDomains.includes(mailMatch)) {
             //create new group
             console.log("creating new group for domain: " + mailMatch);
-            let roles = [];
+            const roles = [];
             roles.push({UID: user.uid, role: "administrator"});
             db.collection('group').doc(mailMatch).set({
               'roles': roles,
@@ -113,7 +113,6 @@ exports.autoAddUser = functions.auth.user().onCreate((user) => {
       console.error('Error getting documents', err);
     });
   });
-  return defer;
 });
 
 exports.newLunchDate = functions.firestore
@@ -121,7 +120,7 @@ exports.newLunchDate = functions.firestore
   .onCreate((change, context) => {
 
     const data = change.data();
-    let payload = {};
+    const payload = {};
 
     const options = {
       priority: "high",
@@ -132,7 +131,7 @@ exports.newLunchDate = functions.firestore
 
       //assuming datatype 'time' with fallback to earlier versions without type
       let time = data.time.toDate();
-      let timezoneTime = time.toLocaleString("en-US", {timeZone: "Europe/Berlin"});
+      const timezoneTime = time.toLocaleString("en-US", {timeZone: "Europe/Berlin"});
       time = new Date(timezoneTime);
       const timeFormatted = padZero(time.getHours()) + ":" + padZero(time.getMinutes());
 
@@ -205,7 +204,7 @@ function loadUsers(group, language) {
         snapshot.forEach(doc => {
           const participant = doc.data();
           //FIXME: (participant.busyUntil === undefined || participant.busyUntil.seconds < now.getSeconds())
-          if (participant.FCMtoken !== undefined && (participant.suggestionID !== -1) && (participant.language == language || (participant.language == undefined && language == defaultLanguage))) {
+          if (participant.FCMtoken !== undefined && (participant.suggestionID !== -1) && (participant.language === language || (participant.language === undefined && language === defaultLanguage))) {
             users.push(participant);
           }
         });
@@ -252,6 +251,19 @@ function pushToGroup(payload, group, language) {
 exports.loadMenus = functions.https.onRequest((req, res) => {
 
   //FIXME: I would like a dynamic parser with which I create a database entry on how to parse listed websites
+  const morning:Date = new Date();
+  morning.setHours(0,0,0,0);
+  const ts = new admin.firestore.Timestamp(morning.getSeconds(),0);
+  db.collection('menu').where('date', '>', ts).get().then(snapshot => {
+    // Delete documents in a batch
+    const batch = db.batch();
+    snapshot.docs.forEach((doc) => {
+      batch.delete(doc.ref);
+    });
+    return batch.commit();
+  }).catch(function(err) {
+    console.log(err);
+  });
 
   console.log("Loading menu from: 'Mensa Lübeck'");
   //Get Mensa Lübeck
@@ -317,13 +329,27 @@ exports.loadMenus2 = functions.https.onRequest((req, res) => {
       console.log("Loading menu from: '"+ restaurant.uid +"'");
 
       if (restaurant.type === "scrape") {
+        let morning:Date = new Date();
+        morning.setHours(0,0,0,0);
+        let ts = new admin.firestore.Timestamp(morning.getSeconds(),0);
+        db.collection('restaurants/' + restaurant.uid + '/menu').where('date', '>', ts).get().then(snapshot => {
+          // Delete documents in a batch
+          let batch = db.batch();
+          snapshot.docs.forEach((doc) => {
+            batch.delete(doc.ref);
+          });
+          return batch.commit();
+        }).catch(function(err) {
+          console.log(err);
+        });
+
         const options = {
           uri: restaurant.url,
           headers: {'User-Agent': 'lunchDate App'},
           transform: (body) => cheerio.load(body)
         };
 
-        if (restaurant.uid == "mensa_luebeck") {
+        if (restaurant.uid === "mensa_luebeck") {
           rp(options)
             .then(($) => {
               const todaysMenu = $('#days').find('.today').find('tr');
