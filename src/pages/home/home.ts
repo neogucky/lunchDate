@@ -65,30 +65,29 @@ export class HomePage {
         this.global.user = {};
       }
 
-      //run this only once
-      if (!initFinished) {
-        setTimeout(() => {
-          this.splashScreen.hide();
-          console.log('end splash autologin');
-        }, 1000);
-
-        //FIXME: this should be done only once when first setting the language
-        this.backend.setLanguage(this.global.language);
-
-        initFinished = true;
-        if (data !== undefined && data.name !== undefined) {
-          this.tabs.select(1);
-        } else {
-          this.tabs.select(2);
-        }
-      }
-
       //get group
       this.backend.getGroup().subscribe(data => {
         this.global.group = data;
+
+        //run this only once
+        if (!initFinished) {
+          setTimeout(() => {
+            this.splashScreen.hide();
+            console.log('end splash autologin');
+          }, 1000);
+
+          //FIXME: this should be done only once when first setting the language
+          this.backend.setLanguage(this.global.language);
+
+          initFinished = true;
+          if (data !== undefined && data.name !== undefined) {
+            this.tabs.select(1);
+          } else {
+            this.tabs.select(2);
+          }
+        }
       });
 
-      console.log(this.global.user);
     });
 
   }

@@ -18,7 +18,7 @@ import {Global} from "../../services/global";
 })
 export class LoginPage {
   loginForm: FormGroup;
-  loginError: string;
+  loginError: string = '';
   staySignedin: boolean;
   hiddenCounter: number = 0;
   username: string;
@@ -74,7 +74,7 @@ export class LoginPage {
       }
     });
 
-    var dummyVersion = "~0.7.0";
+    var dummyVersion = "~0.7.3";
     this.versionNumber = 'version ' + dummyVersion;
     if (this.platform.is('cordova')) {
       this.appVersion.getVersionNumber().then((s) => {

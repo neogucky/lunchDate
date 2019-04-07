@@ -28,7 +28,7 @@
     </ion-list>
 
     <div padding-horizontal>
-      <div class="form-error">{{loginError}}</div>
+      <div color="error" *ngIf="loginError !== ''" class="form-error">{{loginError}}</div>
 
       <button ion-button full type="submit">{{ 'LOGIN.LOGIN' | translate}}</button>
       <div class="login-footer">
