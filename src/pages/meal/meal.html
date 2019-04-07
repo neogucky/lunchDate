@@ -2,21 +2,28 @@
   <div class="headingSpacer">
     <img width="200" src="assets/img/app_banner.png">
   </div>
-  <div class="restaurantItem" *ngIf="mealMenus !== undefined && mealMenus['mensa'] !== undefined">
-    <h2>Mensa</h2>
-    <div *ngFor="let meal of mealMenus['mensa']">
-      <div class="foodItem {{getFoodImage(meal)}}">
-        <p>{{meal.foodDescription}}</p>
-        <p class="price">{{meal.price}}</p>
+
+  <ion-spinner *ngIf="restaurants.length === 0" color="primary" class="loadingThrobber"></ion-spinner>
+  <div *ngFor="let restaurant of getRestaurants()">
+    <div class="restaurantItem" *ngIf="restaurant.details.type === 'scrape' && restaurant.menu.length > 0" >
+      <h3>{{restaurant.details.name}} - {{restaurant.menu[0].date.seconds * 1000 | date:'dd. MMMM'}}</h3>
+      <div class="foodList" >
+        <div *ngFor="let meal of restaurant.menu" >
+          <div class="foodItem {{getFoodImage(meal)}}">
+            <p>{{meal.foodDescription}}</p>
+            <p class="price">{{meal.price}}</p>
+          </div>
+        </div>
+        <div style="clear: left;"></div>
       </div>
     </div>
-    <div style="clear: left;"></div>
-  </div>
-  <div class="restaurantItem">
-  <h2>UKSH-Bistro</h2>
-  <div class="foodItem generic1">
-    <h4>Speiseplan</h4>
-    <a href="https://www.uksh.de/uksh_media/Speisepl%C3%A4ne/L%C3%BCbeck+_+UKSH_Bistro/Speiseplan+Bistro+KW+{{week}}.pdf">Open PDF</a>
-  </div>
+    <div class="restaurantItem" *ngIf="restaurant.details.type === 'link'" >
+      <h3>{{restaurant.details.name}}</h3>
+      <div class="foodItem generic5">
+        <h4>Speiseplan</h4>
+        <a href="https://www.uksh.de/uksh_media/Speisepl%C3%A4ne/L%C3%BCbeck+_+UKSH_Bistro/Speiseplan+Bistro+KW+{{week}}.pdf">Open PDF</a>
+      </div>
+      <div style="clear: left;"></div>
+    </div>
   </div>
 </ion-content>

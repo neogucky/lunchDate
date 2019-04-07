@@ -98,18 +98,20 @@ export class FirebaseService {
 		return uniqueID;
 	}
 
-  getMenu(day) : any {
+  getRestaurant(restaurantID) : any {
+
+    return this.afs.doc('restaurants/'+restaurantID)
+      .valueChanges();
+  }
+
+  getMenu(restaurantID, day) : any {
     var start = new Date(day.getTime());
     start.setHours(0,0,0,0);
 
     var end = new Date(day.getTime());
     end.setHours(23,59,59,999);
 
-    if (this.global.user.group === undefined){
-      console.error('Invalid group! Please don\'t do that to me...');
-    }
-
-    return this.afs.collection<any>('menu', ref => ref.where('date', '>', start).where('date', '<', end))
+    return this.afs.collection<any>('restaurants/'+restaurantID+'/menu/', ref => ref.where('date', '>', start).where('date', '<', end))
       .valueChanges();
   }
 

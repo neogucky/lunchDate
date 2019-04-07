@@ -4,6 +4,13 @@ page-meal {
     padding: 16px 5px!important;
   }
 
+  ion-spinner.loadingThrobber {
+    position: fixed;
+    z-index: 1000;
+    left: 50%;
+    top: 50%;
+  }
+
   img {
     left: 50%;
     position: absolute;
@@ -15,6 +22,7 @@ page-meal {
   }
 
   .restaurantItem h2,
+  .restaurantItem h3,
   .restaurantItem h4 {
     text-align: center;
     margin-top: 10px;
@@ -31,97 +39,129 @@ page-meal {
   }
 
   .foodItem h2,
+  .foodItem h3,
   .foodItem h4,
   .foodItem p,
   .foodItem a {
     text-align: center;
     color: white!important;
+    text-shadow: 0 0 4px black, 0 0 6px black;
   }
 
   .restaurantItem {
     margin-bottom: 25px;
-    clear:left;
+  }
+
+  .foodList {
+    column-count: 2;
+    column-gap: 10px;
+    -moz-column-count: 2;
+    -moz-column-gap: 10px;
+    -webkit-column-count: 2;
+    -webkit-column-gap: 10px;
   }
 
   .foodItem {
-    width: calc(50% - 10px);
-    margin: 5px;
-    float: left;
+    width: calc(100%);
+    margin: 0 0 10px 0;
+    column-break-inside: avoid;
+    -moz-column-break-inside: avoid;
+    -webkit-column-break-inside: avoid;
     color: white;
     font-weight: bold;
     padding: 15px 5px;
   }
 
   .foodItem.pizza {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/pizza.jpg);
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/pizza.jpg);
     background-size: cover;
   }
   .foodItem.pasta {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/pasta.jpg);
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/pasta.jpg);
+    background-size: cover;
+  }
+  .foodItem.kaiserschmarrn {
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/kaiserschmarrn.jpg);
+    background-size: cover;
+  }
+  .foodItem.meatball {
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/meatball.jpg);
+    background-size: cover;
+  }
+  .foodItem.currywurst {
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/currywurst.jpg);
+    background-size: cover;
+  }
+  .foodItem.schnitzel {
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/schnitzel.jpg);
+    background-size: cover;
+  }
+  .foodItem.fish {
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/fish.jpg);
     background-size: cover;
   }
   .foodItem.soup {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/soup.jpg);
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/soup.jpg);
     background-size: cover;
   }
   .foodItem.burger {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/burger.jpg);
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/burger.jpg);
     background-size: cover;
   }
   .foodItem.generic1 {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic1.jpg);
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic1.jpg);
     background-size: cover;
   }
   .foodItem.generic2 {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic2.jpg);
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic2.jpg);
     background-size: cover;
   }
   .foodItem.generic3 {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic3.jpg);
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic3.jpg);
     background-size: cover;
   }
   .foodItem.generic4 {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic4.jpg);
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic4.jpg);
     background-size: cover;
   }
   .foodItem.generic5 {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic5.jpg);
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic5.jpg);
     background-size: cover;
   }
   .foodItem.generic6 {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic6.jpg);
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic6.jpg);
     background-size: cover;
   }
   .foodItem.generic7 {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic7.jpg);
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic7.jpg);
     background-size: cover;
   }
   .foodItem.generic8 {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic8.jpg);
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic8.jpg);
     background-size: cover;
   }
   .foodItem.generic9 {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic9.jpg);
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic9.jpg);
     background-size: cover;
   }
   .foodItem.generic10 {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic10.jpg);
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic10.jpg);
     background-size: cover;
   }
   .foodItem.generic11 {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic11.jpg);
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic11.jpg);
     background-size: cover;
   }
   .foodItem.generic12 {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic12.jpg);
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic12.jpg);
     background-size: cover;
   }
   .foodItem.generic13 {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic13.jpg);
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic13.jpg);
     background-size: cover;
   }
   .foodItem.generic14 {
-    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),url(/assets/img/food/generic14.jpg);
+    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic14.jpg);
     background-size: cover;
   }
 }
