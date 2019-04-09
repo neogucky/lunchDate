@@ -2,14 +2,14 @@
   <div class="headingSpacer">
     <img width="200" src="assets/img/app_banner.png">
   </div>
-
-  <ion-spinner *ngIf="restaurants.length === 0" color="primary" class="loadingThrobber"></ion-spinner>
-  <div *ngFor="let restaurant of getRestaurants()">
+  <h2 *ngIf="restaurantList.length === 0">{{'MEAL.NO_RESTAURANTS' | translate}}</h2>
+  <ion-spinner *ngIf="restaurants === undefined || restaurants.length === 0" color="primary" class="loadingThrobber"></ion-spinner>
+  <div *ngFor="let restaurant of restaurantList">
     <div class="restaurantItem" *ngIf="restaurant.details.type === 'scrape' && restaurant.menu.length > 0" >
       <h3>{{restaurant.details.name}} - {{restaurant.menu[0].date.seconds * 1000 | date:'dd. MMMM'}}</h3>
       <div class="foodList" >
         <div *ngFor="let meal of restaurant.menu" >
-          <div class="foodItem {{getFoodImage(meal)}}">
+          <div class="foodItem {{meal.image}}">
             <p>{{meal.foodDescription}}</p>
             <p class="price">{{meal.price}}</p>
           </div>
@@ -20,8 +20,9 @@
     <div class="restaurantItem" *ngIf="restaurant.details.type === 'link'" >
       <h3>{{restaurant.details.name}}</h3>
       <div class="foodItem generic5">
-        <h4>Speiseplan</h4>
-        <a href="https://www.uksh.de/uksh_media/Speisepl%C3%A4ne/L%C3%BCbeck+_+UKSH_Bistro/Speiseplan+Bistro+KW+{{week}}.pdf">Open PDF</a>
+        <h4>{{'MEAL.MENU' | translate}}</h4>
+        <a *ngIf="restaurant.details.uid === 'bistro_luebeck_uksh'" href="https://www.uksh.de/uksh_media/Speisepl%C3%A4ne/L%C3%BCbeck+_+UKSH_Bistro/Speiseplan+Bistro+KW+{{week}}.pdf">Open PDF</a>
+        <a *ngIf="restaurant.details.uid !== 'bistro_luebeck_uksh'" href="{{restaurant.details.url}}">Open external Weblink</a>
       </div>
       <div style="clear: left;"></div>
     </div>

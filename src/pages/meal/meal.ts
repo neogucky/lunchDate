@@ -13,6 +13,7 @@ export class MealPage {
 
     week: number;
     restaurants: any;
+    restaurantList: Array<any> = new Array<any>();
 
     constructor(public navCtrl: NavController, private backend: FirebaseService, public global: Global) {
         //needed to offer pdf menu for cafeteria
@@ -23,30 +24,30 @@ export class MealPage {
     ionViewDidLoad() {
         let self = this;
         let today = new Date();
+        console.log('meal', 'ionViewDidLoad');
 
-        //FIXME: after the timeout group should be loaded
-        setTimeout(() => {
-            self.global.group.restaurants.forEach(function(restaurantID) {
-                self.restaurants[restaurantID] = {
-                    menu: [],
-                    details: {}
-                };
-                self.backend.getMenu(restaurantID, today).subscribe(data => {
-                    self.restaurants[restaurantID].menu = [];
-                    data.forEach(function(menu) {
-                        self.restaurants[restaurantID].menu.push(menu);
-                    });
-                });
-                self.backend.getRestaurant(restaurantID).subscribe(restaurant => {
-                    self.restaurants[restaurantID].details = restaurant;
-                    console.log(self.restaurants);
-                });
-            });
-        }, 2000)
+        self.global.group.restaurants.forEach(function(restaurantID) {
+              self.restaurants[restaurantID] = {
+                  menu: [],
+                  details: {}
+              };
+              self.backend.getMenu(restaurantID, today).subscribe(data => {
+                  self.restaurants[restaurantID].menu = [];
+                  data.forEach(function(meal) {
+                      meal.image = self.getFoodImage(meal);
+                      self.restaurants[restaurantID].menu.push(meal);
+                  });
+                  self.updateRestaurantList();
+              });
+              self.backend.getRestaurant(restaurantID).subscribe(restaurant => {
+                  self.restaurants[restaurantID].details = restaurant;
+                  self.updateRestaurantList();
+              });
+          });
     }
 
-    getRestaurants() {
-        return Object.keys(this.restaurants).map(key => this.restaurants[key]);
+    updateRestaurantList() {
+      this.restaurantList = Object.keys(this.restaurants).map(key => this.restaurants[key]);
     }
 
     getFoodImage(meal) {
