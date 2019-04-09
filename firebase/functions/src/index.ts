@@ -94,6 +94,7 @@ exports.autoAddUser = functions.auth.user().onCreate((user) => {
               'roles': roles,
               'name': mailMatch,
               'mailMatch': mailMatch,
+              'restaurants': [],
               'creator': user.uid,
               'info': '',
               'createdAt': admin.firestore.Timestamp.now()
@@ -119,72 +120,94 @@ exports.newLunchDate = functions.firestore
   .document('group/{groupId}/suggestion/{suggestionId}')
   .onCreate((change, context) => {
 
-    const data = change.data();
-    const payload = {};
+      const data = change.data();
+      const payload = {};
 
-    const options = {
-      priority: "high",
-      timeToLive: 60 * 60 * 2
-    };
-
-    if (data.type === undefined || data.type !== 'now') {
-
-      //assuming datatype 'time' with fallback to earlier versions without type
-      let time = data.time.toDate();
-      const timezoneTime = time.toLocaleString("en-US", {timeZone: "Europe/Berlin"});
-      time = new Date(timezoneTime);
-      const timeFormatted = padZero(time.getHours()) + ":" + padZero(time.getMinutes());
-
-      payload['en'] = {
-        notification: {
-          title: 'Lunch at ' + timeFormatted,
-          body: 'New lunch date available at ' + timeFormatted,
-          icon: 'icon',
-          badge: '1',
-          sound: 'default'
-        }
-      }
-
-      payload['de'] = {
-        notification: {
-          title: 'Mittagessen um ' + timeFormatted,
-          body: 'Gib deinen Kollegen bescheid, ob dir ' + timeFormatted + ' passt',
-          icon: 'icon',
-          badge: '1',
-          sound: 'default'
-        }
-      }
-    } else {
-      //don't show this for a long time
-      options.timeToLive = 60 * 15;
-      payload['en'] = {
-        notification: {
-          title: 'Hungry?',
-          body: data.creator + ' wants to go for lunch in 5 minutes',
-          icon: 'icon',
-          badge: '1',
-          sound: 'default'
-        }
+      const options = {
+        priority: "high",
+        timeToLive: 60 * 60 * 2
       };
 
-      payload['de'] = {
-        notification: {
-          title: 'Hungrig?',
-          body: data.creator + ' möchte in 5 Minutes zum Essen gehen',
-          icon: 'icon',
-          badge: '1',
-          sound: 'default'
+      if (data.type === undefined || data.type !== 'now') {
+
+        //assuming datatype 'time' with fallback to earlier versions without type
+        let time = data.time.toDate();
+        const timezoneTime = time.toLocaleString("en-US", {timeZone: "Europe/Berlin"});
+        time = new Date(timezoneTime);
+        const timeFormatted = padZero(time.getHours()) + ":" + padZero(time.getMinutes());
+
+        if (data.location === undefined || data.location === 'none') {
+          payload['en'] = {
+            notification: {
+              title: 'Lunch at ' + timeFormatted,
+              body: 'A colleague wants to go for lunch',
+              icon: 'icon',
+              badge: '1',
+              sound: 'default'
+            }
+          };
+
+          payload['de'] = {
+            notification: {
+              title: 'Mittagessen um ' + timeFormatted,
+              body: 'Gib deinen Kollegen bescheid, ob dir ' + timeFormatted + ' passt',
+              icon: 'icon',
+              badge: '1',
+              sound: 'default'
+            }
+          };
+        } else {
+            payload['en'] = {
+              notification: {
+                title: 'Lunch at ' + timeFormatted,
+                body: 'New lunch date available at restaurant: "' + data.locationName + '"',
+                icon: 'icon',
+                badge: '1',
+                sound: 'default'
+              }
+            };
+
+            payload['de'] = {
+              notification: {
+                title: 'Mittagessen um ' + timeFormatted,
+                body: 'Gib deinen Kollegen bescheid, ob dir ' + timeFormatted + ' im Restaurant: "' + data.locationName + '" passt',
+                icon: 'icon',
+                badge: '1',
+                sound: 'default'
+              }
+          };
+        }
+      } else {
+        //don't show this for a long time
+        options.timeToLive = 60 * 15;
+        payload['en'] = {
+          notification: {
+            title: 'Hungry?',
+            body: data.creator + ' wants to go for lunch in 5 minutes',
+            icon: 'icon',
+            badge: '1',
+            sound: 'default'
+          }
+        };
+
+        payload['de'] = {
+          notification: {
+            title: 'Hungrig?',
+            body: data.creator + ' möchte in 5 Minutes zum Essen gehen',
+            icon: 'icon',
+            badge: '1',
+            sound: 'default'
+          }
         }
       }
-    }
 
-    pushToGroup(payload['de'], context.params.groupId, 'de').then(
-      () => {
-        return pushToGroup(payload['en'], context.params.groupId, 'en');
-      }
-    ).catch(err => {
-      console.log('Error in pushToGroup', err);
-    });
+      pushToGroup(payload['de'], context.params.groupId, 'de').then(
+        () => {
+          return pushToGroup(payload['en'], context.params.groupId, 'en');
+        }
+      ).catch(err => {
+        console.log('Error in pushToGroup', err);
+      });
 
   });
 
