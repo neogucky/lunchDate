@@ -44,7 +44,8 @@ export class SignupPage {
     this.auth.signUp(credentials).then(
       () => {
         self.auth.sendEmailVerification();
-        this.navCtrl.setRoot(HomePage);
+        this.navCtrl.pop();
+        //FIXME: Add credentials for easier login
       },
       error => this.signupError = error.message
     );

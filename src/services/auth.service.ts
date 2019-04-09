@@ -4,7 +4,7 @@ import * as firebase from 'firebase/app';
 
 @Injectable()
 export class AuthService {
-	private user: firebase.User;
+	public user: firebase.User;
 	private verifyUserWhenReady: boolean;
 
 	constructor(public afAuth: AngularFireAuth) {

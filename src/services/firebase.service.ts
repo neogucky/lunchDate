@@ -22,7 +22,9 @@ export class FirebaseService {
 		.catch((error) => {
 			// console.log('Error updating user', error); // (document does not exists)
 			this.afs.doc('participants/'+this.auth.uid)
-			  .set({name: value});
+			  .set({name: value}).catch(e => {
+        console.log(e);
+      });
 		});
     }
 
@@ -35,7 +37,9 @@ export class FirebaseService {
 			.catch((error) => {
 				// console.log('Error updating user', error); // (document does not exists)
 				this.afs.doc('participants/'+this.auth.uid)
-					.set({allowPush: value});
+					.set({allowPush: value}).catch(e => {
+          console.log(e);
+        });
 			});
 	}
 
@@ -48,7 +52,9 @@ export class FirebaseService {
 			.catch((error) => {
 				// console.log('Error updating user', error); // (document does not exists)
 				this.afs.doc('participants/'+this.auth.uid)
-					.set({allowReminder: value});
+					.set({allowReminder: value}).catch(e => {
+          console.log(e);
+        });
 			});
 	}
 
@@ -71,7 +77,9 @@ export class FirebaseService {
 		.catch((error) => {
 			// console.log('Error updating user', error); // (document does not exists)
 			this.afs.doc('participants/'+this.auth.uid)
-			  .set({FCMtoken: value});
+			  .set({FCMtoken: value}).catch(e => {
+        console.log(e);
+      });
 		});
 	}
 
@@ -83,24 +91,34 @@ export class FirebaseService {
 			.add({time: currentTime,
 				id: uniqueID,
 				type: 'now',
-				creator: this.global.user.name});
+				creator: this.global.user.name}).catch(e => {
+      console.log(e);
+    });
 		return uniqueID;
 	}
 
-	addSuggestion(time) {
+	addSuggestion(time, restaurantID, restaurantName) {
 		var uniqueID = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(2, 10);
 		this.afs.collection('group/'+ this.global.user.group +'/suggestion/')
 			  .add({time: time,
 					id: uniqueID,
 			  		type: 'time',
+            restaurantID: restaurantID,
+            restaurantName: restaurantName,
 				  	creator: this.global.user.name
-			  });
+			  }).catch(e => {
+      console.log(e);
+    });
 		return uniqueID;
 	}
 
   getRestaurant(restaurantID) : any {
-
     return this.afs.doc('restaurants/'+restaurantID)
+      .valueChanges();
+  }
+
+  getRestaurantList() : any {
+    return this.afs.collection<any>('restaurants/')
       .valueChanges();
   }
 
@@ -142,16 +160,23 @@ export class FirebaseService {
 
 	unparticipate() {
 		this.afs.doc('participants/'+this.auth.uid)
-			  .update({suggestionID: ' '});
+			  .update({suggestionID: ' '}).catch(e => {
+      console.log(e);
+    });
 	}
 
 	participate(id) {
 		this.afs.doc('participants/'+this.auth.uid)
-			  .update({suggestionID: id});
+			  .update({suggestionID: id}).catch(e => {
+      console.log(e);
+    });
 	}
 
 	setLanguage(language: string) {
     this.afs.doc('participants/'+this.auth.uid)
-      .update({language: language});
+      .update({language: language}).catch(e => {
+        console.log(e);
+    });
   }
+
 }

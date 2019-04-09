@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {FormGroup, FormBuilder, Validators} from '@angular/forms';
-import {NavController} from 'ionic-angular';
+import {App, NavController} from 'ionic-angular';
 import {HomePage} from '../home/home';
 import {ToastController} from 'ionic-angular';
 import {AuthService} from '../../services/auth.service';
@@ -11,6 +11,9 @@ import firebase from 'firebase/app';
 import {Storage} from '@ionic/storage';
 import {AppVersion} from '@ionic-native/app-version';
 import {Global} from "../../services/global";
+import {FirebaseService} from "../../services/firebase.service";
+import {FCM} from "@ionic-native/fcm";
+
 
 @Component({
   selector: 'page-login',
@@ -34,7 +37,10 @@ export class LoginPage {
     private platform: Platform,
     private storage: Storage,
     public global: Global,
-    private appVersion: AppVersion
+    private appVersion: AppVersion,
+    private app: App,
+    private backend: FirebaseService,
+    public fcm: FCM
   ) {
     console.log(this.platform);
     this.loginForm = fb.group({
@@ -59,7 +65,7 @@ export class LoginPage {
             console.log('splash  user');
 
             //Homepage handles splash screen hiding
-            self.navCtrl.setRoot(HomePage);
+            this.loadApp();
           } else {
             console.log('splash no user');
             this.splashScreen.hide();
@@ -104,11 +110,68 @@ export class LoginPage {
       email: data.email,
       password: data.password
     };
+
+    console.log(this.auth);
     this.auth.signInWithEmail(credentials)
       .then(
-        () => this.navCtrl.setRoot(HomePage),
+        () => this.loadApp(),
         error => this.loginError = error.message
       );
+  }
+
+  loadApp() {
+    console.log('loadApp');
+    console.log(this.auth);
+
+    if (this.auth === undefined || this.auth.user === undefined ||  this.auth.user === null) {
+      console.log('Failure while logging in. Logging in again');
+      this.login();
+      return;
+    }
+
+    //get push token
+    if (!this.platform.is('core') && !this.platform.is('mobileweb')) {
+      this.fcm.getToken().then(token => {
+        this.backend.updateFCMToken(token);
+      });
+    }
+
+    let initFinished = false;
+    console.log(this.auth.uid);
+    this.backend.getUser().subscribe(data => {
+      if (data !== undefined && data.name !== undefined) {
+
+        //activate push & reminder by default
+        if (data.allowPush === undefined) {
+          data.allowPush = true;
+        }
+        if (data.allowReminder === undefined) {
+          data.allowReminder = true;
+        }
+        this.global.user = data;
+      } else {
+        this.global.user = {};
+      }
+
+      //get group
+      this.backend.getGroup().subscribe(data => {
+        this.global.group = data;
+
+        //run this only once
+        if (!initFinished) {
+          setTimeout(() => {
+            this.splashScreen.hide();
+            console.log('end splash autologin');
+          }, 1000);
+
+          //FIXME: this should be done only once when first setting the language
+          this.backend.setLanguage(this.global.language);
+
+          initFinished = true;
+          this.navCtrl.setRoot(HomePage);
+        }
+      });
+    });
   }
 
   signup() {
@@ -133,7 +196,7 @@ export class LoginPage {
 
   hiddenDebugJump() {
     if (this.hiddenCounter++ == 5) {
-      this.navCtrl.setRoot(HomePage)
+      this.loadApp();
     }
   }
 

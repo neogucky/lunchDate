@@ -134,8 +134,12 @@ export class SettingsPage {
   }
 
   logout() {
-    this.auth.signOut();
-    this.events.publish('navigate:loginpage');
+    this.auth.signOut().then( () => {
+      location.reload();
+      }
+    ).catch(e => {
+      console.log(e);
+    });
   }
 
 
