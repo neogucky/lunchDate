@@ -18,12 +18,26 @@
         <ion-label>
           {{suggestion.time.toDate() | date:"HH:mm"}}
         </ion-label>
-        <div item-content class="participants">
-          {{getParticipants(suggestion.id).simple}} <a (click)="showParticipants(suggestion.id)"
-                                                       *ngIf="getParticipants(suggestion.id).extended !== ''">{{getParticipants(suggestion.id).extended}}</a>
+        <div item-content class="item-content">
+          <div class="participants">
+            {{getParticipants(suggestion.id).simple}} <a (click)="showParticipants(suggestion.id)"
+                                                         *ngIf="getParticipants(suggestion.id).extended !== ''">{{getParticipants(suggestion.id).extended}}</a>
+          </div>
+          <div class="actionBar">
+            <ion-icon *ngIf="suggestion.restaurantID !== undefined && suggestion.restaurantID !== 'none'" color="primary" name="restaurant" class="restaurant"></ion-icon>
+            <div *ngIf="suggestion.restaurantID !== undefined && suggestion.restaurantID !== 'none'" class="location">
+              {{suggestion.restaurantName}}
+            </div>
+            <ion-icon *ngIf="suggestion.restaurantID === undefined || suggestion.restaurantID === 'none'" name="restaurant" class="restaurant"></ion-icon>
+            <div *ngIf="suggestion.restaurantID === undefined || suggestion.restaurantID === 'none'"  class="location">
+              {{'TIME.RESTAURANT_NONE' | translate}}
+            </div>
+
+          <button  ion-button clear (click)="switchParticipation(suggestion.id)"
+                  item-end>{{ getParticipationString(suggestion.id) }}</button>
+          </div>
+          <div style="clear:both;"></div>
         </div>
-        <button ion-button (click)="switchParticipation(suggestion.id)" outline
-                item-end>{{ getParticipationString(suggestion.id) }}</button>
       </ion-item>
       <ion-item>
         <ion-label>
@@ -32,14 +46,14 @@
         <div item-content class="participants">
           {{getParticipants('busy').simple}}
         </div>
-        <button ion-button (click)="switchParticipation('busy')" outline item-end>{{ getParticipationString('busy') }}
+        <button ion-button (click)="switchParticipation('busy')" class="busybutton" clear item-end>{{ getParticipationString('busy') }}
           <a *ngIf="getParticipants('busy').extended !== ''">{{getParticipants('busy').extended}}</a></button>
       </ion-item>
     </ion-list>
     <br>
     <br>
 
-    <ion-col (click)="datePicker.open()" width-50>
+    <ion-col (click)="presentModal();" width-50>
       <ion-icon color="primary" name="clock" id="addDate"></ion-icon>
 
       <ion-item no-lines hidden="true">
@@ -55,6 +69,5 @@
     <ion-col (click)="addSuggestionNow()" width-50>
       <ion-icon color="primary" name="megaphone" id="goNow"></ion-icon>
     </ion-col>
-
   </div>
 </ion-content>

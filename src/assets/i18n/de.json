@@ -43,9 +43,15 @@
   "TIME.SHOUT_CONFIRM": "Kollegen fragen",
   "TIME.SHOUT_CANCEL": "Abbrechen",
   "TIME.MEET_REMINDER": "Mach dich bereit, in 5 Minuten gibt es Mittag!",
+  "TIME.ADD_NEW_CAPTION": "Erstelle einen Termin",
+  "TIME.RESTAURANT": "Restaurantvorschlag",
+  "TIME.RESTAURANT_NONE": "Freie Wahl",
+  "TIME.SELECT_TIME": "Uhrzeit",
+  "TIME.ADD_TIME": "Vorschlagen",
+  "TIME.CANCEL_TIME": "Abbrechen",
 
-  "MEAL.TITLE": "Unter Bearbeitung",
-  "MEAL.EXPLANATION": "Geplantes Feature: Hier kannst du durch swipen das für dich passenste Gericht finden.",
+  "MEAL.MENU": "Speiseplan",
+  "MEAL.NO_RESTAURANTS": "In Ihrer Gruppe sind noch keine Restaurants verfügbar",
 
   "SETTINGS.LOGOUT": "ausloggen",
   "SETTINGS.NAME": "Dein Name",

@@ -8,6 +8,9 @@ import {Platform} from 'ionic-angular';
 import {AlertController} from 'ionic-angular';
 import * as moment from 'moment';
 import {TranslateService} from '@ngx-translate/core';
+import { ModalController } from 'ionic-angular';
+import { ModalNew } from '../../pages/time/modal/new';
+
 
 @Component({
   selector: 'page-time',
@@ -18,9 +21,9 @@ export class TimePage {
   suggestionList: any;
   participantMap: any;
   participants: any;
-  selectedTime: String = "11:30";
   suggestionSubscription: any;
   dayStamp: number;
+  restaurantMap: any = {};
 
   @ViewChild('datePicker') datePicker;
 
@@ -54,17 +57,18 @@ export class TimePage {
     private localNotifications: LocalNotifications,
     public alertCtrl: AlertController,
     private platform: Platform,
-    private translate: TranslateService) {
+    private translate: TranslateService,
+    public modalController: ModalController) {
 
     this.participantMap = {};
 
     let today = new Date();
 
-    var self = this;
+    let self = this;
     this.dayStamp = today.getDay();
 
     //Load language
-    for (var key in self.LANGUAGE) {
+    for (let key in self.LANGUAGE) {
       translate.get(self.LANGUAGE[key]).subscribe(
         value => {
           // value is our translated string
@@ -72,6 +76,12 @@ export class TimePage {
         }
       )
     }
+
+    self.backend.getRestaurantList().subscribe(data => {
+      data.forEach( (restaurant) => {
+        self.restaurantMap[restaurant.uid] = restaurant;
+      })
+    });
 
     document.addEventListener("resume", this.onResume.bind(this), false);
 
@@ -193,21 +203,22 @@ export class TimePage {
     setTimeout(this.suggestDate.bind(this), 500);
   }
 
-  suggestDate() {
+  suggestDate(time, locationID) {
 
     //FIXME: remove unsexy js workarround due to not binding Date object
-    var selectedTime = new Date();
-    selectedTime.setHours(Number(this.selectedTime.substring(0, 2)));
-    selectedTime.setMinutes(Number(this.selectedTime.substring(3, 5)));
+    const selectedTime = new Date();
+    selectedTime.setHours(Number(time.substring(0, 2)));
+    selectedTime.setMinutes(Number(time.substring(3, 5)));
 
-    var error = false;
-    var self = this;
+    let error = false;
+    const self = this;
     if (this.suggestionList !== undefined) {
       this.suggestionList.forEach(
         function (suggestion) {
           let suggestionDate = suggestion.time.toDate();
-          if (suggestionDate.getMinutes() == selectedTime.getMinutes()
-            && suggestionDate.getHours() == selectedTime.getHours()) {
+          if (suggestionDate.getMinutes() === selectedTime.getMinutes()
+            && suggestionDate.getHours() === selectedTime.getHours()
+            && suggestion.restaurantID === locationID) {
             //date already exists
             self.switchParticipation(suggestion.id);
             error = true;
@@ -217,7 +228,11 @@ export class TimePage {
     }
 
     if (!error) {
-      var id = this.backend.addSuggestion(selectedTime);
+      let locationName = "";
+      if (locationID !== 'none'){
+        locationName = self.restaurantMap[locationID].name;
+      }
+      const id = self.backend.addSuggestion(selectedTime, locationID, locationName);
       setTimeout(function () {
         self.switchParticipation(id);
       }, 500);
@@ -257,5 +272,17 @@ export class TimePage {
         this.suggestionList = data;
       });
     }
+  }
+
+  async presentModal() {
+    const self = this;
+    let modal = this.modalController.create(ModalNew, {'restaurtantList': this.global.group.restaurants, 'restaurantMap': this.restaurantMap});
+    modal.onDidDismiss(data => {
+      if (data !== undefined){
+        console.log(data);
+        self.suggestDate(data.selectedTime, data.restaurant);
+      }
+    });
+    modal.present();
   }
 }

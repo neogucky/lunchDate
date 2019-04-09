@@ -12,6 +12,8 @@ import { HttpClientModule, HttpClient } from '@angular/common/http';
 
 import { MealPage } from '../pages/meal/meal';
 import { TimePage } from '../pages/time/time';
+import { ModalNew } from '../pages/time/modal/new';
+
 import { SettingsPage } from '../pages/settings/settings';
 
 import { MyApp } from './app.component';
@@ -47,7 +49,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 		TimePage,
 		SettingsPage,
 		LoginPage,
-		SignupPage
+		SignupPage,
+    ModalNew
 	],
 	imports: [
 		BrowserModule,
@@ -72,7 +75,8 @@ export function HttpLoaderFactory(http: HttpClient) {
 		TimePage,
 		SettingsPage,
 		LoginPage,
-		SignupPage
+		SignupPage,
+    ModalNew
 	],
 	providers: [
 		StatusBar,

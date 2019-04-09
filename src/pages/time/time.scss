@@ -16,10 +16,45 @@ page-time {
     text-align: center;
   }
 
-  div.participants {
-    width: 100%;
-    text-align: right;
+  div.participants,
+  div.location{
+    text-align: left;
     font-size: smaller;
+  }
+
+  div.item-content {
+    padding: 7px 0 5px 0;
+  }
+
+  div.actionBar {
+    display: block;
+    width: 100%;
+    margin-top: 5px;
+  }
+
+  button.busybutton,
+  div.actionBar button.item-button {
+    margin: 0!important;
+    float: right;
+    position: absolute;
+    right: 6px;
+    bottom: 8px;
+  }
+
+  button.busybutton {
+    bottom: 12px!important;
+  }
+
+  div.actionBar div.location {
+    position: relative;
+    padding: 6px 0;
+    float: left;
+  }
+
+  div.actionBar ion-icon.restaurant {
+    margin: 7px 5px 0px 0;
+    float: left;
+    font-size: 1em;
   }
 
   button.item-button.button.button-md.button-outline.button-outline-md {
