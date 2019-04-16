@@ -15,7 +15,7 @@
     <ion-list>
 
       <ion-item *ngFor="let suggestion of suggestionList">
-        <ion-label>
+        <ion-label class="time">
           {{suggestion.time.toDate() | date:"HH:mm"}}
         </ion-label>
         <div item-content class="item-content">

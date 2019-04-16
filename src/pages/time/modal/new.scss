@@ -4,4 +4,23 @@ new-time {
     float: right;
   }
 
+  ion-header div.toolbar-background {
+    background-image: url(/assets/img/food/newDate.jpg);
+    background-size: cover;
+    background-position: center;
+  }
+
+  ion-header,
+  ion-header ion-toolbar.toolbar-md {
+    min-height: 150px;
+  }
+
+  ion-content .scroll-content {
+    margin-top: 155px!important;
+  }
+
+  h1 {
+    display: none;
+  }
+
 }

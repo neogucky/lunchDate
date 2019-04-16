@@ -16,6 +16,11 @@ page-time {
     text-align: center;
   }
 
+  .time.label {
+    overflow: visible;
+    text-overflow: unset;
+  }
+
   div.participants,
   div.location{
     text-align: left;
