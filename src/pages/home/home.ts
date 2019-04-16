@@ -36,6 +36,7 @@ export class HomePage {
 
   ionViewDidLoad() {
     if (this.auth.authenticated) {
+      console.log(this.global);
       if (this.global !== undefined && this.global.user !== undefined && this.global.user.name !== undefined && this.global.user.name !== "") {
         console.log('Go directly to time page');
         this.tabs.select(1);

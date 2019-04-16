@@ -139,7 +139,7 @@ export class LoginPage {
     let initFinished = false;
     console.log(this.auth.uid);
     this.backend.getUser().subscribe(data => {
-      if (data !== undefined && data.name !== undefined) {
+      if (data !== undefined ) {
 
         //activate push & reminder by default
         if (data.allowPush === undefined) {
@@ -149,13 +149,20 @@ export class LoginPage {
           data.allowReminder = true;
         }
         this.global.user = data;
+      } else if (data.name !== undefined) {
+        this.global.user = data;
       } else {
-        this.global.user = {};
+        this.global.user = { name: ''};
       }
 
       //get group
       this.backend.getGroup().subscribe(data => {
-        this.global.group = data;
+        console.log(data);
+        if (data !== undefined && data.name !== undefined) {
+          this.global.group = data;
+        } else {
+          this.global.group = {name: 'none', roles: []};
+        }
 
         //run this only once
         if (!initFinished) {
@@ -175,7 +182,15 @@ export class LoginPage {
   }
 
   signup() {
-    this.navCtrl.push(SignupPage);
+    const self = this;
+    const signupCallback = function (username, password) {
+      return new Promise((resolve, reject) => {
+        self.username = username;
+        self.password = password;
+        resolve();
+      });
+    }
+    this.navCtrl.push(SignupPage, {callback: signupCallback});
   }
 
   onStaySignedin() {
@@ -199,5 +214,6 @@ export class LoginPage {
       this.loadApp();
     }
   }
+
 
 }
