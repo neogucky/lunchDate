@@ -26,24 +26,26 @@ export class MealPage {
         let today = new Date();
         console.log('meal', 'ionViewDidLoad');
 
-        self.global.group.restaurants.forEach(function(restaurantID) {
-              self.restaurants[restaurantID] = {
-                  menu: [],
-                  details: {}
-              };
-              self.backend.getMenu(restaurantID, today).subscribe(data => {
-                  self.restaurants[restaurantID].menu = [];
-                  data.forEach(function(meal) {
-                      meal.image = self.getFoodImage(meal);
-                      self.restaurants[restaurantID].menu.push(meal);
-                  });
-                  self.updateRestaurantList();
+        if ( self.global.group !== undefined && self.global.group.restaurants !== undefined) {
+          self.global.group.restaurants.forEach(function (restaurantID) {
+            self.restaurants[restaurantID] = {
+              menu: [],
+              details: {}
+            };
+            self.backend.getMenu(restaurantID, today).subscribe(data => {
+              self.restaurants[restaurantID].menu = [];
+              data.forEach(function (meal) {
+                meal.image = self.getFoodImage(meal);
+                self.restaurants[restaurantID].menu.push(meal);
               });
-              self.backend.getRestaurant(restaurantID).subscribe(restaurant => {
-                  self.restaurants[restaurantID].details = restaurant;
-                  self.updateRestaurantList();
-              });
+              self.updateRestaurantList();
+            });
+            self.backend.getRestaurant(restaurantID).subscribe(restaurant => {
+              self.restaurants[restaurantID].details = restaurant;
+              self.updateRestaurantList();
+            });
           });
+        }
     }
 
     updateRestaurantList() {
@@ -60,6 +62,11 @@ export class MealPage {
             meal.foodDescription.includes("Spaghetti") ||
             meal.foodDescription.includes("Gnocchi")) {
             return "pasta";
+        } else if (meal.foodDescription.includes("Bockwurst") ||
+          meal.foodDescription.includes("Wurst") ||
+          meal.foodDescription.includes("Würste") ||
+          meal.foodDescription.includes("Sausage")) {
+          return "sausage";
         } else if (meal.foodDescription.includes("Suppe") ||
             meal.foodDescription.includes("suppe") ||
             meal.foodDescription.includes("Eintopf") ||
@@ -83,12 +90,22 @@ export class MealPage {
             meal.foodDescription.includes("Hackbraten")) {
             return "meatball";
         } else if (meal.foodDescription.includes("Fisch") ||
-            meal.foodDescription.includes("lachs") ||
-            meal.foodDescription.includes("Lachs") ||
-            meal.foodDescription.includes("Forelle") ||
-            meal.foodDescription.includes("forelle") ||
-            meal.foodDescription.includes("fisch")) {
-            return "fish";
+          meal.foodDescription.includes("lachs") ||
+          meal.foodDescription.includes("Lachs") ||
+          meal.foodDescription.includes("Forelle") ||
+          meal.foodDescription.includes("forelle") ||
+          meal.foodDescription.includes("fisch")) {
+          return "fish";
+        } else if (meal.foodDescription.includes("Chicken Crossies") ||
+          meal.foodDescription.includes("Chicken Nuggets") ||
+          meal.foodDescription.includes("Chicken-Crossies") ||
+          meal.foodDescription.includes("Chicken-Nuggets")) {
+          return "nuggets";
+        } else if (meal.foodDescription.includes("Apfelstrudel") ) {
+          return "strudel";
+        } else if (meal.foodDescription.includes("Curry") ||
+          meal.foodDescription.includes("curry") ) {
+          return "curry";
         } else {
             let random = meal.foodDescription.length % 13 + 1;
             return "generic" + random;
