@@ -136,7 +136,7 @@ exports.newLunchDate = functions.firestore
         time = new Date(timezoneTime);
         const timeFormatted = padZero(time.getHours()) + ":" + padZero(time.getMinutes());
 
-        if (data.location === undefined || data.location === 'none') {
+        if (data.restaurantID === undefined || data.restaurantID === 'none') {
           payload['en'] = {
             notification: {
               title: 'Lunch at ' + timeFormatted,
@@ -160,7 +160,7 @@ exports.newLunchDate = functions.firestore
             payload['en'] = {
               notification: {
                 title: 'Lunch at ' + timeFormatted,
-                body: 'New lunch date available at restaurant: "' + data.locationName + '"',
+                body: 'New lunch date available at restaurant: "' + data.restaurantName + '"',
                 icon: 'icon',
                 badge: '1',
                 sound: 'default'
@@ -170,7 +170,7 @@ exports.newLunchDate = functions.firestore
             payload['de'] = {
               notification: {
                 title: 'Mittagessen um ' + timeFormatted,
-                body: 'Gib deinen Kollegen bescheid, ob dir ' + timeFormatted + ' im Restaurant: "' + data.locationName + '" passt',
+                body: 'Gib deinen Kollegen bescheid, ob dir ' + timeFormatted + ' im Restaurant: "' + data.restaurantName + '" passt',
                 icon: 'icon',
                 badge: '1',
                 sound: 'default'
@@ -301,13 +301,14 @@ exports.loadMenus = functions.https.onRequest((req, res) => {
     .then(($) => {
       const todaysMenu = $('#days').find('.today').find('tr');
       todaysMenu.each(function(i, foodItem) {
+        $(foodItem).find('br').replaceWith(' ');
         //skipping first row (header)
         if (i > 0){
           console.log('try adding food item: ' + $(foodItem).find('strong').text());
           admin.firestore().collection('menu').add({
             'cantineID': 'mensa',
             'foodTitle': $(foodItem).find('strong').text().split(' ')[0],
-            'foodDescription': $(foodItem).find('strong').text(),
+            'foodDescription': $(foodItem).find('strong').text().replace(/\n/g, " "),
             'price':  $(foodItem).find('td').last().text(),
             'date': admin.firestore.Timestamp.now()
           }).catch(err => console.log(err));
@@ -377,6 +378,7 @@ exports.loadMenus2 = functions.https.onRequest((req, res) => {
             .then(($) => {
               const todaysMenu = $('#days').find('.today').find('tr');
               todaysMenu.each(function (i, foodItem) {
+                $(foodItem).find('br').replaceWith(' ');
                 //skipping first row (header)
                 if (i > 0) {
                   console.log('try adding food item: ' + $(foodItem).find('strong').text());
@@ -387,6 +389,84 @@ exports.loadMenus2 = functions.https.onRequest((req, res) => {
                     'price': $(foodItem).find('td').last().text(),
                     'date': admin.firestore.Timestamp.now()
                   }).catch(err => console.log(err));
+                }
+              });
+            })
+            .catch(function (err) {
+              console.log(err);
+            });
+        } else if (restaurant.uid === "bistro_luebeck_uksh") {
+          let title, description, price;
+          rp(options)
+            .then(($) => {
+              const todaysMenu = $($('tr').find('td')[3]).find('p');
+              todaysMenu.each(function (i, foodSegment) {
+                /*  Structure:
+                  * <p>Title</p>
+                  * <p>Description</p>
+                  * <p>calories</p>
+                  * <p>price</p>
+                  */
+                $(foodSegment).find('br').replaceWith(' ');
+                switch (i % 4) {
+                  case 0:
+                      title = $(foodSegment).text();
+                      break;
+                  case 1:
+                      description = title + "\n" + $(foodSegment).text();
+                      break;
+                  case 2:
+                      break;
+                  case 3:
+                      price = $(foodSegment).text();
+                      console.log('try adding food item: ' + title);
+                      db.collection('restaurants/' + restaurant.uid + '/menu').add({
+                        'cantineID': restaurant.uid,
+                        'foodTitle': title,
+                        'foodDescription': description,
+                        'price': price,
+                        'date': admin.firestore.Timestamp.now()
+                      }).catch(err => console.log(err));
+                      break;
+                }
+              });
+            })
+            .catch(function (err) {
+              console.log(err);
+            });
+        } else if (restaurant.uid === "cafeteria_luebeck_uksh") {
+          let title, description, price;
+          rp(options)
+            .then(($) => {
+              const todaysMenu = $($('tr').find('td')[1]).find('p');
+              todaysMenu.each(function (i, foodSegment) {
+                /*  Structure:
+                  * <p>Title</p>
+                  * <p>Description</p>
+                  * <p>calories</p>
+                  * <p>price</p>
+                  */
+                $(foodSegment).find('br').replaceWith(' ');
+                switch (i % 4) {
+                  case 0:
+                    title = $(foodSegment).text();
+                    break;
+                  case 1:
+                    description = title + "\n" + $(foodSegment).text();
+                    break;
+                  case 2:
+                    break;
+                  case 3:
+                    price = $(foodSegment).text();
+                    console.log('try adding food item: ' + title);
+                    db.collection('restaurants/' + restaurant.uid + '/menu').add({
+                      'cantineID': restaurant.uid,
+                      'foodTitle': title,
+                      'foodDescription': description,
+                      'price': price,
+                      'date': admin.firestore.Timestamp.now()
+                    }).catch(err => console.log(err));
+                    break;
                 }
               });
             })
