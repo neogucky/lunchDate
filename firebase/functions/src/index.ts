@@ -227,7 +227,7 @@ function loadUsers(group, language) {
         snapshot.forEach(doc => {
           const participant = doc.data();
           //FIXME: (participant.busyUntil === undefined || participant.busyUntil.seconds < now.getSeconds())
-          if (participant.FCMtoken !== undefined && (participant.suggestionID !== -1) && (participant.language === language || (participant.language === undefined && language === defaultLanguage))) {
+          if (participant.FCMtoken !== undefined && (participant.suggestionID !== 'busy') && (participant.language === language || (participant.language === undefined && language === defaultLanguage))) {
             users.push(participant);
           }
         });
@@ -381,11 +381,23 @@ exports.loadMenus2 = functions.https.onRequest((req, res) => {
                 $(foodItem).find('br').replaceWith(' ');
                 //skipping first row (header)
                 if (i > 0) {
-                  console.log('try adding food item: ' + $(foodItem).find('strong').text());
+                  let ingredients = '';
+                  //first extract all ingredients which are listed in brackets
+                  if ( /\(.*?\)/.test( $(foodItem).find('strong').text())) {
+                    ingredients = $(foodItem).find('strong').text().match(/\(.*?\)/).join(', ');
+                    //re-convert to array since more than one ingredient can be in one bracket and we don't wont duplicates
+                    const ingredientSet = [...new Set(ingredients.split(', '))];
+                    ingredients = ingredientSet.join(', ');
+                  }
+
+                  //add description without ingredients
+                  let description = $(foodItem).find('strong').text().replace(/ *\([^)]*\) */g, "");
+
                   db.collection('restaurants/' + restaurant.uid + '/menu').add({
                     'cantineID': restaurant.uid,
                     'foodTitle': $(foodItem).find('strong').text().split(' ')[0],
-                    'foodDescription': $(foodItem).find('strong').text(),
+                    'foodDescription': description,
+                    'foodIngredients': ingredients,
                     'price': $(foodItem).find('td').last().text(),
                     'date': admin.firestore.Timestamp.now()
                   }).catch(err => console.log(err));
@@ -396,7 +408,8 @@ exports.loadMenus2 = functions.https.onRequest((req, res) => {
               console.log(err);
             });
         } else if (restaurant.uid === "bistro_luebeck_uksh") {
-          let title, description, price;
+          let title, description, price, ingredients;
+          let skippedEntries = 0;
           rp(options)
             .then(($) => {
               const todaysMenu = $($('tr').find('td')[3]).find('p');
@@ -404,29 +417,48 @@ exports.loadMenus2 = functions.https.onRequest((req, res) => {
                 /*  Structure:
                   * <p>Title</p>
                   * <p>Description</p>
-                  * <p>calories</p>
+                  * <p>calories</p> (optional)
                   * <p>price</p>
+                  * <div style="clear"></div>
                   */
                 $(foodSegment).find('br').replaceWith(' ');
-                switch (i % 4) {
+                switch ((i + skippedEntries) % 4) {
                   case 0:
                       title = $(foodSegment).text();
                       break;
                   case 1:
-                      description = title + "\n" + $(foodSegment).text();
+                    //first extract all ingredients which are listed in brackets
+                    if ( /\(.*?\)/.test($(foodSegment).text())) {
+                      ingredients = $(foodSegment).text().match(/\(.*?\)/).join(', ');
+                      //re-convert to array since more than one ingredient can be in one bracket and we don't wont duplicates
+                      const ingredientSet = [...new Set(ingredients.split(', '))];
+                      ingredients = ingredientSet.join(', ');
+                    } else {
+                      ingredients = '';
+                    }
+
+                    //add description without ingredients
+                    description = title + "\n" + $(foodSegment).text().replace(/ *\([^)]*\) */g, "");
                       break;
                   case 2:
-                      break;
                   case 3:
-                      price = $(foodSegment).text();
-                      console.log('try adding food item: ' + title);
-                      db.collection('restaurants/' + restaurant.uid + '/menu').add({
-                        'cantineID': restaurant.uid,
-                        'foodTitle': title,
-                        'foodDescription': description,
-                        'price': price,
-                        'date': admin.firestore.Timestamp.now()
-                      }).catch(err => console.log(err));
+                      if ($(foodSegment).text().includes('kcal')) {
+                        // set calories
+                      } else {
+                        price = $(foodSegment).text();
+                        console.log('try adding food item: ' + title);
+                        db.collection('restaurants/' + restaurant.uid + '/menu').add({
+                          'cantineID': restaurant.uid,
+                          'foodTitle': title,
+                          'foodDescription': description,
+                          'foodIngredients': ingredients,
+                          'price': price,
+                          'date': admin.firestore.Timestamp.now()
+                        }).catch(err => console.log(err));
+                        if (i % 4 === 2) {
+                          skippedEntries++;
+                        }
+                      }
                       break;
                 }
               });
@@ -435,7 +467,8 @@ exports.loadMenus2 = functions.https.onRequest((req, res) => {
               console.log(err);
             });
         } else if (restaurant.uid === "cafeteria_luebeck_uksh") {
-          let title, description, price;
+          let title, description, price, ingredients;
+          let skippedEntries = 0;
           rp(options)
             .then(($) => {
               const todaysMenu = $($('tr').find('td')[1]).find('p');
@@ -447,25 +480,43 @@ exports.loadMenus2 = functions.https.onRequest((req, res) => {
                   * <p>price</p>
                   */
                 $(foodSegment).find('br').replaceWith(' ');
-                switch (i % 4) {
+                switch ((i + skippedEntries) % 4) {
                   case 0:
                     title = $(foodSegment).text();
                     break;
                   case 1:
-                    description = title + "\n" + $(foodSegment).text();
+                    //first extract all ingredients which are listed in brackets
+                    if ( /\(.*?\)/.test($(foodSegment).text())) {
+                      ingredients = $(foodSegment).text().match(/\(.*?\)/).join(', ');
+                      //re-convert to array since more than one ingredient can be in one bracket and we don't wont duplicates
+                      const ingredientSet = [...new Set(ingredients.split(', '))];
+                      ingredients = ingredientSet.join(', ');
+                    } else {
+                      ingredients = '';
+                    }
+
+                    //add description without ingredients
+                    description = title + "\n" + $(foodSegment).text().replace(/ *\([^)]*\) */g, " ");
                     break;
                   case 2:
-                    break;
                   case 3:
-                    price = $(foodSegment).text();
-                    console.log('try adding food item: ' + title);
-                    db.collection('restaurants/' + restaurant.uid + '/menu').add({
-                      'cantineID': restaurant.uid,
-                      'foodTitle': title,
-                      'foodDescription': description,
-                      'price': price,
-                      'date': admin.firestore.Timestamp.now()
-                    }).catch(err => console.log(err));
+                    if ($(foodSegment).text().includes('kcal')) {
+                      // set calories
+                    } else {
+                      price = $(foodSegment).text();
+                      console.log('try adding food item: ' + title);
+                      db.collection('restaurants/' + restaurant.uid + '/menu').add({
+                        'cantineID': restaurant.uid,
+                        'foodTitle': title,
+                        'foodDescription': description,
+                        'foodIngredients': ingredients,
+                        'price': price,
+                        'date': admin.firestore.Timestamp.now()
+                      }).catch(err => console.log(err));
+                      if (i % 4 === 2) {
+                        skippedEntries++;
+                      }
+                    }
                     break;
                 }
               });
