@@ -1,7 +1,7 @@
 page-meal {
 
   .scroll-content {
-    padding: 16px 5px!important;
+    padding: 16px 5px !important;
   }
 
   ion-spinner.loadingThrobber {
@@ -44,7 +44,7 @@ page-meal {
   .foodItem p,
   .foodItem a {
     text-align: center;
-    color: white!important;
+    color: white !important;
     text-shadow: 0 0 4px black, 0 0 6px black;
   }
 
@@ -72,112 +72,198 @@ page-meal {
     padding: 15px 5px;
   }
 
+  .foodItem.lahmacun {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/lahmacun.jpg);
+    background-size: cover;
+  }
+
   .foodItem.pizza {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/pizza.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/pizza.jpg);
     background-size: cover;
   }
+
   .foodItem.pasta {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/pasta.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/pasta.jpg);
     background-size: cover;
   }
+
   .foodItem.kaiserschmarrn {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/kaiserschmarrn.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/kaiserschmarrn.jpg);
     background-size: cover;
   }
+
   .foodItem.meatball {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/meatball.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/meatball.jpg);
     background-size: cover;
   }
+
+  .foodItem.dicedmeat {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/dicedmeat.jpg);
+    background-size: cover;
+  }
+
   .foodItem.currywurst {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/currywurst.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/currywurst.jpg);
     background-size: cover;
   }
+
   .foodItem.schnitzel {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/schnitzel.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/schnitzel.jpg);
     background-size: cover;
   }
+
   .foodItem.fish {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/fish.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/fish.jpg);
     background-size: cover;
   }
+
   .foodItem.soup {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/soup.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/soup.jpg);
     background-size: cover;
   }
+
   .foodItem.burger {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/burger.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/burger.jpg);
     background-size: cover;
   }
+
   .foodItem.sausage {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/sausages.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/sausages.jpg);
     background-size: cover;
   }
+
   .foodItem.nuggets {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/nuggets.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/nuggets.jpg);
     background-size: cover;
   }
+
   .foodItem.strudel {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/strudel.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/strudel.jpg);
     background-size: cover;
   }
+
   .foodItem.curry {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/curry.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/curry.jpg);
     background-size: cover;
   }
+
+  .foodItem.sandwich {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/sandwich.jpg);
+    background-size: cover;
+  }
+
+  .foodItem.pancake {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/pancake.jpg);
+    background-size: cover;
+  }
+
+  .foodItem.falafel {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/falafel.jpg);
+    background-size: cover;
+  }
+
+  .foodItem.ramen {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/ramen.jpg);
+    background-size: cover;
+  }
+
+  .foodItem.sweet-potato {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/sweet-potato.jpg);
+    background-size: cover;
+  }
+
+  .foodItem.pork {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/pork.jpg);
+    background-size: cover;
+  }
+
+  .foodItem.steak {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/steak.jpg);
+    background-size: cover;
+  }
+
+  .foodItem.gyros {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/gyros.jpg);
+    background-size: cover;
+  }
+
+  .foodItem.baklava {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/baklava.jpg);
+    background-size: cover;
+  }
+
+  .foodItem.tortilla {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/tortilla.jpg);
+    background-size: cover;
+  }
+
   .foodItem.generic1 {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic1.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/generic1.jpg);
     background-size: cover;
   }
+
   .foodItem.generic2 {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic2.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/generic2.jpg);
     background-size: cover;
   }
+
   .foodItem.generic3 {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic3.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/generic3.jpg);
     background-size: cover;
   }
+
   .foodItem.generic4 {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic4.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/generic4.jpg);
     background-size: cover;
   }
+
   .foodItem.generic5 {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic5.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/generic5.jpg);
     background-size: cover;
   }
+
   .foodItem.generic6 {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic6.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/generic6.jpg);
     background-size: cover;
   }
+
   .foodItem.generic7 {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic7.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/generic7.jpg);
     background-size: cover;
   }
+
   .foodItem.generic8 {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic8.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/generic8.jpg);
     background-size: cover;
   }
+
   .foodItem.generic9 {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic9.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/generic9.jpg);
     background-size: cover;
   }
+
   .foodItem.generic10 {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic10.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/generic10.jpg);
     background-size: cover;
   }
+
   .foodItem.generic11 {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic11.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/generic11.jpg);
     background-size: cover;
   }
+
   .foodItem.generic12 {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic12.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/generic12.jpg);
     background-size: cover;
   }
+
   .foodItem.generic13 {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic13.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/generic13.jpg);
     background-size: cover;
   }
+
   .foodItem.generic14 {
-    background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)),url(/assets/img/food/generic14.jpg);
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url(/assets/img/food/generic14.jpg);
     background-size: cover;
   }
 }
