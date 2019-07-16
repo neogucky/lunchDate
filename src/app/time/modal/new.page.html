@@ -1,0 +1,36 @@
+  <ion-header>
+    <ion-toolbar>
+    <h1 class="title">{{ 'TIME.ADD_NEW_CAPTION' | translate }}</h1>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content padding>
+    <ion-list>
+      <ion-item>
+        <ion-label color="primary">{{'TIME.SELECT_TIME' | translate}}</ion-label>
+        <ion-datetime #datePicker
+                      text-center
+                      displayFormat="HH:mm"
+                      hourValues="10,11,12,13,14,15"
+                      minuteValues="0,15,30,45"
+                      [(ngModel)]="selectedTime"></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary">{{'TIME.RESTAURANT' | translate}}</ion-label>
+        <ion-select [(ngModel)]="restaurant" >
+          <ion-select-option value="none">{{'TIME.RESTAURANT_NONE' | translate}}</ion-select-option>
+
+          <ion-select-option *ngFor="let restaurantItem of restaurantList" value="{{restaurantItem}}">{{restaurantMap[restaurantItem].name}}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+    </ion-list>
+  </ion-content>
+
+  <ion-footer>
+    <ion-toolbar>
+      <button  ion-button clear (click)="createNewDate()"
+               item-end>{{ 'TIME.ADD_TIME' | translate }}</button>
+      <button  ion-button clear (click)="dismissDate()"
+               item-end>{{ 'TIME.CANCEL_TIME' | translate }}</button>
+    </ion-toolbar>
+  </ion-footer>

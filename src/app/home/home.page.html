@@ -1,0 +1,16 @@
+<ion-tabs #tabs selectedIndex="1" (ionChange)="switchedTab()">
+  <ion-tab-bar slot="bottom" color="primary">
+    <ion-tab-button [disabled]="global.user === undefined || global.user.name === undefined || global.user.name === ''" tab="meal">
+      <ion-icon name="md-restaurant"></ion-icon>
+      <ion-label>{{ 'MEAL' | translate}}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button [disabled]="global.user === undefined || global.user.name === undefined || global.user.name === ''" tab="time">
+      <ion-icon name="md-alarm"></ion-icon>
+      <ion-label>{{ 'LUNCHTIME' | translate}}</ion-label>
+    </ion-tab-button>
+    <ion-tab-button tab="settings">
+      <ion-icon name="md-settings"></ion-icon>
+      <ion-label>{{ 'SETTINGS' | translate}}</ion-label>
+    </ion-tab-button>
+  </ion-tab-bar>
+</ion-tabs>

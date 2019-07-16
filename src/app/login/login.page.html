@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar (click)="hiddenLogin()">
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>{{ 'LOGIN.TITLE' | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form (ngSubmit)="login()" [formGroup]="loginForm">
+    <ion-list inset>
+
+      <ion-item>
+        <ion-input type="text" [(ngModel)]="username" placeholder="Email" formControlName="email"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-input type="password" [(ngModel)]="password" placeholder="Password" formControlName="password"></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label color="primary">{{ 'LOGIN.REMEMBER' | translate }}</ion-label>
+        <ion-toggle [ngModelOptions]="{standalone: true}" (ionChange)="onStaySignedin()"
+                    [(ngModel)]="staySignedin"></ion-toggle>
+      </ion-item>
+
+    </ion-list>
+
+    <div padding-horizontal>
+      <div color="error" *ngIf="loginError !== ''" class="form-error">{{loginError}}</div>
+
+      <button ion-button full type="submit">{{ 'LOGIN.LOGIN' | translate}}</button>
+      <div class="login-footer">
+        <p>
+          <a style="display:none;" href="#">{{ 'LOGIN.FORGOT' | translate }}</a>
+          {{ 'LOGIN.SIGNUP_HINT' | translate}}
+        </p>
+      </div>
+    </div>
+  </form>
+  <ion-list>
+    <button ion-button icon-left block clear (click)="signup()">
+      <ion-icon name="person-add"></ion-icon>
+      {{ 'LOGIN.SIGNUP' | translate}}
+    </button>
+  </ion-list>
+  <p class="version" (click)="hiddenDebugJump()">{{versionNumber}}</p>
+</ion-content>
