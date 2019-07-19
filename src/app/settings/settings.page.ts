@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import {AlertController, Events, Platform, ToastController} from '@ionic/angular';
+import {AlertController, Events, NavController, Platform, ToastController} from '@ionic/angular';
 import {AuthService} from '../auth.service';
 import {FirebaseService} from '../firebase.service';
 import {Global} from '../global';
 import {FCM} from '@ionic-native/fcm/ngx';
 import {TranslateService} from '@ngx-translate/core';
-import { Storage } from '@ionic/storage';
+import {Storage} from '@ionic/storage';
+
+let self;
 
 @Component({
   selector: 'app-settings',
@@ -34,7 +36,10 @@ export class SettingsPage implements OnInit {
       public alertCtrl: AlertController,
       public fcm: FCM,
       private translate: TranslateService,
-      private storage: Storage) {
+      private storage: Storage,
+      private navCtrl: NavController) {
+
+    self = this;
 
     // Load language
     for (const key of Object.keys(this.LANGUAGE)) {
@@ -48,16 +53,7 @@ export class SettingsPage implements OnInit {
   }
 
   ngOnInit() {
-    if (this.global.user.allowPush) {
-      setTimeout(() => {
-        this.global.user.allowPush = true;
-      }, 100);
-    }
-    if (this.global.user.allowReminder) {
-      setTimeout(() => {
-        this.global.user.allowReminder = true;
-      }, 100);
-    }
+
   }
 
   // update name when 1 second no input
@@ -116,15 +112,15 @@ export class SettingsPage implements OnInit {
 
   private async changeName() {
 
-    if (this.global.user.name === undefined || this.global.user.name === '') {
+    if (self.global.user.name === undefined || self.global.user.name === '') {
       return;
     }
 
-    this.backend.updateUserName(this.global.user.name);
+    self.backend.updateUserName(self.global.user.name);
 
     /* always show toast in top as not to overlap the navigation bar */
-    const alert = await this.toastCtrl.create({
-      message: this.LANGUAGE.NAME_CHANGED + ' "' + this.global.user.name + '"',
+    const alert = await self.toastCtrl.create({
+      message: self.LANGUAGE.NAME_CHANGED + ' "' + self.global.user.name + '"',
       duration: 3000,
       position: 'top'
     });
@@ -133,7 +129,7 @@ export class SettingsPage implements OnInit {
 
   logout() {
     this.auth.signOut().then( () => {
-          location.reload();
+      this.navCtrl.navigateRoot('/login');
         }
     ).catch(e => {
       console.log(e);

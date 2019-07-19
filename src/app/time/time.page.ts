@@ -280,10 +280,8 @@ export class TimePage {
         componentProps: {restaurtantList: this.global.group.restaurants, restaurantMap: this.restaurantMap}
         });
     modal.present();
-    const data = await modal.onDidDismiss();
-    console.log(data);
-    // FIXME: look how data looks like and then fix next line
-    // this.suggestDate(data.selectedTime, data.restaurant);
+    const result = await modal.onDidDismiss();
+    this.suggestDate(result.data.selectedTime, result.data.restaurant);
   }
 
 }

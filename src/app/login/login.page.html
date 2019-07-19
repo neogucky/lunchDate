@@ -30,7 +30,7 @@
     <div padding-horizontal>
       <div color="error" *ngIf="loginError !== ''" class="form-error">{{loginError}}</div>
 
-      <button ion-button full type="submit">{{ 'LOGIN.LOGIN' | translate}}</button>
+      <ion-button ion-button expand="full" type="submit">{{ 'LOGIN.LOGIN' | translate}}</ion-button>
       <div class="login-footer">
         <p>
           <a style="display:none;" href="#">{{ 'LOGIN.FORGOT' | translate }}</a>
@@ -40,10 +40,10 @@
     </div>
   </form>
   <ion-list>
-    <button ion-button icon-left block clear (click)="signup()">
+    <ion-button ion-button icon-left expand="full" fill="clear" (click)="signup()">
       <ion-icon name="person-add"></ion-icon>
       {{ 'LOGIN.SIGNUP' | translate}}
-    </button>
+    </ion-button>
   </ion-list>
   <p class="version" (click)="hiddenDebugJump()">{{versionNumber}}</p>
 </ion-content>

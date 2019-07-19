@@ -8,7 +8,7 @@ import * as firebase from 'firebase';
 import {FirebaseService} from '../firebase.service';
 import {FCM} from '@ionic-native/fcm/ngx';
 import {AppVersion} from '@ionic-native/app-version/ngx';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { Storage } from '@ionic/storage';
 
 @Component({
@@ -37,12 +37,21 @@ export class LoginPage implements OnInit {
         private backend: FirebaseService,
         public fcm: FCM,
         private router: Router,
-        private storage: Storage
+        private storage: Storage,
+        private route: ActivatedRoute
     ) {
         console.log(this.platform);
         this.loginForm = fb.group({
             email: ['', Validators.compose([Validators.required, Validators.email])],
             password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
+        });
+
+        this.route.queryParams.subscribe(params => {
+          console.log(params);
+          if (params && params.user) {
+              this.username = params.user.username;
+              this.password = params.user.password;
+          }
         });
     }
 
@@ -176,16 +185,7 @@ export class LoginPage implements OnInit {
     }
 
     signup() {
-        const self = this;
-        // FIXME: Instead of signup callback we need to listen to parameters when navigating back to this login page
-        const signupCallback = (username, password) => {
-            return new Promise((resolve, reject) => {
-                self.username = username;
-                self.password = password;
-                resolve();
-            });
-        };
-        this.router.navigateByUrl('/signup');
+        this.router.navigate(['signup']);
     }
 
     onStaySignedin() {

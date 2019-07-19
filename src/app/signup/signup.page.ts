@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NavController, NavParams} from '@ionic/angular';
 import {AuthService} from '../auth.service';
 import {Global} from '../global';
+import {NavigationExtras} from '@angular/router';
 
 @Component({
   selector: 'app-signup',
@@ -13,20 +14,17 @@ export class SignupPage {
 
   signupError = '';
   form: FormGroup;
-  callback: any;
 
   constructor(
       fb: FormBuilder,
       private navCtrl: NavController,
       private auth: AuthService,
-      private global: Global,
-      private navParams: NavParams
+      private global: Global
   ) {
     this.form = fb.group({
       email: ['', Validators.compose([Validators.required, Validators.email])],
       password: ['', Validators.compose([Validators.required, Validators.minLength(6)])]
     });
-    this.callback = this.navParams.get('callback');
   }
 
   signup() {
@@ -48,9 +46,12 @@ export class SignupPage {
     this.auth.signUp(credentials).then(
         () => {
           self.auth.sendEmailVerification();
-          this.callback(credentials.email, credentials.password).then( () => {
-            this.navCtrl.pop();
-          });
+          const navigationExtras: NavigationExtras = {
+            queryParams: {
+              user: credentials
+            }
+          };
+          this.navCtrl.navigateBack(['login'], navigationExtras);
         },
         error => this.signupError = error.message
     );

@@ -1,4 +1,4 @@
-<ion-tabs #tabs selectedIndex="1" (ionChange)="switchedTab()">
+<ion-tabs #tabs>
   <ion-tab-bar slot="bottom" color="primary">
     <ion-tab-button [disabled]="global.user === undefined || global.user.name === undefined || global.user.name === ''" tab="meal">
       <ion-icon name="md-restaurant"></ion-icon>
