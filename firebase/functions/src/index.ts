@@ -417,7 +417,7 @@ exports.loadMenus2 = functions.https.onRequest((req, res) => {
                 /*  Structure:
                   * <p>Title</p>
                   * <p>Description</p>
-                  * <p>calories</p> (optional)
+                  * <p>calories / vegetarian</p> (optional)
                   * <p>price</p>
                   * <div style="clear"></div>
                   */
@@ -442,9 +442,7 @@ exports.loadMenus2 = functions.https.onRequest((req, res) => {
                       break;
                   case 2:
                   case 3:
-                      if ($(foodSegment).text().includes('kcal')) {
-                        // set calories
-                      } else {
+                      if ($(foodSegment).text().includes('€')) {
                         price = $(foodSegment).text();
                         console.log('try adding food item: ' + title);
                         db.collection('restaurants/' + restaurant.uid + '/menu').add({
@@ -500,9 +498,7 @@ exports.loadMenus2 = functions.https.onRequest((req, res) => {
                     break;
                   case 2:
                   case 3:
-                    if ($(foodSegment).text().includes('kcal')) {
-                      // set calories
-                    } else {
+                    if ($(foodSegment).text().includes('€')) {
                       price = $(foodSegment).text();
                       console.log('try adding food item: ' + title);
                       db.collection('restaurants/' + restaurant.uid + '/menu').add({

@@ -32,15 +32,14 @@
             <div *ngIf="suggestion.restaurantID === undefined || suggestion.restaurantID === 'none'"  class="location">
               {{'TIME.RESTAURANT_NONE' | translate}}
             </div>
-
-            <button  ion-button clear (click)="switchParticipation(suggestion.id)"
-                     item-end>{{ getParticipationString(suggestion.id) }}</button>
           </div>
           <div style="clear:both;"></div>
         </div>
+        <button  ion-button clear (click)="switchParticipation(suggestion.id)"
+                 item-end>{{ getParticipationString(suggestion.id) }}</button>
       </ion-item>
       <ion-item>
-        <ion-label>
+        <ion-label class="busy">
           <ion-icon name="close-circle"></ion-icon>
         </ion-label>
         <div item-content class="participants">

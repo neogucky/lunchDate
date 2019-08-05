@@ -15,11 +15,9 @@
     text-align: center;
   }
 
-  ion-label.sc-ion-label-md-h.sc-ion-label-md-s {
+  ion-label.busy,
+  ion-label.time {
     max-width: 50px;
-  }
-
-  .time.label {
     overflow: visible;
     text-overflow: unset;
   }
@@ -30,14 +28,13 @@
     font-size: smaller;
   }
 
-  div.item-content {
-    padding: 7px 0 5px 0;
+  div.participants {
+    width: calc(100% - 60px);
   }
 
-  div.actionBar {
-    display: block;
+  div.item-content {
+    padding: 7px 0 5px 10px;
     width: 100%;
-    margin-top: 5px;
   }
 
   button.busybutton,
@@ -45,7 +42,7 @@
     margin: 0!important;
     float: right;
     position: absolute;
-    right: 6px;
+    right: 0px;
     bottom: 8px;
   }
 

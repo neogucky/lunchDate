@@ -30,8 +30,12 @@ import {AuthService} from './auth.service';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 import {Global} from './global';
 import { firebaseConfig } from './config';
+import { ImagePicker } from '@ionic-native/image-picker/ngx';
+import { Crop } from '@ionic-native/crop/ngx';
+import { File } from '@ionic-native/file/ngx';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -54,6 +58,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpClientModule,
     AngularFireModule.initializeApp(firebaseConfig.fire),
     AngularFirestoreModule,
+    AngularFireStorageModule,
     AngularFireAuthModule,
     TranslateModule.forRoot({
         loader: {
@@ -75,7 +80,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     Global,
     AuthService,
     FirebaseService,
+    File,
     FCM,
+    ImagePicker,
+    Crop,
     LocalNotifications,
     Network,
     AppVersion,
