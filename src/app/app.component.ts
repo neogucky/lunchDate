@@ -39,7 +39,6 @@ export class AppComponent {
             this.statusBar.styleDefault();
             this.loadLanguage();
 
-
             // load global object
             this.storage.get('language').then((language) => {
                 if (language !== undefined && language !== null && language !== '') {

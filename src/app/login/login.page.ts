@@ -6,7 +6,6 @@ import {SplashScreen} from '@ionic-native/splash-screen/ngx';
 import {Global} from '../global';
 import * as firebase from 'firebase';
 import {FirebaseService} from '../firebase.service';
-import {FCM} from '@ionic-native/fcm/ngx';
 import {AppVersion} from '@ionic-native/app-version/ngx';
 import {ActivatedRoute, Router} from '@angular/router';
 import { Storage } from '@ionic/storage';
@@ -35,7 +34,6 @@ export class LoginPage implements OnInit {
         public global: Global,
         private appVersion: AppVersion,
         private backend: FirebaseService,
-        public fcm: FCM,
         private router: Router,
         private storage: Storage,
         private route: ActivatedRoute
@@ -135,9 +133,7 @@ export class LoginPage implements OnInit {
 
         // get push token
         if (!this.platform.is('pwa') && !this.platform.is('mobileweb')) {
-            this.fcm.getToken().then(token => {
-                this.backend.updateFCMToken(token);
-            });
+            this.backend.initializeFirebasePush(this.platform);
         }
 
         let initFinished = false;

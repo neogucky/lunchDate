@@ -5,7 +5,7 @@ import {ModalNewPage} from './modal/new.page';
 import {FirebaseService} from '../firebase.service';
 import {TranslateService} from '@ngx-translate/core';
 import {LocalNotifications} from '@ionic-native/local-notifications/ngx';
-
+import {ModalParticipantsPage} from './modal/participants.page';
 
 @Component({
   selector: 'app-time',
@@ -47,14 +47,14 @@ export class TimePage {
 
 
   constructor(
-      public global: Global,
-      private backend: FirebaseService,
-      private toastCtrl: ToastController,
-      private localNotifications: LocalNotifications,
-      public alertCtrl: AlertController,
-      private platform: Platform,
-      private translate: TranslateService,
-      public modalController: ModalController) {
+    public global: Global,
+    private backend: FirebaseService,
+    private toastCtrl: ToastController,
+    private localNotifications: LocalNotifications,
+    public alertCtrl: AlertController,
+    private platform: Platform,
+    private translate: TranslateService,
+    public modalController: ModalController) {
 
     this.participantMap = {};
 
@@ -66,15 +66,15 @@ export class TimePage {
     // Load language
     for (const key of Object.keys(self.LANGUAGE)) {
       translate.get(self.LANGUAGE[key]).subscribe(
-          value => {
-            // value is our translated string
-            self.LANGUAGE[key] = value;
-          }
+        value => {
+          // value is our translated string
+          self.LANGUAGE[key] = value;
+        }
       );
     }
 
     self.backend.getRestaurantList().subscribe(data => {
-      data.forEach( (restaurant) => {
+      data.forEach((restaurant) => {
         self.restaurantMap[restaurant.uid] = restaurant;
       });
     });
@@ -95,7 +95,7 @@ export class TimePage {
           if (self.participantMap[participant.suggestionID] === undefined) {
             self.participantMap[participant.suggestionID] = [];
           }
-          self.participantMap[participant.suggestionID].push(participant.name);
+          self.participantMap[participant.suggestionID].push({name: participant.name, uid: participant.uid, avatar: participant.avatar});
         });
       });
     }
@@ -103,24 +103,12 @@ export class TimePage {
   }
 
   async showParticipants(id) {
-    let participanList = this.participantMap[id].slice();
-    const lastParticipant = participanList[participanList.length - 1];
-    participanList = participanList.splice(0, participanList.length - 1);
-
-    const suggestionTime = this.suggestionList.find((el) => el.id === id).time.toDate();
-    // FIXME: show this in a dedicated view with better formatting
-    const confirm = await this.alertCtrl.create({
-      header: this.LANGUAGE.PARTICIPANTS_TITLE + ' ' + suggestionTime.toLocaleTimeString(),
-      message: '<span style="color:black!important;">' +
-          participanList.join(', ') + ' ' + this.LANGUAGE.LIST_CONCAT + ' ' + lastParticipant +
-          '</span>',
-      buttons: [
-        {
-          text: this.LANGUAGE.CLOSE
-        }
-      ]
-    });
-    confirm.present();
+    const modal = await this.modalController.create(
+      {
+        component: ModalParticipantsPage,
+        componentProps: {participantMap: this.participantMap[id]}
+      });
+    modal.present();
   }
 
   /*
@@ -128,47 +116,40 @@ export class TimePage {
      */
   getParticipants(id) {
 
-    const result = {simple: '', extended: ''};
+    let result = '';
 
     if (this.participantMap[id] === undefined || this.participantMap[id].length === 0) {
       if (id !== 'busy') {
-        result.simple = this.LANGUAGE.LUNCHER_NOBODY;
+        result = this.LANGUAGE.LUNCHER_NOBODY;
       } else {
-        result.simple = this.LANGUAGE.BUSY_NOBODY;
+        result = this.LANGUAGE.BUSY_NOBODY;
       }
-
-      return result;
-    }
-
-    let word;
-    if (id !== 'busy') {
-      word = this.LANGUAGE.GOING;
     } else {
-      word = this.LANGUAGE.BUSY;
+      for (const participant of this.participantMap[id]) {
+        result += '<span>' + this.getInitials(participant) + '</span>';
+      }
     }
 
-    let participanList = this.participantMap[id].slice();
-
-    if (participanList.length === 1) {
-      result.simple = participanList[0] + ' ' + this.LANGUAGE.LIST_END_SINGULAR + ' ' + word;
-    } else if (participanList.length <= 4) {
-      const firstParticipant = participanList.splice(0, 1);
-      result.simple = participanList.join(', ') + ' ' +
-          this.LANGUAGE.LIST_CONCAT + ' ' +
-          firstParticipant + ' ' +
-          this.LANGUAGE.LIST_END_PLURAL + ' ' +
-          word;
-    } else {
-      const participantCount = participanList.length;
-      participanList = participanList.splice(0, 3);
-      result.simple = participanList.join(', ');
-      result.extended = ' ' + this.LANGUAGE.LIST_CONCAT + ' ' + (participantCount - 3) + ' ' + this.LANGUAGE.LIST_END_COUNT + ' ' + word;
-    }
     return result;
   }
 
+  getInitials(participant) {
+    let initials = '';
+    const names = participant.name.split(' ');
+    for (const name of names) {
+      if (initials.length <= 1) {
+        initials += name.charAt(0);
+      }
+    }
+    if (initials.length === 1) {
+      initials += participant.name.charAt(1);
+    }
+    return initials;
+  }
+
   getParticipationString(id) {
-    if (this.participantMap[id] !== undefined && this.participantMap[id].includes(this.global.user.name)) {
+    if (this.participantMap[id] !== undefined &&
+      this.participantMap[id].find(participant => participant.name === this.global.user.name) !== undefined) {
       return this.LANGUAGE.CANCEL;
     } else {
       return this.LANGUAGE.JOIN;
@@ -214,16 +195,16 @@ export class TimePage {
     const self = this;
     if (this.suggestionList !== undefined) {
       this.suggestionList.forEach(
-          (suggestion) => {
-            const suggestionDate = suggestion.time.toDate();
-            if (suggestionDate.getMinutes() === selectedTime.getMinutes()
-                && suggestionDate.getHours() === selectedTime.getHours()
-                && suggestion.restaurantID === locationID) {
-              // date already exists
-              self.switchParticipation(suggestion.id);
-              error = true;
-            }
+        (suggestion) => {
+          const suggestionDate = suggestion.time.toDate();
+          if (suggestionDate.getMinutes() === selectedTime.getMinutes()
+            && suggestionDate.getHours() === selectedTime.getHours()
+            && suggestion.restaurantID === locationID) {
+            // date already exists
+            self.switchParticipation(suggestion.id);
+            error = true;
           }
+        }
       );
     }
 
@@ -276,9 +257,10 @@ export class TimePage {
 
   async presentModal() {
     const modal = await this.modalController.create(
-        {component: ModalNewPage,
+      {
+        component: ModalNewPage,
         componentProps: {restaurtantList: this.global.group.restaurants, restaurantMap: this.restaurantMap}
-        });
+      });
     modal.present();
     const result = await modal.onDidDismiss();
     this.suggestDate(result.data.selectedTime, result.data.restaurant);

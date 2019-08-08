@@ -2,6 +2,8 @@ import {Injectable} from '@angular/core';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {AuthService} from './auth.service';
 import {Global} from './global';
+import {AngularFireStorage} from '@angular/fire/storage';
+import { Firebase } from '@ionic-native/firebase/ngx';
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +12,9 @@ export class FirebaseService {
 
     constructor(
         public afs: AngularFirestore,
+        private storage: AngularFireStorage,
         private auth: AuthService,
+        private firebasePush: Firebase,
         public global: Global) {
 
     }
@@ -142,10 +146,10 @@ export class FirebaseService {
 
     getSuggestions(day): any {
 
-        var start = new Date(day.getTime());
+        const start = new Date(day.getTime());
         start.setHours(0, 0, 0, 0);
 
-        var end = new Date(day.getTime());
+        const end = new Date(day.getTime());
         end.setHours(23, 59, 59, 999);
 
         if (this.global.user.group === undefined) {
@@ -187,5 +191,58 @@ export class FirebaseService {
             console.log(e);
         });
     }
+
+
+  uploadFile(image, uploadComplete) {
+
+    this.afs.doc('participants/' + this.auth.uid)
+      .update({avatar: image})
+      .then(() => {
+        uploadComplete(image);
+      })
+      .catch((error) => {
+        // console.log('Error updating user', error); // (document does not exists)
+        this.afs.doc('participants/' + this.auth.uid)
+          .set({avatar: image})
+          .catch(e => {
+          console.error(e);
+        });
+      });
+  }
+
+  initializeFirebasePush(platform) {
+    try {
+     this.firebasePush.subscribe('all');
+     platform.is('android') ? this.initializeFirebaseAndroid() : this.initializeFirebaseIOS();
+    } catch (error) {
+     this.firebasePush.logError(error);
+    }
+  }
+
+  initializeFirebaseAndroid() {
+   this.firebasePush.getToken().then(token => this.updateFCMToken(token));
+   this.firebasePush.onTokenRefresh().subscribe(token => this.updateFCMToken(token))
+   this.subscribeToPushNotifications();
+  }
+  initializeFirebaseIOS() {
+   this.firebasePush.grantPermission()
+      .then(() => {
+       this.firebasePush.getToken().then(token => this.updateFCMToken(token));
+       this.firebasePush.onTokenRefresh().subscribe(token => this.updateFCMToken(token))
+       this.subscribeToPushNotifications();
+      })
+      .catch((error) => {
+       this.firebasePush.logError(error);
+      });
+  }
+  subscribeToPushNotifications() {
+   this.firebasePush.onNotificationOpen().subscribe((response) => {
+      if (response.tap) {
+        // app was opened by clicking on push notification
+      } else {
+        // app was already open when receiving push
+      }
+    });
+  }
 
 }

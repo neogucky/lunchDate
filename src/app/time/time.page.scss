@@ -1,4 +1,4 @@
-  img {
+  img.logo {
     left: 50%;
     position: absolute;
     margin: 20px 0 10px -100px;
@@ -22,6 +22,12 @@
     text-overflow: unset;
   }
 
+  .busy {
+    text-align: center;
+    font-size: 1.4em;
+    margin-bottom: 4px;
+  }
+
   div.participants,
   div.location{
     text-align: left;
@@ -30,6 +36,46 @@
 
   div.participants {
     width: calc(100% - 60px);
+
+    span {
+      background-color: var(--ion-color-primary);
+      border-radius: 50%;
+      width: 22px;
+      height: 22px;
+      display: inline-block;
+      color: white;
+      padding: 2.5px 0 0 3.5px;
+      margin: 0 1px;
+      font-size: 11px;
+      float: left;
+
+      img {
+        width: 23px;
+        max-width: 23px;
+        border-radius: 50%;
+        top: -3.5px;
+        left: -3.5px;
+        position: relative;
+      }
+    }
+
+    div.circleWrapper {
+      height: 22px;
+    }
+
+    circle.dashed {
+      fill: transparent;
+      stroke: black;
+      stroke-width: 1;
+      stroke-dasharray: 4, 4.5;
+    }
+
+    svg{
+      height: 22px;
+      width: 22px;
+      margin: 0 1px -7px 1px;
+    }
+
   }
 
   div.item-content {
@@ -47,19 +93,24 @@
   }
 
   button.busybutton {
-    bottom: 12px!important;
+    bottom: 14px !important;
+    right: 2px;
   }
 
-  div.actionBar div.location {
-    position: relative;
-    padding: 6px 0;
-    float: left;
-  }
+  div.actionBar{
+    clear: both;
 
-  div.actionBar ion-icon.restaurant {
-    margin: 7px 5px 0px 0;
-    float: left;
-    font-size: 1em;
+    div.location {
+      position: relative;
+      padding: 6px 0;
+      float: left;
+    }
+
+    ion-icon.restaurant {
+      margin: 7px 5px 0px 0;
+      float: left;
+      font-size: 1em;
+    }
   }
 
   button.item-button.button.button-md.button-outline.button-outline-md {
@@ -91,6 +142,8 @@
     margin: 0 calc(25% - 60px);
   }
 
+
+
   @media only screen and (max-width: 380px) {
     [padding].content .scroll-content {
       padding-left: 0 !important;
@@ -113,4 +166,6 @@
     h3 {
       padding: 16px;
     }
+
   }
+

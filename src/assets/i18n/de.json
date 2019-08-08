@@ -49,6 +49,7 @@
   "TIME.SELECT_TIME": "Uhrzeit",
   "TIME.ADD_TIME": "Vorschlagen",
   "TIME.CANCEL_TIME": "Abbrechen",
+  "TIME.PARTICIPANTS": "Teilnehmer",
 
   "MEAL.MENU": "Speiseplan",
   "MEAL.NO_RESTAURANTS": "In Ihrer Gruppe sind noch keine Restaurants verfügbar",

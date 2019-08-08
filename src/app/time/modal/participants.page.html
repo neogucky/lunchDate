@@ -1,0 +1,23 @@
+  <ion-header>
+    <ion-toolbar>
+    <h1 class="title">{{ 'TIME.PARTICIPANTS' | translate }}</h1>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content padding>
+    <ion-list>
+      <ion-item *ngFor="let participant of participantMap">
+        <span class="icon">
+          <img [hidden]="participant.avatar === undefined" src="{{participant.avatar}}">
+          {{getInitials(participant)}}
+        </span>
+        <ion-label>{{participant.name}}</ion-label>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+
+  <ion-footer>
+    <ion-toolbar>
+      <button  ion-button clear (click)="dismiss()"
+               item-end>{{ 'GLOBAL.CLOSE' | translate }}</button>
+    </ion-toolbar>
+  </ion-footer>

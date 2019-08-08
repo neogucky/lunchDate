@@ -1,18 +1,18 @@
-new-time {
 
   ion-toolbar button {
     float: right;
+    padding-bottom: 5px;
   }
 
-  ion-header div.toolbar-background {
-    background-image: url(/assets/img/food/newDate.jpg);
+  ion-header {
+    background-image: url(/assets/img/new_header.jpg);
     background-size: cover;
     background-position: center;
-  }
-
-  ion-header,
-  ion-header ion-toolbar.toolbar-md {
     min-height: 150px;
+
+    ion-toolbar {
+      display: none;
+    }
   }
 
   ion-content .scroll-content {
@@ -23,4 +23,3 @@ new-time {
     display: none;
   }
 
-}

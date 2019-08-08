@@ -1,10 +1,11 @@
 <ion-content padding>
   <div class="headingSpacer">
-    <img width="200" src="assets/img/app_banner.png">
+    <img class="logo" width="200" src="assets/img/app_banner.png">
   </div>
 
   <div class="userBox">
-    <ion-icon name="contact"></ion-icon>
+    <ion-icon [hidden]="userImage !== undefined" (click)="selectImage()" name="contact"></ion-icon>
+    <div class="imageContainer" [hidden]="userImage === undefined" (click)="selectImage()"><img src="{{userImage}}"></div>
     <div class="inner">
       {{global.user.name}}
       <br>
@@ -47,3 +48,11 @@
   </ion-item>
 
 </ion-content>
+<div class="overlay" [hidden]="imageUpload === ''">
+  <span class="center">
+    <span [hidden]="imageUpload !== 'selecting'">Waiting for image gallery</span>
+    <span [hidden]="imageUpload !== 'uploading'">Uploading image</span>
+  <br />
+  <br />
+<div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+</span> </div>

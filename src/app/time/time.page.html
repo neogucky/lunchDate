@@ -1,6 +1,6 @@
 <ion-content padding>
   <div class="headingSpacer">
-    <img width="200" src="assets/img/app_banner.png">
+    <img class="logo" width="200" src="assets/img/app_banner.png">
   </div>
 
   <div *ngIf="this.global.user.group === undefined">
@@ -20,8 +20,18 @@
         </ion-label>
         <div item-content class="item-content">
           <div class="participants">
-            {{getParticipants(suggestion.id).simple}} <a (click)="showParticipants(suggestion.id)"
-                                                         *ngIf="getParticipants(suggestion.id).extended !== ''">{{getParticipants(suggestion.id).extended}}</a>
+            <a (click)="showParticipants(suggestion.id)">
+              <span *ngFor="let participant of participantMap[suggestion.id]">
+                <img [hidden]="participant.avatar === undefined" src="{{participant.avatar}}">
+                {{getInitials(participant)}}
+              </span>
+              <div class="circleWrapper" [hidden]="participantMap[suggestion.id] !== undefined">
+                <svg viewBox="0 0 23 23">
+                  <circle cx="11.5" cy="11.5" r="10" class="dashed" />
+                </svg>
+              </div>
+
+            </a>
           </div>
           <div class="actionBar">
             <ion-icon *ngIf="suggestion.restaurantID !== undefined && suggestion.restaurantID !== 'none'" color="primary" name="restaurant" class="restaurant"></ion-icon>
@@ -40,13 +50,17 @@
       </ion-item>
       <ion-item>
         <ion-label class="busy">
-          <ion-icon name="close-circle"></ion-icon>
+          <ion-icon name="remove-circle-outline"></ion-icon>
         </ion-label>
         <div item-content class="participants">
-          {{getParticipants('busy').simple}}
+          <a (click)="showParticipants('busy')">
+              <span *ngFor="let participant of participantMap['busy']">
+                <img [hidden]="participant.avatar === undefined" src="{{participant.avatar}}">
+                {{getInitials(participant)}}
+              </span>
+          </a>
         </div>
-        <button ion-button (click)="switchParticipation('busy')" class="busybutton" clear item-end>{{ getParticipationString('busy') }}
-          <a *ngIf="getParticipants('busy').extended !== ''">{{getParticipants('busy').extended}}</a></button>
+        <button ion-button (click)="switchParticipation('busy')" class="busybutton" clear item-end>{{ getParticipationString('busy') }}</button>
       </ion-item>
     </ion-list>
     <br>

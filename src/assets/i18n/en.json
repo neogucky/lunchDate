@@ -52,6 +52,8 @@
   "TIME.SELECT_TIME": "Time",
   "TIME.ADD_TIME": "Suggest",
   "TIME.CANCEL_TIME": "Cancel",
+  "TIME.PARTICIPANTS": "Participants",
+
 
   "MEAL.TITLE": "Under Construction",
   "MEAL.EXPLANATION": "Planned feature: swipe to find today's most suitable meal",

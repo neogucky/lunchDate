@@ -11,6 +11,8 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 
 import { ModalNewPage } from './time/modal/new.page';
+import { ModalParticipantsPage } from './time/modal/participants.page';
+
 import {SignupPageModule} from './signup/signup.module';
 import {LoginPageModule} from './login/login.module';
 import {SettingsPageModule} from './settings/settings.module';
@@ -24,7 +26,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {AppVersion} from '@ionic-native/app-version/ngx';
 import {Network} from '@ionic-native/network/ngx';
 import {LocalNotifications} from '@ionic-native/local-notifications/ngx';
-import {FCM} from '@ionic-native/fcm/ngx';
 import {FirebaseService} from './firebase.service';
 import {AuthService} from './auth.service';
 import { AngularFireModule } from '@angular/fire';
@@ -35,7 +36,11 @@ import {Global} from './global';
 import { firebaseConfig } from './config';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { Crop } from '@ionic-native/crop/ngx';
-import { File } from '@ionic-native/file/ngx';
+import { Base64 } from '@ionic-native/base64/ngx';
+import { Firebase } from '@ionic-native/firebase/ngx';
+
+import {WebView} from '@ionic-native/ionic-webview/ngx';
+import { ImageResizer } from '@ionic-native/image-resizer/ngx';
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -46,8 +51,9 @@ export function HttpLoaderFactory(http: HttpClient) {
   declarations: [
       AppComponent,
       ModalNewPage,
+      ModalParticipantsPage
   ],
-  entryComponents: [ModalNewPage],
+  entryComponents: [ModalNewPage, ModalParticipantsPage],
   imports: [
     BrowserModule,
     IonicModule.forRoot(),
@@ -80,9 +86,11 @@ export function HttpLoaderFactory(http: HttpClient) {
     Global,
     AuthService,
     FirebaseService,
-    File,
-    FCM,
+    Base64,
+    Firebase,
     ImagePicker,
+    ImageResizer,
+    WebView,
     Crop,
     LocalNotifications,
     Network,

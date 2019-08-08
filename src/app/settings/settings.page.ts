@@ -3,9 +3,14 @@ import {AlertController, Events, NavController, Platform, ToastController} from 
 import {AuthService} from '../auth.service';
 import {FirebaseService} from '../firebase.service';
 import {Global} from '../global';
-import {FCM} from '@ionic-native/fcm/ngx';
 import {TranslateService} from '@ngx-translate/core';
 import {Storage} from '@ionic/storage';
+import { ImagePicker } from '@ionic-native/image-picker/ngx';
+import { Crop } from '@ionic-native/crop/ngx';
+import { Base64 } from '@ionic-native/base64/ngx';
+import { ImageResizer, ImageResizerOptions } from '@ionic-native/image-resizer/ngx';
+import {WebView} from '@ionic-native/ionic-webview/ngx';
+
 
 let self;
 
@@ -17,6 +22,8 @@ let self;
 export class SettingsPage implements OnInit {
 
   onEditTimer: any;
+  userImage;
+  imageUpload = '';
 
   // language (async loading)
   LANGUAGE: any = {
@@ -34,10 +41,14 @@ export class SettingsPage implements OnInit {
       private backend: FirebaseService,
       private platform: Platform,
       public alertCtrl: AlertController,
-      public fcm: FCM,
       private translate: TranslateService,
       private storage: Storage,
-      private navCtrl: NavController) {
+      private navCtrl: NavController,
+      private crop: Crop,
+      private imagePicker: ImagePicker,
+      private base64: Base64,
+      private imageResizer: ImageResizer,
+      private webView: WebView) {
 
     self = this;
 
@@ -75,12 +86,6 @@ export class SettingsPage implements OnInit {
 
     if (this.platform.is('pwa') || this.platform.is('mobileweb')) {
       return;
-    }
-
-    if (this.global.user.allowPush) {
-      this.fcm.subscribeToTopic(this.global.user.group);
-    } else {
-      this.fcm.unsubscribeFromTopic(this.global.user.group);
     }
   }
 
@@ -136,4 +141,62 @@ export class SettingsPage implements OnInit {
     });
   }
 
+  selectImage() {
+    self.imageUpload = 'selecting';
+    this.imagePicker.hasReadPermission().then(
+      (result) => {
+        if (result === false) {
+          // no callbacks required as this opens a popup which returns async
+          this.imagePicker.requestReadPermission();
+        } else if (result === true) {
+          this.imagePicker.getPictures({
+            maximumImagesCount: 1
+          }).then(
+            (images) => {
+                this.crop.crop(images[0], {quality: 100})
+                  .then(
+                    newImage => this.uploadImageToFirebase(newImage),
+                    error => {
+                      console.error('Error cropping image', error);
+                      self.imageUpload = '';
+                    }
+                  );
+            }, (err) => console.log(err)
+          );
+        }
+      }, (err) => {
+        console.log(err);
+        self.imageUpload = '';
+      });
+  }
+
+  uploadImageToFirebase(image) {
+    self.imageUpload = 'uploading';
+
+    const options = {
+      uri: image,
+      folderName: 'upload',
+      fileName: 'avatar.jpg',
+      quality: 100,
+      width: 70,
+      height: 70
+    } as ImageResizerOptions;
+
+    self.imageResizer
+      .resize(options)
+      .then((filePath: string) => {
+        self.base64.encodeFile(self.webView.convertFileSrc(filePath)).then((base64File: string) => {
+          self.backend.uploadFile(base64File, (url) => {
+            self.userImage = url;
+            self.imageUpload = '';
+          });
+        }).catch( (error) => {
+          console.error(error);
+          self.imageUpload = '';
+        });
+      }).catch(error => {
+        console.error(error);
+        self.imageUpload = '';
+      });
+  }
 }
