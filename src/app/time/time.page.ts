@@ -162,7 +162,7 @@ export class TimePage {
       this.localNotifications.clearAll();
     }
 
-    if (this.participantMap[id] !== undefined && this.participantMap[id].includes(this.global.user.name)) {
+    if (this.participantMap[id] !== undefined && this.participantMap[id].find(participant => participant.name === this.global.user.name) !== undefined ) {
       this.backend.unparticipate();
     } else {
       if (!this.platform.is('pwa') && !this.platform.is('mobileweb') && this.global.user.allowReminder && id !== 'busy') {
