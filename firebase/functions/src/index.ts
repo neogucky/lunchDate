@@ -254,7 +254,7 @@ function pushToGroup(payload, group, language) {
       }
 
       if (tokens === undefined || tokens.length === 0) {
-        console.error('No users selcted to send push to');
+        console.error('No users selected to send push to');
         reject();
       }
       console.log('sending push to users with language: ' + language);
@@ -344,6 +344,25 @@ function loadRestaurants() {
   });
 }
 
+exports.testPush = functions.https.onRequest((req, res) => {
+  const payload = {
+    notification: {
+      title: 'Hungrig?',
+      body: 'Hans möchte in 5 Minutes zum Testen gehen',
+      icon: 'icon',
+      badge: '1',
+      sound: 'default'
+    }
+  }
+    const tokens = ['cT43lVcFMms:APA91bGV76fdbwXoQX069PmmGiU9vsrtD2uCnjc7iX8ou5i8N'];
+
+    admin.messaging().sendToDevice(tokens, payload).then(() => {
+      res.status(200).end()
+    }).catch(err => {
+      console.log('Error sending push ', err);
+      res.status(200).end()
+    });
+});
 
 exports.loadMenus2 = functions.https.onRequest((req, res) => {
 
@@ -385,13 +404,13 @@ exports.loadMenus2 = functions.https.onRequest((req, res) => {
                   //first extract all ingredients which are listed in brackets
                   if ( /\(.*?\)/.test( $(foodItem).find('strong').text())) {
                     ingredients = $(foodItem).find('strong').text().match(/\(.*?\)/).join(', ');
-                    //re-convert to array since more than one ingredient can be in one bracket and we don't wont duplicates
+                    //re-convert to array since more than one ingredient can be in one bracket and we don't want duplicates
                     const ingredientSet = [...new Set(ingredients.split(', '))];
                     ingredients = ingredientSet.join(', ');
                   }
 
                   //add description without ingredients
-                  let description = $(foodItem).find('strong').text().replace(/ *\([^)]*\) */g, "");
+                  let description = $(foodItem).find('strong').text().replace(/ *\([^)]*\) */g, " ");
 
                   db.collection('restaurants/' + restaurant.uid + '/menu').add({
                     'cantineID': restaurant.uid,
@@ -438,7 +457,7 @@ exports.loadMenus2 = functions.https.onRequest((req, res) => {
                     }
 
                     //add description without ingredients
-                    description = title + "\n" + $(foodSegment).text().replace(/ *\([^)]*\) */g, "");
+                    description = title + "\n" + $(foodSegment).text().replace(/ *\([^)]*\) */g, " ");
                       break;
                   case 2:
                   case 3:
