@@ -41,6 +41,8 @@ import { Firebase } from '@ionic-native/firebase/ngx';
 
 import {WebView} from '@ionic-native/ionic-webview/ngx';
 import { ImageResizer } from '@ionic-native/image-resizer/ngx';
+import {JoinGroupPageModule} from "./settings/join-group/join-group.module";
+import {CreateGroupPageModule} from "./settings/create-group/create-group.module";
 
 
 export function HttpLoaderFactory(http: HttpClient) {
@@ -73,12 +75,14 @@ export function HttpLoaderFactory(http: HttpClient) {
             deps: [HttpClient]
         }
     }),
-      HomePageModule,
-      MealPageModule,
-      TimePageModule,
-      SettingsPageModule,
-      LoginPageModule,
-      SignupPageModule
+    HomePageModule,
+    MealPageModule,
+    TimePageModule,
+    SettingsPageModule,
+    JoinGroupPageModule,
+    CreateGroupPageModule,
+    LoginPageModule,
+    SignupPageModule
   ],
   providers: [
     StatusBar,

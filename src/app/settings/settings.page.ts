@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import {AlertController, Events, NavController, Platform, ToastController} from '@ionic/angular';
-import {AuthService} from '../auth.service';
-import {FirebaseService} from '../firebase.service';
-import {Global} from '../global';
-import {TranslateService} from '@ngx-translate/core';
-import {Storage} from '@ionic/storage';
+import { AlertController, Events, NavController, Platform, ToastController} from '@ionic/angular';
+import { AuthService } from '../auth.service';
+import { FirebaseService } from '../firebase.service';
+import { Global } from '../global';
+import { TranslateService } from '@ngx-translate/core';
+import { Storage } from '@ionic/storage';
 import { ImagePicker } from '@ionic-native/image-picker/ngx';
 import { Crop } from '@ionic-native/crop/ngx';
 import { Base64 } from '@ionic-native/base64/ngx';
 import { ImageResizer, ImageResizerOptions } from '@ionic-native/image-resizer/ngx';
-import {WebView} from '@ionic-native/ionic-webview/ngx';
+import { WebView } from '@ionic-native/ionic-webview/ngx';
 
 
 let self;
@@ -113,6 +113,12 @@ export class SettingsPage implements OnInit {
       ]
     });
     confirm.present();
+  }
+
+  showGroups() {
+  }
+
+  showGroupCreate() {
   }
 
   private async changeName() {

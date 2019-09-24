@@ -31,12 +31,32 @@ const routes: Routes = [
           {
             path: 'settings',
             children:
-                [
-                  {
-                    path: '',
-                    loadChildren: '../settings/settings.module#SettingsPageModule'
-                  }
-                ]
+              [
+                {
+                  path: '',
+                  loadChildren: '../settings/settings.module#SettingsPageModule',
+                }
+              ]
+          },
+          {
+            path: 'settings/create-group',
+            children:
+              [
+                {
+                  path: '',
+                  loadChildren: '../settings/create-group/create-group.module#CreateGroupPageModule',
+                }
+              ]
+          },
+          {
+            path: 'settings/join-group',
+            children:
+              [
+                {
+                  path: '',
+                  loadChildren: '../settings/join-group/join-group.module#JoinGroupPageModule',
+                }
+              ]
           },
           {
             path: '',

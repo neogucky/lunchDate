@@ -26,7 +26,13 @@
                [(ngModel)]="global.user.name"></ion-input>
   </ion-item>
 
-  <h3 *ngIf="global.user.name === undefined || global.user.name == ''">{{'SETTINGS.NEED_NAME' | translate}}</h3>
+  <h4 *ngIf="global.user.name === undefined || global.user.name == ''">{{'SETTINGS.NEED_NAME' | translate}}</h4>
+
+  <ion-item *ngIf="this.global.group.roles.length === 0">
+    <ion-button expand="block" color="primary" routerLink="/home/settings/join-group/" routerDirection="forward">{{'SETTINGS.JOIN_GROUP' | translate}}</ion-button>
+    <ion-button expand="block" routerLink="/home/settings/create-group/" routerDirection="forward">{{'SETTINGS.CREATE_GROUP' | translate}}</ion-button>
+  </ion-item>
+  <h4 *ngIf="this.global.group.roles.length === 0">{{'SETTINGS.NEED_GROUP' | translate}}</h4>
 
   <ion-item>
     <ion-label>{{'SETTINGS.NEW_NOTIFICATION' | translate}}</ion-label>

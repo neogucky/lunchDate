@@ -9,6 +9,8 @@ const routes: Routes = [
   { path: 'settings', loadChildren: './settings/settings.module#SettingsPageModule' },
   { path: 'signup', loadChildren: './signup/signup.module#SignupPageModule' },
   { path: 'time', loadChildren: './time/time.module#TimePageModule' },
+  { path: 'create-group', loadChildren: './settings/create-group/create-group.module#CreateGroupPageModule' },
+  { path: 'join-group', loadChildren: './settings/join-group/join-group.module#JoinGroupPageModule' },
 ];
 
 @NgModule({

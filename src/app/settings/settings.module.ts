@@ -9,7 +9,7 @@ import { SettingsPage } from './settings.page';
 
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpLoaderFactory } from '../app.module';
-import {HttpClient} from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 const routes: Routes = [
   {

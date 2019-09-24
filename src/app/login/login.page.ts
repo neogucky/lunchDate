@@ -31,9 +31,9 @@ export class LoginPage implements OnInit {
         private splashScreen: SplashScreen,
         private fb: FormBuilder,
         private platform: Platform,
+        private backend: FirebaseService,
         public global: Global,
         private appVersion: AppVersion,
-        private backend: FirebaseService,
         private router: Router,
         private storage: Storage,
         private route: ActivatedRoute
@@ -45,7 +45,6 @@ export class LoginPage implements OnInit {
         });
 
         this.route.queryParams.subscribe(params => {
-          console.log(params);
           if (params && params.user) {
               this.username = params.user.username;
               this.password = params.user.password;
@@ -115,7 +114,6 @@ export class LoginPage implements OnInit {
             password: data.password
         };
 
-        console.log(this.auth);
         this.auth.signInWithEmail(credentials)
             .then(
                 () => this.loadApp(),
@@ -133,7 +131,8 @@ export class LoginPage implements OnInit {
 
         // get push token
         if (!this.platform.is('pwa') && !this.platform.is('mobileweb')) {
-            this.backend.initializeFirebasePush(this.platform);
+          console.log('initializeFirebasePush for android');
+          this.backend.initializeFirebasePush(this.platform);
         }
 
         let initFinished = false;
@@ -153,7 +152,6 @@ export class LoginPage implements OnInit {
             } else {
                 this.global.user = {name: ''};
             }
-            console.log(this.global);
 
             // get group
             this.backend.getGroup().subscribe((group) => {

@@ -19,6 +19,12 @@ export class FirebaseService {
 
     }
 
+   FIREBASE_URL: string;
+
+    getUserMail() {
+      return this.auth.getEmail();
+    }
+
     updateUserName(value) {
         this.afs.doc('participants/' + this.auth.uid)
             .update({name: value})
@@ -77,16 +83,45 @@ export class FirebaseService {
     updateFCMToken(value) {
         this.afs.doc('participants/' + this.auth.uid)
             .update({FCMtoken: value})
-            .then(() => {
-                // update successful (document exists)
-            })
             .catch((error) => {
-                // console.log('Error updating user', error); // (document does not exists)
+                // FCMtoken needs to be created since it did not exist
                 this.afs.doc('participants/' + this.auth.uid)
                     .set({FCMtoken: value}).catch(e => {
                     console.log(e);
                 });
             });
+    }
+
+    createGroup(group: {
+      group_name: any;
+      group_key: any;
+      mail_match: boolean;
+      mailMatchDomain: string;
+    }): any {
+      if (!group.mail_match) {
+        group.mailMatchDomain = '';
+      }
+
+      // FIXME: check if mailMatch doesn't exist
+      // FIXME: set or check mailMatch serverside to prevent cheating
+
+      return this.afs.collection('group/')
+        .add({
+          name: group.group_name,
+          groupKey: group.group_key,
+          creator: this.global.user.name,
+          mailMatch: group.mailMatchDomain
+        }).catch(e => {
+        console.log(e);
+      });
+    }
+
+    joinGroup(groupKey: string) {
+      return this.afs.doc('participants/' + this.auth.uid)
+        .update({groupKey})
+        .catch((error) => {
+          console.log('Error updating user', error);
+        });
     }
 
     addSuggestionNow() {
@@ -212,23 +247,28 @@ export class FirebaseService {
 
   initializeFirebasePush(platform) {
     try {
-     this.firebasePush.subscribe('all');
-     platform.is('android') ? this.initializeFirebaseAndroid() : this.initializeFirebaseIOS();
+      if (this.global.user !== undefined && this.global.user.group !== undefined) {
+        this.firebasePush.subscribe(this.global.user.group);
+      }
+      console.log('platform', platform);
+      platform.is('android') ? this.initializeFirebaseAndroid() : this.initializeFirebaseIOS();
     } catch (error) {
-     this.firebasePush.logError(error);
+     console.error(error);
     }
   }
 
   initializeFirebaseAndroid() {
-   this.firebasePush.getToken().then(token => this.updateFCMToken(token));
-   this.firebasePush.onTokenRefresh().subscribe(token => this.updateFCMToken(token))
-   this.subscribeToPushNotifications();
+    console.log('initializeFirebasePush for android');
+    this.firebasePush.getToken().then(token => this.updateFCMToken(token));
+    this.firebasePush.onTokenRefresh().subscribe(token => this.updateFCMToken(token));
+    this.subscribeToPushNotifications();
   }
   initializeFirebaseIOS() {
-   this.firebasePush.grantPermission()
+    console.log('initializeFirebasePush for iOS');
+    this.firebasePush.grantPermission()
       .then(() => {
        this.firebasePush.getToken().then(token => this.updateFCMToken(token));
-       this.firebasePush.onTokenRefresh().subscribe(token => this.updateFCMToken(token))
+       this.firebasePush.onTokenRefresh().subscribe(token => this.updateFCMToken(token));
        this.subscribeToPushNotifications();
       })
       .catch((error) => {
@@ -244,5 +284,4 @@ export class FirebaseService {
       }
     });
   }
-
 }

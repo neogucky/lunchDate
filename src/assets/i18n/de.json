@@ -21,8 +21,8 @@
   "SIGNUP.WORKMAIL": "Arbeits E-Mail",
   "SIGNUP.EXPLANATION": "Damit du mit deinen Kollegen in einer Gruppe bist, musst du eine Mail-Adresse mit einer Arbeits-Domain verwenden.",
 
-  "TIME.WELCOME": "Willkommen bei Lunch Date! Du musst einer Gruppe beitreten um Termine vorschlagen und sehen zu können",
-  "TIME.WELCOME_EXPLANATION": "Derzeit passiert dies über deine Arbeits-Mail-Adresse. Schreibe uns über lunchdate@new-media-design.net wenn du Hilfe benötigst.",
+  "TIME.WELCOME": "Willkommen bei Lunch Date! Trete einer Gruppe bei um Termine vorschlagen und sehen zu können.",
+  "TIME.WELCOME_EXPLANATION": "Diese App hilft bei der Termin- und Ortsfindung für die Mittagspause. Schreibe uns über lunchdate@new-media-design.net wenn du Hilfe benötigst.",
   "TIME.CREATETEXT_1": "Klicke auf",
   "TIME.CREATETEXT_2": "um einen Essens-Termin für heute vorzuschlagen",
   "TIME.PARTICIPANTS_TITLE":  "Teilnehmer für",
@@ -65,5 +65,16 @@
   "SETTINGS.ABOUT_TEXT": "Nomen<br> <i>aus dem Englischen</i><br><br> 1. Eine Frucht<br> 2. Eine Absprache zu einem gemeinsammen Essen",
   "SETTINGS.LANGUAGE": "Sprache",
   "SETTINGS.MEMBERS": "Mitglieder",
-  "SETTINGS.NAME_CHANGED": "Dein Name ist nun:"
+  "SETTINGS.NAME_CHANGED": "Dein Name ist nun:",
+  "SETTINGS.JOIN_GROUP": "Gruppe beitreten",
+  "SETTINGS.CREATE_GROUP": "Gruppe erstellen",
+  "SETTINGS.ABOUT_GROUPS": "Alle Mitglieder einer Gruppe werden über Essenstermine informiert und können diesen beitreten. Frage Gruppenmitglieder nach dem Schlüssel um beiztutreten.",
+  "SETTINGS.ABOUT_CREATING_GROUPS": "Erstelle eine Gruppe in der deine Kollegen ihre Mittagspause organisieren können. Sie können der Gruppe entweder über einen Gruppen-Schlüssel oder über ihre Arbeitsmailadresse beitreten.",
+  "SETTINGS.ABOUT_JOINING_GROUPS": "Frage Gruppenmitglieder nach dem Schlüssel um beiztutreten.",
+  "SETTINGS.GROUP_KEY": "Gruppen Schlüssel",
+  "SETTINGS.GROUP_NAME": "Gruppen Name",
+  "SETTINGS.MAIL_MATCH": "Automatisch zuordnen",
+  "SETTINGS.MAIL_MATCH_ADDRESS": "zugehörige Mail",
+  "SETTINGS.MAIL_MATCH_DESCRIPTION": "Jeder Nutzer mit einer zugehörigen Mail-Adresse wird automatisch der Gruppe hinzugefügt. Wenn diese Mail-Adresse nicht nur von direkten Kollegen genutzt wird sollte die Option daktiviert werden."
+
 }

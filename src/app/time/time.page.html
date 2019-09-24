@@ -6,6 +6,9 @@
   <div *ngIf="this.global.user.group === undefined">
     <h3>{{ 'TIME.WELCOME' | translate }}</h3>
     <p>{{ 'TIME.WELCOME_EXPLANATION' | translate }}</p>
+    <ion-button expand="block" color="primary" routerLink="/home/settings/join-group/" routerDirection="forward">{{'SETTINGS.JOIN_GROUP' | translate}}</ion-button>
+    <ion-button expand="block" routerLink="/home/settings/create-group/" routerDirection="forward">{{'SETTINGS.CREATE_GROUP' | translate}}</ion-button>
+
   </div>
 
   <div *ngIf="this.global.user.group !== undefined">

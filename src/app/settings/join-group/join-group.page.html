@@ -1,0 +1,26 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="settings"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'SETTINGS.JOIN_GROUP' | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+
+  {{ 'SETTINGS.ABOUT_GROUPS' | translate}}
+  {{ 'SETTINGS.ABOUT_JOINING_GROUPS' | translate}}
+
+  <form (ngSubmit)="joinGroup()">
+    <br>
+      <ion-item>
+        <ion-input type="text" [(ngModel)]="groupKey" name="group_key" placeholder="{{ 'SETTINGS.GROUP_KEY' | translate}}"></ion-input>
+      </ion-item>
+    <br>
+    <ion-button ion-button expand="full" type="submit">{{ 'SETTINGS.JOIN_GROUP' | translate}}</ion-button>
+  </form>
+  <p class="errorMessage" *ngIf="errorMessage !== ''">{{errorMessage}}</p>
+  <p class="successMessage" *ngIf="successMessage !== ''">{{successMessage}}</p>
+
+</ion-content>

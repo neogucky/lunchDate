@@ -19,13 +19,13 @@
   "SIGNUP.SIGNUP": "Sign up",
   "SIGNUP.MISSING_INFO_ERROR": "Please enter your mail address and password!",
   "SIGNUP.WORKMAIL": "Work-Mail",
-  "SIGNUP.EXPLANATION": "You need to use a mail-domain which is shared by your collegues in order to be matched to the same group.",
+  "SIGNUP.EXPLANATION": "You need to use a mail-domain which is shared by your colleagues in order to be matched to the same group.",
 
   "MEAL.MENU": "Menu",
   "MEAL.NO_RESTAURANTS": "No restaurants are available for your group",
 
-  "TIME.WELCOME": "Welcome to Lunch Date! You need to join a group in order to participate in communal lunches.",
-  "TIME.WELCOME_EXPLANATION": "At the moment this works by using a verified work mail-address or asking the group admin. In the released version you will be able to create and moderate groups using this app.",
+  "TIME.WELCOME": "Welcome to Lunch Date!",
+  "TIME.WELCOME_EXPLANATION": "This App is for organizing a time and place to have lunch at work. Join a group to participate communal lunches with colleagues. If you are the first member create one instead.",
   "TIME.CREATETEXT_1": "Click on",
   "TIME.CREATETEXT_2": "to tell your colleagues today's lunch time",
   "TIME.PARTICIPANTS_TITLE":  "Participants for",
@@ -69,5 +69,15 @@
   "SETTINGS.ABOUT_TEXT": "noun<br> 1. A fruit that is traditionally shared with coworkers at lunchtime.<br> 2. A set time to meet people for lunch.",
   "SETTINGS.LANGUAGE": "Language",
   "SETTINGS.MEMBERS": "Members",
-  "SETTINGS.NAME_CHANGED": "Name was changed to:"
+  "SETTINGS.NAME_CHANGED": "Name was changed to:",
+  "SETTINGS.JOIN_GROUP": "Join group",
+  "SETTINGS.CREATE_GROUP": "Create group",
+  "SETTINGS.ABOUT_GROUPS": "Members of a group will be notified about new launch dates and be able to join them.",
+  "SETTINGS.ABOUT_CREATING_GROUPS": "Create a group so your colleagues can organize lunch dates. Colleagues can either join with a group key or by their corporate mail address.",
+  "SETTINGS.ABOUT_JOINING_GROUPS": "To join a group ask any member for the group key.",
+  "SETTINGS.GROUP_KEY": "Group key",
+  "SETTINGS.GROUP_NAME": "Group name",
+  "SETTINGS.MAIL_MATCH": "match automatically",
+  "SETTINGS.MAIL_MATCH_ADDRESS": "matching mail",
+  "SETTINGS.MAIL_MATCH_DESCRIPTION": "All users using a mail address with this domain will automatically be added to the group. Don't choose this option if more than your direct colleagues share this address"
 }

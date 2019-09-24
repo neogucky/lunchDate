@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="settings"></ion-back-button>
+    </ion-buttons>
+    <ion-title>{{ 'SETTINGS.CREATE_GROUP' | translate}}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+
+  {{ 'SETTINGS.ABOUT_GROUPS' | translate}}
+  {{ 'SETTINGS.ABOUT_CREATING_GROUPS' | translate}}
+
+  <form (ngSubmit)="createGroup()" [formGroup]="form">
+    <ion-list inset>
+      <ion-item>
+      <ion-input type="text" [(ngModel)]="groupName" formControlName="group_name" placeholder="{{ 'SETTINGS.GROUP_NAME' | translate}}"></ion-input>
+    </ion-item>
+      <ion-item>
+        <ion-input type="text" [(ngModel)]="groupKey" formControlName="group_key" placeholder="{{ 'SETTINGS.GROUP_KEY' | translate}}"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label>{{'SETTINGS.MAIL_MATCH' | translate}}</ion-label>
+        <ion-toggle [(ngModel)]="mailMatch" formControlName="mail_match"></ion-toggle>
+      </ion-item>
+      <ion-item *ngIf="mailMatch == true" lines="none">
+        <ion-label>{{'SETTINGS.MAIL_MATCH_ADDRESS' | translate}}</ion-label>
+        <ion-label>{{mailMatchDomain}}</ion-label>
+      </ion-item>
+      <ion-item *ngIf="mailMatch == true">
+        <ion-label class="ion-text-wrap italic">{{'SETTINGS.MAIL_MATCH_DESCRIPTION' | translate}}</ion-label>
+      </ion-item>
+      <br>
+      <ion-button ion-button expand="full" type="submit">{{ 'SETTINGS.CREATE_GROUP' | translate}}</ion-button>
+    </ion-list>
+  </form>
+  <p class="errorMessage" *ngIf="errorMessage !== ''">{{errorMessage}}</p>
+  <p class="successMessage" *ngIf="successMessage !== ''">{{successMessage}}</p>
+
+</ion-content>

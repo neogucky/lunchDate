@@ -5,16 +5,16 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { IonicModule } from '@ionic/angular';
 
-import { SignupPage } from './signup.page';
+import { CreateGroupPage } from './create-group.page';
 
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpLoaderFactory } from '../app.module';
+import { HttpLoaderFactory } from '../../app.module';
 import { HttpClient } from '@angular/common/http';
 
 const routes: Routes = [
   {
     path: '',
-    component: SignupPage
+    component: CreateGroupPage
   }
 ];
 
@@ -33,6 +33,6 @@ const routes: Routes = [
       }
     })
   ],
-  declarations: [SignupPage]
+  declarations: [CreateGroupPage]
 })
-export class SignupPageModule {}
+export class CreateGroupPageModule {}
