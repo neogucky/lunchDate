@@ -1,8 +1,5 @@
 <ion-header>
   <ion-toolbar (click)="hiddenLogin()">
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
     <ion-title>{{ 'LOGIN.TITLE' | translate}}</ion-title>
   </ion-toolbar>
 </ion-header>
@@ -45,5 +42,7 @@
       {{ 'LOGIN.SIGNUP' | translate}}
     </ion-button>
   </ion-list>
+  <a class="privacy" (click)="goToPrivacy()">{{'LOGIN.PRIVACY' | translate}}</a>
+
   <p class="version" (click)="hiddenDebugJump()">{{versionNumber}}</p>
 </ion-content>

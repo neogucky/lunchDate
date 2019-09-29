@@ -15,6 +15,7 @@
 	"LOGIN.LOGIN": "Einloggen",
 	"LOGIN.SIGNUP_HINT": "Für neue Nutzer ist eine Registrierung nötig.",
 	"LOGIN.SIGNUP": "Registrieren",
+  "LOGIN.PRIVACY": "Impressum",
 
   "SIGNUP.SIGNUP": "Registrieren",
   "SIGNUP.MISSING_INFO_ERROR": "Du musst eine Mailadresse und ein sicheres Passwort eingeben!",
@@ -75,6 +76,7 @@
   "SETTINGS.GROUP_NAME": "Gruppen Name",
   "SETTINGS.MAIL_MATCH": "Automatisch zuordnen",
   "SETTINGS.MAIL_MATCH_ADDRESS": "zugehörige Mail",
-  "SETTINGS.MAIL_MATCH_DESCRIPTION": "Jeder Nutzer mit einer zugehörigen Mail-Adresse wird automatisch der Gruppe hinzugefügt. Wenn diese Mail-Adresse nicht nur von direkten Kollegen genutzt wird sollte die Option daktiviert werden."
-
+  "SETTINGS.MAIL_MATCH_DESCRIPTION": "Jeder Nutzer mit einer zugehörigen Mail-Adresse wird automatisch der Gruppe hinzugefügt. Wenn diese Mail-Adresse nicht nur von direkten Kollegen genutzt wird sollte die Option daktiviert werden.",
+  "SETTINGS.LEAVE_GROUP": "Gruppe verlassen",
+  "SETTINGS.NEED_GROUP": "Trete einer Gruppe bei"
 }

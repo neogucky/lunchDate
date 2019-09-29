@@ -36,10 +36,8 @@ export class HomePage implements OnInit{
         console.log('Go directly to time page');
         this.router.navigate(['/home/time']);
 
-        // get push token
         if (!this.platform.is('pwa') && !this.platform.is('mobileweb')) {
-          console.log('initializeFirebasePush for android');
-          this.backend.initializeFirebasePush(this.platform);
+          this.backend.initializeFirebasePush();
         }
       } else {
         console.log('Go to settings first');

@@ -19,8 +19,6 @@ export class FirebaseService {
 
     }
 
-   FIREBASE_URL: string;
-
     getUserMail() {
       return this.auth.getEmail();
     }
@@ -40,31 +38,33 @@ export class FirebaseService {
             });
     }
 
-    updateUserAllowPush(value) {
+    updateUserAllowPush(allowPush) {
         this.afs.doc('participants/' + this.auth.uid)
-            .update({allowPush: value})
+            .update({allowPush})
             .then(() => {
                 // update successful (document exists)
             })
             .catch((error) => {
                 // console.log('Error updating user', error); // (document does not exists)
                 this.afs.doc('participants/' + this.auth.uid)
-                    .set({allowPush: value}).catch(e => {
+                    .set({allowPush}).catch(e => {
                     console.log(e);
                 });
             });
+
+        this.global.user.allowPush(allowPush);
     }
 
-    updateUserAllowReminder(value) {
+    updateUserAllowReminder(allowReminder) {
         this.afs.doc('participants/' + this.auth.uid)
-            .update({allowReminder: value})
+            .update({allowReminder})
             .then(() => {
                 // update successful (document exists)
             })
             .catch((error) => {
                 // console.log('Error updating user', error); // (document does not exists)
                 this.afs.doc('participants/' + this.auth.uid)
-                    .set({allowReminder: value}).catch(e => {
+                    .set({allowReminder}).catch(e => {
                     console.log(e);
                 });
             });
@@ -78,18 +78,6 @@ export class FirebaseService {
     getGroup(): any {
         return this.afs.doc<any>('group/' + this.global.user.group)
             .valueChanges();
-    }
-
-    updateFCMToken(value) {
-        this.afs.doc('participants/' + this.auth.uid)
-            .update({FCMtoken: value})
-            .catch((error) => {
-                // FCMtoken needs to be created since it did not exist
-                this.afs.doc('participants/' + this.auth.uid)
-                    .set({FCMtoken: value}).catch(e => {
-                    console.log(e);
-                });
-            });
     }
 
     createGroup(group: {
@@ -121,6 +109,23 @@ export class FirebaseService {
         .update({groupKey})
         .catch((error) => {
           console.log('Error updating user', error);
+        }).then(() => {
+          this.managePushSubscription(this.global.user.allowPush);
+        });
+    }
+
+    leaveGroup() {
+      if (this.global.user.allowPush) {
+        this.managePushSubscription(false);
+      }
+      return this.afs.doc('participants/' + this.auth.uid)
+        .update({group: 'leave_G5x9'})
+        .catch((error) => {
+          console.log('Error updating user', error);
+        }).then(() => {
+          if (this.global.user.allowPush) {
+            this.managePushSubscription(true);
+          }
         });
     }
 
@@ -207,6 +212,11 @@ export class FirebaseService {
     }
 
     unparticipate() {
+        if (this.global.user.suggestionID === 'busy') {
+          if (this.global.user.allowPush) {
+            this.managePushSubscription(true);
+          }
+        }
         this.afs.doc('participants/' + this.auth.uid)
             .update({suggestionID: ' '}).catch(e => {
             console.log(e);
@@ -214,10 +224,23 @@ export class FirebaseService {
     }
 
     participate(id) {
-        this.afs.doc('participants/' + this.auth.uid)
-            .update({suggestionID: id}).catch(e => {
-            console.log(e);
-        });
+      if (this.global.user.suggestionID === 'busy') {
+        // user was busy
+        if (this.global.user.allowPush) {
+          this.managePushSubscription(true);
+        }
+      }
+      this.afs.doc('participants/' + this.auth.uid)
+          .update({suggestionID: id}).catch(e => {
+          console.log(e);
+      });
+
+      if (id === 'busy') {
+        // user has become busy
+        if (this.global.user.allowPush) {
+          this.managePushSubscription(false);
+        }
+      }
     }
 
     setLanguage(language: string) {
@@ -245,43 +268,33 @@ export class FirebaseService {
       });
   }
 
-  initializeFirebasePush(platform) {
-    try {
-      if (this.global.user !== undefined && this.global.user.group !== undefined) {
-        this.firebasePush.subscribe(this.global.user.group);
-      }
-      console.log('platform', platform);
-      platform.is('android') ? this.initializeFirebaseAndroid() : this.initializeFirebaseIOS();
-    } catch (error) {
-     console.error(error);
-    }
+  initializeFirebasePush() {
+    console.log('called initializeFirebasePush');
+    this.managePushSubscription(this.global.user.allowPush && this.global.user.suggestionID !== 'busy');
   }
 
-  initializeFirebaseAndroid() {
-    console.log('initializeFirebasePush for android');
-    this.firebasePush.getToken().then(token => this.updateFCMToken(token));
-    this.firebasePush.onTokenRefresh().subscribe(token => this.updateFCMToken(token));
-    this.subscribeToPushNotifications();
-  }
-  initializeFirebaseIOS() {
-    console.log('initializeFirebasePush for iOS');
-    this.firebasePush.grantPermission()
-      .then(() => {
-       this.firebasePush.getToken().then(token => this.updateFCMToken(token));
-       this.firebasePush.onTokenRefresh().subscribe(token => this.updateFCMToken(token));
-       this.subscribeToPushNotifications();
-      })
-      .catch((error) => {
-       this.firebasePush.logError(error);
-      });
-  }
-  subscribeToPushNotifications() {
-   this.firebasePush.onNotificationOpen().subscribe((response) => {
-      if (response.tap) {
-        // app was opened by clicking on push notification
-      } else {
-        // app was already open when receiving push
+  /*
+   *  Manages which topic is subscribed by the user. This must be updated if the lunch group, the users availability
+   *  or his desire to receive push notifications changes
+   */
+  managePushSubscription(allowPush) {
+    if (allowPush) {
+      try {
+        if (this.global.user !== undefined && this.global.user.group !== undefined && this.global.user.allowPush) {
+          this.firebasePush.subscribe(this.global.user.group);
+        }
+      } catch (error) {
+        console.error('error subscribing group', error);
       }
-    });
+    } else {
+      try {
+        if (this.global.user !== undefined && this.global.user.group !== undefined) {
+          this.firebasePush.unsubscribe(this.global.user.group);
+        }
+      } catch (error) {
+        console.error('error unsubscribing group', error);
+      }
+
+    }
   }
 }

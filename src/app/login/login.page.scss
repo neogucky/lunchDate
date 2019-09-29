@@ -9,13 +9,20 @@
     padding-left: 0;
   }
 
-
-    .version {
+  .version {
     text-align: right;
     position: absolute;
     right: 16px;
     bottom: 16px;
   }
+
+  .privacy {
+    text-align: left;
+    position: absolute;
+    left: 16px;
+    bottom: 32px;
+  }
+
   .form-error {
     margin-bottom: 15px;
   }

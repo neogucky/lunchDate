@@ -21,7 +21,6 @@ export class JoinGroupPage implements OnInit {
   ngOnInit() {
   }
 
-
   async joinGroup() {
     this.errorMessage = '';
     this.successMessage = '';
@@ -38,6 +37,5 @@ export class JoinGroupPage implements OnInit {
         }
       });
     }
-
   }
 }

@@ -82,7 +82,7 @@ export class LoginPage implements OnInit {
             }
         });
 
-        const dummyVersion = '~0.7.3';
+        const dummyVersion = '~1.0.0';
         this.versionNumber = 'version ' + dummyVersion;
         if (this.platform.is('cordova')) {
             this.appVersion.getVersionNumber().then((s) => {
@@ -129,12 +129,6 @@ export class LoginPage implements OnInit {
             return;
         }
 
-        // get push token
-        if (!this.platform.is('pwa') && !this.platform.is('mobileweb')) {
-          console.log('initializeFirebasePush for android');
-          this.backend.initializeFirebasePush(this.platform);
-        }
-
         let initFinished = false;
         this.backend.getUser().subscribe(data => {
             if (data !== undefined) {
@@ -154,36 +148,42 @@ export class LoginPage implements OnInit {
             }
 
             // get group
-            this.backend.getGroup().subscribe((group) => {
+            if (this.global.user.group !== undefined && this.global.user.group !== '' ) {
+              this.backend.getGroup().subscribe((group) => {
                 if (group !== undefined && group.name !== undefined) {
-                    this.global.group = group;
+                  this.global.group = group;
                 } else {
-                    this.global.group = {name: 'none', roles: []};
+                  this.global.group = {name: 'none', roles: []};
                 }
 
                 // run this only once
                 if (!initFinished) {
-                    setTimeout(() => {
-                        this.splashScreen.hide();
-                        console.log('end splash autologin');
-                    }, 1000);
+                  setTimeout(() => {
+                    this.splashScreen.hide();
+                    console.log('end splash autologin');
+                  }, 1000);
 
-                    // FIXME: this should be done only once when first setting the language
-                    this.backend.setLanguage(this.global.language);
+                  // FIXME: this should be done only once when first setting the language
+                  this.backend.setLanguage(this.global.language);
 
-                    initFinished = true;
-                    this.router.navigateByUrl('/home');
+                  initFinished = true;
+                  this.router.navigateByUrl('/home');
                 }
-            });
+              });
+            }
         });
     }
 
     signup() {
-        this.router.navigate(['signup']);
+      this.router.navigate(['signup']);
+    }
+
+    goToPrivacy() {
+      this.router.navigate(['privacy']);
     }
 
     onStaySignedin() {
-        this.storage.set('staySignedin', this.staySignedin);
+          this.storage.set('staySignedin', this.staySignedin);
     }
 
     async hiddenLogin() {
@@ -206,4 +206,3 @@ export class LoginPage implements OnInit {
     }
 
 }
-

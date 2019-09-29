@@ -150,25 +150,33 @@ export class SettingsPage implements OnInit {
   selectImage() {
     self.imageUpload = 'selecting';
     this.imagePicker.hasReadPermission().then(
-      (result) => {
-        if (result === false) {
+      (hasReadPermission) => {
+        if (!hasReadPermission) {
           // no callbacks required as this opens a popup which returns async
           this.imagePicker.requestReadPermission();
-        } else if (result === true) {
+        } else {
           this.imagePicker.getPictures({
             maximumImagesCount: 1
           }).then(
             (images) => {
+              self.imageUpload = '';
+              if (images.length !== 0) {
                 this.crop.crop(images[0], {quality: 100})
                   .then(
                     newImage => this.uploadImageToFirebase(newImage),
-                    error => {
-                      console.error('Error cropping image', error);
-                      self.imageUpload = '';
+                    err => {
+                      console.error('Error cropping image', err);
                     }
                   );
-            }, (err) => console.log(err)
-          );
+              }
+              }, (err) => {
+                console.log('Error opening gallery', err);
+                self.imageUpload = '';
+              }
+          ).catch((err) => {
+            console.log(err);
+            self.imageUpload = '';
+          });
         }
       }, (err) => {
         console.log(err);
@@ -203,6 +211,17 @@ export class SettingsPage implements OnInit {
       }).catch(error => {
         console.error(error);
         self.imageUpload = '';
+      });
+  }
+
+  async leaveGroup() {
+      this.backend.leaveGroup().then(async (response) => {
+        const alert = await self.toastCtrl.create({
+          message: 'left group',
+          duration: 3000,
+          position: 'top'
+        });
+        alert.present();
       });
   }
 }

@@ -4,8 +4,8 @@
   </div>
 
   <div class="userBox">
-    <ion-icon [hidden]="userImage !== undefined" (click)="selectImage()" name="contact"></ion-icon>
-    <div class="imageContainer" [hidden]="userImage === undefined" (click)="selectImage()"><img src="{{userImage}}"></div>
+    <ion-icon *ngIf="global.user.avatar === undefined" (click)="selectImage()" name="contact"></ion-icon>
+    <div class="imageContainer" *ngIf="global.user.avatar != undefined" (click)="selectImage()"><img src="{{global.user.avatar}}"></div>
     <div class="inner">
       {{global.user.name}}
       <br>
@@ -19,40 +19,50 @@
   </div>
 
   <br>
-
-  <ion-item>
-    <ion-label color="primary">{{'SETTINGS.NAME' | translate}}</ion-label>
-    <ion-input placeholder="{{'SETTINGS.ADD_NAME' | translate}}" (input)="onInput()"
-               [(ngModel)]="global.user.name"></ion-input>
-  </ion-item>
-
-  <h4 *ngIf="global.user.name === undefined || global.user.name == ''">{{'SETTINGS.NEED_NAME' | translate}}</h4>
-
-  <ion-item *ngIf="this.global.group.roles.length === 0">
-    <ion-button expand="block" color="primary" routerLink="/home/settings/join-group/" routerDirection="forward">{{'SETTINGS.JOIN_GROUP' | translate}}</ion-button>
-    <ion-button expand="block" routerLink="/home/settings/create-group/" routerDirection="forward">{{'SETTINGS.CREATE_GROUP' | translate}}</ion-button>
-  </ion-item>
-  <h4 *ngIf="this.global.group.roles.length === 0">{{'SETTINGS.NEED_GROUP' | translate}}</h4>
-
-  <ion-item>
-    <ion-label>{{'SETTINGS.NEW_NOTIFICATION' | translate}}</ion-label>
-    <ion-toggle (ionChange)="onAllowPush()" [(ngModel)]="global.user.allowPush"></ion-toggle>
-  </ion-item>
-  <ion-item>
-    <ion-label>{{'SETTINGS.START_NOTIFICATION' | translate}}</ion-label>
-    <ion-toggle (ionChange)="onAllowReminder()" [(ngModel)]="global.user.allowReminder"></ion-toggle>
-  </ion-item>
-  <ion-item>
-    <ion-label>{{'SETTINGS.LANGUAGE' | translate}}</ion-label>
-    <ion-select (ionChange)="onLanguageChange()" [(ngModel)]="global.language">
-      <ion-select-option value="de">Deutsch</ion-select-option>
-      <ion-select-option value="en">English</ion-select-option>
-    </ion-select>
-  </ion-item>
-  <ion-item detail-push (click)="onAbout()">
-    {{'SETTINGS.ABOUT' | translate}}
-  </ion-item>
-
+  <ion-list>
+    <ion-item>
+      <ion-label color="primary">{{'SETTINGS.NAME' | translate}}</ion-label>
+      <ion-input placeholder="{{'SETTINGS.ADD_NAME' | translate}}" (input)="onInput()"
+                 [(ngModel)]="global.user.name"></ion-input>
+    </ion-item>
+    <ion-item class="item-interactive" *ngIf="global.user.name === undefined || global.user.name == ''" inset>
+      <h4>{{'SETTINGS.NEED_NAME' | translate}}</h4>
+    </ion-item>
+    <ion-item class="item-interactive" *ngIf="global.group.roles.length === 0">
+      <ion-button expand="block" color="primary" routerLink="/home/settings/join-group/" routerDirection="forward">{{'SETTINGS.JOIN_GROUP' | translate}}</ion-button>
+      <ion-button expand="block" routerLink="/home/settings/create-group/" routerDirection="forward">{{'SETTINGS.CREATE_GROUP' | translate}}</ion-button>
+    </ion-item>
+    <ion-item class="item-interactive" *ngIf="global.group.roles.length === 0" inset>
+    <h4 *ngIf="global.group.roles.length === 0">{{'SETTINGS.NEED_GROUP' | translate}}</h4>
+    </ion-item>
+    <ion-item class="item-interactive" *ngIf="global.group.roles.length > 0">
+      <ion-icon name="contacts" style="padding-right:10px;"></ion-icon>
+      <ion-label>{{global.group.name}}</ion-label>
+      <ion-button  (click)="leaveGroup()">{{'SETTINGS.LEAVE_GROUP' | translate}}</ion-button>
+    </ion-item>
+    <ion-item class="item-interactive" *ngIf="global.group.roles.length > 0">
+      <ion-label>{{'SETTINGS.GROUP_KEY' | translate}}</ion-label>
+      <ion-label style="text-align: right;">{{global.group.groupKey}}</ion-label>
+    </ion-item>
+    <ion-item class="item-interactive">
+      <ion-label>{{'SETTINGS.NEW_NOTIFICATION' | translate}}</ion-label>
+      <ion-toggle (ionChange)="onAllowPush()" [(ngModel)]="global.user.allowPush"></ion-toggle>
+    </ion-item>
+    <ion-item class="item-interactive">
+      <ion-label>{{'SETTINGS.START_NOTIFICATION' | translate}}</ion-label>
+      <ion-toggle (ionChange)="onAllowReminder()" [(ngModel)]="global.user.allowReminder"></ion-toggle>
+    </ion-item>
+    <ion-item class="item-interactive">
+      <ion-label>{{'SETTINGS.LANGUAGE' | translate}}</ion-label>
+      <ion-select (ionChange)="onLanguageChange()" [(ngModel)]="global.language">
+        <ion-select-option value="de">Deutsch</ion-select-option>
+        <ion-select-option value="en">English</ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item class="item-interactive" detail-push (click)="onAbout()">
+      {{'SETTINGS.ABOUT' | translate}}
+    </ion-item>
+  </ion-list>
 </ion-content>
 <div class="overlay" [hidden]="imageUpload === ''">
   <span class="center">

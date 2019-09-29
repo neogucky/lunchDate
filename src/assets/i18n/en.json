@@ -14,7 +14,8 @@
 	"LOGIN.REMEMBER": "Stay signed in",
 	"LOGIN.LOGIN": "LOG IN",
 	"LOGIN.SIGNUP_HINT": "If you're a new user, please sign up.",
-	"LOGIN.SIGNUP": "SIGN UP",
+  "LOGIN.SIGNUP": "SIGN UP",
+  "LOGIN.PRIVACY": "Privacy policy",
 
   "SIGNUP.SIGNUP": "Sign up",
   "SIGNUP.MISSING_INFO_ERROR": "Please enter your mail address and password!",
@@ -79,5 +80,7 @@
   "SETTINGS.GROUP_NAME": "Group name",
   "SETTINGS.MAIL_MATCH": "match automatically",
   "SETTINGS.MAIL_MATCH_ADDRESS": "matching mail",
-  "SETTINGS.MAIL_MATCH_DESCRIPTION": "All users using a mail address with this domain will automatically be added to the group. Don't choose this option if more than your direct colleagues share this address"
+  "SETTINGS.MAIL_MATCH_DESCRIPTION": "All users using a mail address with this domain will automatically be added to the group. Don't choose this option if more than your direct colleagues share this address",
+  "SETTINGS.LEAVE_GROUP": "leave group",
+  "SETTINGS.NEED_GROUP": "Join a group to participate"
 }
