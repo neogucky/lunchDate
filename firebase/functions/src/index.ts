@@ -10,50 +10,6 @@ const settings = {timestampsInSnapshots: true};
 db.settings(settings);
 
 /*
- * 	this tries to re-add all users depending on mail adresses. Propably a bad idea to use this when the app is live
- */
-exports.autoAddUsers = functions.https.onRequest((req, res) => {
-
-  const roles = [];
-  let groupID;
-
-  admin.auth().listUsers().then(function (listUsersResult) {
-
-    listUsersResult.users.forEach(function (user) {
-      const mailMatch = user.email.split("@")[1];
-      console.log("Trying to find: " + mailMatch);
-
-      db.collection('group').where('mailMatch', '==', mailMatch).get()
-        .then(snapshot => {
-          snapshot.forEach(doc => {
-            //every group that automatically adds the users mail
-            const group = doc.data();
-            groupID = doc.id;
-            roles.push({UID: user.uid, role: "moderator"});
-
-            db.collection('participants').doc(user.uid).set({group: doc.id}, {merge: true}).catch(err => {
-              console.error('Error setting users group', err);
-            });
-          });
-        }).catch(err => {
-        console.error('Error getting documents', err);
-      });
-    });
-  }).then(() => {
-    setTimeout(() => {
-      db.collection('group').doc(groupID).set({roles: roles}, {merge: true}).catch(err => {
-        console.error('Error setting group roles', err);
-      });
-      return;
-    }, 12000);
-  }).catch(err => {
-    console.error('Error getting users', err);
-  });
-
-});
-
-
-/*
  * 	try to add user to a group if the mail adress matches
  */
 exports.autoAddUser = functions.auth.user().onCreate((user) => {
@@ -68,6 +24,7 @@ exports.autoAddUser = functions.auth.user().onCreate((user) => {
         snapshot.forEach(doc => {
           //every group that automatically adds the users mail
           foundMail = true;
+          console.log("Found matching mail at " + doc.data().name);
           const group = doc.data();
           const roles = group.roles;
           roles.push({UID: user.uid, role: "member"});
@@ -116,74 +73,110 @@ exports.autoAddUser = functions.auth.user().onCreate((user) => {
   });
 });
 
+
+exports.joinGroup = functions.firestore.document('participants/{participantID}').onUpdate((change, context) => {
+
+  const groupKey = change.after.data().groupKey;
+
+  if (groupKey !== undefined && groupKey !== ''){
+    let groupKeyExists;
+    return new Promise((resolve, reject) => {
+      db.collection('group').where('groupKey', '==', groupKey).get()
+        .then(snapshot => {
+          snapshot.forEach(doc => {
+            groupKeyExists = true;
+            const group = doc.data();
+            let roles = group.roles;
+            if (roles === undefined) {
+              roles = [];
+            }
+            roles.push({UID: context.params.participantID, role: "member"});
+            db.collection('group').doc(doc.id).set({roles: roles}, {merge: true}).catch(err => {
+              console.error('Error setting group roles', err);
+            }).then(() => {
+              db.collection('participants').doc(context.params.participantID).set({group: doc.id, groupKey: ''}, {merge: true}).then(() => {
+                resolve(group.name);
+              }).catch(err => {
+                console.error('Error setting users group', err);
+              });
+            }).catch(err => console.log(err));
+          });
+          if (!groupKeyExists){
+            //group key does not exist
+            resolve('');
+          }
+        }).catch(err => {
+        console.error('Error', err);
+      });
+    });
+  } else if (change.after.data().group === 'leave_G5x9') {
+    return new Promise((resolve, reject) => {
+      db.collection('group').doc( change.before.data().group ).get()
+        .then(doc => {
+          const group = doc.data();
+          let roles = group.roles;
+
+          try {
+            const deleteIndex = roles.findIndex((element) => element.UID === context.params.participantID);
+            if (deleteIndex > -1) {
+              roles.splice(deleteIndex, 1);
+            }
+            db.collection('group').doc(doc.id).set({roles: roles}, {merge: true}).catch(err => {
+              console.error('Error setting group roles', err);
+            }).then(() => {
+              db.collection('participants').doc(context.params.participantID).set({
+                group: ''
+              }, {merge: true}).then(() => {
+                resolve(group.name);
+              }).catch(err => {
+                console.error('Error setting users group', err);
+              });
+            }).catch(err => console.log(err));
+          } catch(err){
+            console.error('Error setting users group', err);
+            //even if there is some error remove the group of the user
+            db.collection('participants').doc(context.params.participantID).set({
+              group: ''
+            }, {merge: true}).then(() => {
+              resolve(group.name);
+            }).catch(err => {
+              console.error('Error setting users group', err);
+            });
+          }
+
+        }).catch(err => {
+        console.error('Error', err);
+      });
+    });
+  }
+  return '';
+});
+
 exports.newLunchDate = functions.firestore
   .document('group/{groupId}/suggestion/{suggestionId}')
   .onCreate((change, context) => {
 
-      const data = change.data();
-      const payload = {};
+    const data = change.data();
+    const payload = {};
 
-      const options = {
-        priority: "high",
-        timeToLive: 60 * 60 * 2
-      };
+    const options = {
+      priority: "high",
+      timeToLive: 60 * 60 * 2
+    };
 
-      if (data.type === undefined || data.type !== 'now') {
+    if (data.type === undefined || data.type !== 'now') {
 
-        //assuming datatype 'time' with fallback to earlier versions without type
-        let time = data.time.toDate();
-        const timezoneTime = time.toLocaleString("en-US", {timeZone: "Europe/Berlin"});
-        time = new Date(timezoneTime);
-        const timeFormatted = padZero(time.getHours()) + ":" + padZero(time.getMinutes());
+      //assuming datatype 'time' with fallback to earlier versions without type
+      let time = data.time.toDate();
+      const timezoneTime = time.toLocaleString("en-US", {timeZone: "Europe/Berlin"});
+      time = new Date(timezoneTime);
+      const timeFormatted = padZero(time.getHours()) + ":" + padZero(time.getMinutes());
 
-        if (data.restaurantID === undefined || data.restaurantID === 'none') {
-          payload['en'] = {
-            notification: {
-              title: 'Lunch at ' + timeFormatted,
-              body: 'A colleague wants to go for lunch',
-              icon: 'icon',
-              badge: '1',
-              sound: 'default'
-            }
-          };
-
-          payload['de'] = {
-            notification: {
-              title: 'Mittagessen um ' + timeFormatted,
-              body: 'Gib deinen Kollegen bescheid, ob dir ' + timeFormatted + ' passt',
-              icon: 'icon',
-              badge: '1',
-              sound: 'default'
-            }
-          };
-        } else {
-            payload['en'] = {
-              notification: {
-                title: 'Lunch at ' + timeFormatted,
-                body: 'New lunch date available at restaurant: "' + data.restaurantName + '"',
-                icon: 'icon',
-                badge: '1',
-                sound: 'default'
-              }
-            };
-
-            payload['de'] = {
-              notification: {
-                title: 'Mittagessen um ' + timeFormatted,
-                body: 'Gib deinen Kollegen bescheid, ob dir ' + timeFormatted + ' im Restaurant: "' + data.restaurantName + '" passt',
-                icon: 'icon',
-                badge: '1',
-                sound: 'default'
-              }
-          };
-        }
-      } else {
-        //don't show this for a long time
-        options.timeToLive = 60 * 15;
+      if (data.restaurantID === undefined || data.restaurantID === 'none') {
         payload['en'] = {
           notification: {
-            title: 'Hungry?',
-            body: data.creator + ' wants to go for lunch in 5 minutes',
+            title: 'Lunch at ' + timeFormatted,
+            body: 'A colleague wants to go for lunch',
             icon: 'icon',
             badge: '1',
             sound: 'default'
@@ -192,22 +185,82 @@ exports.newLunchDate = functions.firestore
 
         payload['de'] = {
           notification: {
-            title: 'Hungrig?',
-            body: data.creator + ' möchte in 5 Minutes zum Essen gehen',
+            title: 'Mittagessen um ' + timeFormatted,
+            body: 'Gib deinen Kollegen bescheid, ob dir ' + timeFormatted + ' passt',
             icon: 'icon',
             badge: '1',
             sound: 'default'
           }
+        };
+      } else {
+        payload['en'] = {
+          notification: {
+            title: 'Lunch at ' + timeFormatted,
+            body: 'New lunch date available at restaurant: "' + data.restaurantName + '"',
+            icon: 'icon',
+            badge: '1',
+            sound: 'default'
+          }
+        };
+
+        payload['de'] = {
+          notification: {
+            title: 'Mittagessen um ' + timeFormatted,
+            body: 'Gib deinen Kollegen bescheid, ob dir ' + timeFormatted + ' im Restaurant: "' + data.restaurantName + '" passt',
+            icon: 'icon',
+            badge: '1',
+            sound: 'default'
+          }
+        };
+      }
+    } else {
+      //don't show this for a long time
+      options.timeToLive = 60 * 15;
+      payload['en'] = {
+        notification: {
+          title: 'Hungry?',
+          body: data.creator + ' wants to go for lunch in 5 minutes',
+          icon: 'icon',
+          badge: '1',
+          sound: 'default'
+        }
+      };
+
+      payload['de'] = {
+        notification: {
+          title: 'Hungrig?',
+          body: data.creator + ' möchte in 5 Minutes zum Essen gehen',
+          icon: 'icon',
+          badge: '1',
+          sound: 'default'
         }
       }
+    }
 
-      pushToGroup(payload['de'], context.params.groupId, 'de').then(
-        () => {
-          return pushToGroup(payload['en'], context.params.groupId, 'en');
-        }
-      ).catch(err => {
-        console.log('Error in pushToGroup', err);
+    // FIXME: new topic system - bilingual messages needed
+    // only users that want to receive notifications should be subscribed to the group topics
+    let message = payload['de'];
+    delete message.notification.icon;
+    delete message.notification.badge;
+    delete message.notification.sound;
+    message.topic = context.params.groupId;
+
+    admin.messaging().send(message)
+      .then((response) => {
+        // Response is a message ID string.
+        console.log('Successfully sent message:', response);
+      })
+      .catch((error) => {
+        console.log('Error sending message:', error);
       });
+
+    pushToGroup(payload['de'], context.params.groupId, 'de').then(
+      () => {
+        return pushToGroup(payload['en'], context.params.groupId, 'en');
+      }
+    ).catch(err => {
+      console.log('Error in pushToGroup', err);
+    });
 
   });
 
@@ -226,7 +279,7 @@ function loadUsers(group, language) {
       .then(snapshot => {
         snapshot.forEach(doc => {
           const participant = doc.data();
-          //FIXME: (participant.busyUntil === undefined || participant.busyUntil.seconds < now.getSeconds())
+          // FIXME: (participant.busyUntil === undefined || participant.busyUntil.seconds < now.getSeconds())
           if (participant.FCMtoken !== undefined && (participant.suggestionID !== 'busy') && (participant.language === language || (participant.language === undefined && language === defaultLanguage))) {
             users.push(participant);
           }
@@ -273,7 +326,7 @@ function pushToGroup(payload, group, language) {
 
 exports.loadMenus = functions.https.onRequest((req, res) => {
 
-  //FIXME: I would like a dynamic parser with which I create a database entry on how to parse listed websites
+  // FIXME: I would like a dynamic parser with which I create a database entry on how to parse listed websites
   const morning:Date = new Date();
   morning.setHours(0,0,0,0);
   const ts = new admin.firestore.Timestamp(morning.getSeconds(),0);
@@ -353,14 +406,32 @@ exports.testPush = functions.https.onRequest((req, res) => {
       badge: '1',
       sound: 'default'
     }
-  }
-    const tokens = ['cT43lVcFMms:APA91bGV76fdbwXoQX069PmmGiU9vsrtD2uCnjc7iX8ou5i8N'];
+  };
+  const tokens = ['eKoibccW_q4:APA91bEwnrkKUa6-UrN3KhANASpmSmTQWSRxEc5DLB_YjBKp_H16DL4LhLCwq11PWs8pNwhwjGIclVA4f0IdEizyu76ZDc5envdHTfJl3v5yh3tlbWea1bevubC0HLLmxq1HSUvfDncm'];
 
-    admin.messaging().sendToDevice(tokens, payload).then(() => {
-      res.status(200).end()
-    }).catch(err => {
-      console.log('Error sending push ', err);
-      res.status(200).end()
+  admin.messaging().sendToDevice(tokens, payload).then(() => {
+    res.status(200).end()
+  }).catch(err => {
+    console.log('Error sending push ', err);
+    res.status(200).end()
+  });
+
+  const message = {
+    notification: {
+      title: 'Hungrig?',
+      body: 'Hans möchte in 5 Minutes zum Testen gehen',
+    },
+    topic: 'x5nkgH82CZ8gti8hGcbW'
+  };
+
+  // Send a message to devices subscribed to the provided topic.
+  admin.messaging().send(message)
+    .then((response) => {
+      // Response is a message ID string.
+      console.log('Successfully sent message:', response);
+    })
+    .catch((error) => {
+      console.log('Error sending message:', error);
     });
 });
 
@@ -443,8 +514,8 @@ exports.loadMenus2 = functions.https.onRequest((req, res) => {
                 $(foodSegment).find('br').replaceWith(' ');
                 switch ((i + skippedEntries) % 4) {
                   case 0:
-                      title = $(foodSegment).text();
-                      break;
+                    title = $(foodSegment).text();
+                    break;
                   case 1:
                     //first extract all ingredients which are listed in brackets
                     if ( /\(.*?\)/.test($(foodSegment).text())) {
@@ -458,25 +529,25 @@ exports.loadMenus2 = functions.https.onRequest((req, res) => {
 
                     //add description without ingredients
                     description = title + "\n" + $(foodSegment).text().replace(/ *\([^)]*\) */g, " ");
-                      break;
+                    break;
                   case 2:
                   case 3:
-                      if ($(foodSegment).text().includes('€')) {
-                        price = $(foodSegment).text();
-                        console.log('try adding food item: ' + title);
-                        db.collection('restaurants/' + restaurant.uid + '/menu').add({
-                          'cantineID': restaurant.uid,
-                          'foodTitle': title,
-                          'foodDescription': description,
-                          'foodIngredients': ingredients,
-                          'price': price,
-                          'date': admin.firestore.Timestamp.now()
-                        }).catch(err => console.log(err));
-                        if (i % 4 === 2) {
-                          skippedEntries++;
-                        }
+                    if ($(foodSegment).text().includes('€')) {
+                      price = $(foodSegment).text();
+                      console.log('try adding food item: ' + title);
+                      db.collection('restaurants/' + restaurant.uid + '/menu').add({
+                        'cantineID': restaurant.uid,
+                        'foodTitle': title,
+                        'foodDescription': description,
+                        'foodIngredients': ingredients,
+                        'price': price,
+                        'date': admin.firestore.Timestamp.now()
+                      }).catch(err => console.log(err));
+                      if (i % 4 === 2) {
+                        skippedEntries++;
                       }
-                      break;
+                    }
+                    break;
                 }
               });
             })
