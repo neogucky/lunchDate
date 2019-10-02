@@ -3,7 +3,7 @@
     <img class="logo" width="200" src="assets/img/app_banner.png">
   </div>
 
-  <div *ngIf="this.global.user.group === undefined">
+  <div *ngIf="global.user.group === undefined || global.user.group === ''">
     <h3>{{ 'TIME.WELCOME' | translate }}</h3>
     <p>{{ 'TIME.WELCOME_EXPLANATION' | translate }}</p>
     <ion-button expand="block" color="primary" routerLink="/home/settings/join-group/" routerDirection="forward">{{'SETTINGS.JOIN_GROUP' | translate}}</ion-button>
@@ -11,7 +11,7 @@
 
   </div>
 
-  <div *ngIf="this.global.user.group !== undefined">
+  <div *ngIf="this.global.user.group !== undefined && this.global.user.group !== ''">
     <h3 *ngIf="suggestionList === undefined || suggestionList.length == 0">{{ 'TIME.CREATETEXT_1' | translate }}
       <ion-icon (click)="datePicker.open()" color="primary" name="clock"></ion-icon>
       {{ 'TIME.CREATETEXT_2' | translate }}</h3>

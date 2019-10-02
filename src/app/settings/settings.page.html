@@ -4,7 +4,7 @@
   </div>
 
   <div class="userBox">
-    <ion-icon *ngIf="global.user.avatar === undefined" (click)="selectImage()" name="contact"></ion-icon>
+    <ion-icon *ngIf="global.user === undefined || global.user.avatar === undefined" (click)="selectImage()" name="contact"></ion-icon>
     <div class="imageContainer" *ngIf="global.user.avatar != undefined" (click)="selectImage()"><img src="{{global.user.avatar}}"></div>
     <div class="inner">
       {{global.user.name}}

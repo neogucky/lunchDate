@@ -9,6 +9,7 @@ import { Firebase } from '@ionic-native/firebase/ngx';
     providedIn: 'root'
 })
 export class FirebaseService {
+  private getGroupSubscription: any;
 
     constructor(
         public afs: AngularFirestore,
@@ -51,8 +52,7 @@ export class FirebaseService {
                     console.log(e);
                 });
             });
-
-        this.global.user.allowPush(allowPush);
+        this.managePushSubscription(allowPush);
     }
 
     updateUserAllowReminder(allowReminder) {
@@ -76,6 +76,7 @@ export class FirebaseService {
     }
 
     getGroup(): any {
+        console.log('getGroup', this.global.user.group);
         return this.afs.doc<any>('group/' + this.global.user.group)
             .valueChanges();
     }
@@ -111,6 +112,7 @@ export class FirebaseService {
           console.log('Error updating user', error);
         }).then(() => {
           this.managePushSubscription(this.global.user.allowPush);
+          this.manageGroupMembership();
         });
     }
 
@@ -125,6 +127,7 @@ export class FirebaseService {
         }).then(() => {
           if (this.global.user.allowPush) {
             this.managePushSubscription(true);
+            this.manageGroupMembership();
           }
         });
     }
@@ -296,5 +299,30 @@ export class FirebaseService {
       }
 
     }
+  }
+
+  // get users group - updates users group subscription if user changes group
+  manageGroupMembership() {
+    return new Promise((resolve, reject) => {
+
+      if (this.getGroupSubscription !== undefined) {
+        this.getGroupSubscription.unsubscribe();
+      }
+      // get group
+      if (this.global.user.group !== undefined && this.global.user.group !== '' ) {
+        this.getGroupSubscription = this.getGroup().subscribe((group) => {
+
+          // this will update every time the group changes
+          this.global.updateGroup(group, this.global.user.group);
+
+          // this will resolve the promise only once
+          resolve();
+
+        });
+      } else {
+        this.global.updateGroup(undefined, this.global.user.group);
+        resolve();
+      }
+    });
   }
 }

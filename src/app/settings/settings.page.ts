@@ -37,7 +37,7 @@ export class SettingsPage implements OnInit {
       public events: Events,
       private toastCtrl: ToastController,
       public global: Global,
-      private auth: AuthService,
+      public auth: AuthService,
       private backend: FirebaseService,
       private platform: Platform,
       public alertCtrl: AlertController,
@@ -64,7 +64,7 @@ export class SettingsPage implements OnInit {
   }
 
   ngOnInit() {
-
+    console.log('user', this.global.user);
   }
 
   // update name when 1 second no input

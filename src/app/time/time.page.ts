@@ -83,7 +83,7 @@ export class TimePage {
 
     // FIXME: What to do if no group? Call function later again!
     // FIXME: What to do if group deleted?
-    if (this.global.user.group !== undefined) {
+    if (this.global.user.group !== undefined && this.global.user.group !== '') {
       this.suggestionSubscription = backend.getSuggestions(today).subscribe(data => {
         this.suggestionList = data;
       });
