@@ -111,8 +111,8 @@ export class FirebaseService {
         .catch((error) => {
           console.log('Error updating user', error);
         }).then(() => {
-          this.managePushSubscription(this.global.user.allowPush);
-          this.manageGroupMembership();
+          // this.managePushSubscription(this.global.user.allowPush);
+          // this.manageGroupMembership();
         });
     }
 

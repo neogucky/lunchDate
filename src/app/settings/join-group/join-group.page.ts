@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import {FirebaseService} from '../../firebase.service';
-import {NavController} from "@ionic/angular";
+import {NavController} from '@ionic/angular';
+import {Global} from '../../global';
 
 @Component({
   selector: 'app-join-group',
@@ -12,10 +13,12 @@ export class JoinGroupPage implements OnInit {
   errorMessage: string;
   groupKey: string;
   successMessage: string;
+  loading = false;
 
   constructor(
     private backend: FirebaseService,
     private navCtrl: NavController,
+    private global: Global,
   ) { }
 
   ngOnInit() {
@@ -25,17 +28,19 @@ export class JoinGroupPage implements OnInit {
     this.errorMessage = '';
     this.successMessage = '';
     if (this.groupKey !== undefined) {
-      this.backend.joinGroup(this.groupKey).then((response) => {
-        const groupName = '???'
-        console.log(response);
-        if (groupName === undefined) {
-          this.errorMessage = 'Unknown group key. Please check the spelling';
-        } else {
-          // FIXME: not visible - use toast instead
-          this.successMessage = 'Joined group: ' + groupName;
-          this.navCtrl.navigateRoot('/settings');
-        }
+      this.loading = true;
+      this.backend.joinGroup(this.groupKey.toUpperCase()).then((response) => {
+        this.waitForServer();
       });
+    }
+  }
+
+  waitForServer() {
+    if (this.global.user.groupKey === undefined || this.global.user.groupKey === '' ) {
+      this.loading = false;
+      this.navCtrl.navigateRoot('home/settings');
+    } else {
+      setTimeout(this.waitForServer.bind(this), 500);
     }
   }
 }

@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {NavigationExtras} from '@angular/router';
 import {FirebaseService} from '../../firebase.service';
 import {NavController} from '@ionic/angular';
+import {Global} from "../../global";
 
 @Component({
   selector: 'app-create-group',
@@ -16,10 +17,12 @@ export class CreateGroupPage implements OnInit {
   errorMessage: string;
   successMessage: string;
   form: FormGroup;
+  loading = false;
 
   constructor(
     private backend: FirebaseService,
     private navCtrl: NavController,
+    private global: Global,
     fb: FormBuilder
   ) {
     this.form = fb.group({
@@ -42,16 +45,26 @@ export class CreateGroupPage implements OnInit {
       return;
     }
 
+    this.loading = true;
     this.backend.createGroup({
       group_name: data.group_name,
-      group_key: data.group_key,
+      group_key: data.group_key.toUpperCase(),
       mail_match: data.mail_match,
       mailMatchDomain: this.mailMatchDomain
     }).then( () => {
-      self.backend.joinGroup(data.group_key).then((response) => {
-          this.navCtrl.navigateRoot('/settings');
+      self.backend.joinGroup(data.group_key.toUpperCase()).then((response) => {
+          this.waitForServer();
       });
     });
 
+  }
+
+  waitForServer() {
+    if (this.global.user.groupKey === undefined || this.global.user.groupKey === '' ) {
+      this.loading = false;
+      this.navCtrl.navigateRoot('home/settings');
+    } else {
+      setTimeout(this.waitForServer.bind(this), 500);
+    }
   }
 }

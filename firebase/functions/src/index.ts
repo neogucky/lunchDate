@@ -79,6 +79,7 @@ exports.joinGroup = functions.firestore.document('participants/{participantID}')
   const groupKey = change.after.data().groupKey;
 
   if (groupKey !== undefined && groupKey !== ''){
+    console.log('joinGroup', 'Trying to joing group with key: ' + groupKey);
     let groupKeyExists;
     return new Promise((resolve, reject) => {
       db.collection('group').where('groupKey', '==', groupKey).get()
@@ -86,6 +87,7 @@ exports.joinGroup = functions.firestore.document('participants/{participantID}')
           snapshot.forEach(doc => {
             groupKeyExists = true;
             const group = doc.data();
+            console.log('joinGroup', 'Found matching group: ' + group.name);
             let roles = group.roles;
             if (roles === undefined) {
               roles = [];
@@ -103,7 +105,12 @@ exports.joinGroup = functions.firestore.document('participants/{participantID}')
           });
           if (!groupKeyExists){
             //group key does not exist
-            resolve('');
+            console.log('joinGroup', 'Did NOT find matching group - removing key');
+            db.collection('participants').doc(context.params.participantID).set({groupKey: ''}, {merge: true}).then(() => {
+              resolve('');
+            }).catch(err => {
+              console.error('Error setting users group', err);
+            });
           }
         }).catch(err => {
         console.error('Error', err);
@@ -125,8 +132,7 @@ exports.joinGroup = functions.firestore.document('participants/{participantID}')
               console.error('Error setting group roles', err);
             }).then(() => {
               db.collection('participants').doc(context.params.participantID).set({
-                group: ''
-              }, {merge: true}).then(() => {
+                group: '', groupKey: ''}, {merge: true}).then(() => {
                 resolve(group.name);
               }).catch(err => {
                 console.error('Error setting users group', err);

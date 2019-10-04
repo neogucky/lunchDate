@@ -12,15 +12,22 @@
   {{ 'SETTINGS.ABOUT_GROUPS' | translate}}
   {{ 'SETTINGS.ABOUT_JOINING_GROUPS' | translate}}
 
-  <form (ngSubmit)="joinGroup()">
+  <form>
     <br>
       <ion-item>
-        <ion-input type="text" [(ngModel)]="groupKey" name="group_key" placeholder="{{ 'SETTINGS.GROUP_KEY' | translate}}"></ion-input>
+        <ion-input class="groupKey" type="text" [(ngModel)]="groupKey" name="group_key" placeholder="{{ 'SETTINGS.GROUP_KEY' | translate}}"></ion-input>
       </ion-item>
     <br>
-    <ion-button ion-button expand="full" type="submit">{{ 'SETTINGS.JOIN_GROUP' | translate}}</ion-button>
+    <ion-button (click)="joinGroup()" ion-button expand="full">{{ 'SETTINGS.JOIN_GROUP' | translate}}</ion-button>
   </form>
   <p class="errorMessage" *ngIf="errorMessage !== ''">{{errorMessage}}</p>
   <p class="successMessage" *ngIf="successMessage !== ''">{{successMessage}}</p>
-
 </ion-content>
+<div class="overlay" [hidden]="!loading">
+    <span class="center">
+      <span>Managing groups...</span>
+    <br />
+    <br />
+    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+    </span>
+</div>

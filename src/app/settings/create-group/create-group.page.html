@@ -18,7 +18,7 @@
       <ion-input type="text" formControlName="group_name" placeholder="{{ 'SETTINGS.GROUP_NAME' | translate}}"></ion-input>
     </ion-item>
       <ion-item>
-        <ion-input type="text" formControlName="group_key" placeholder="{{ 'SETTINGS.GROUP_KEY' | translate}}"></ion-input>
+        <ion-input class="groupKey" type="text" formControlName="group_key" placeholder="{{ 'SETTINGS.GROUP_KEY' | translate}}"></ion-input>
       </ion-item>
       <ion-item>
         <ion-label>{{'SETTINGS.MAIL_MATCH' | translate}}</ion-label>
@@ -37,5 +37,12 @@
   </form>
   <p class="errorMessage" *ngIf="errorMessage !== ''">{{errorMessage}}</p>
   <p class="successMessage" *ngIf="successMessage !== ''">{{successMessage}}</p>
-
 </ion-content>
+<div class="overlay" [hidden]="!loading">
+    <span class="center">
+      <span>Managing groups...</span>
+    <br />
+    <br />
+    <div class="lds-roller"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
+    </span>
+</div>

@@ -146,20 +146,21 @@ export class LoginPage implements OnInit {
             } else {
                 this.global.user = {name: ''};
             }
-            console.log('about to manageGroupMembership');
-            // get group -> the callback should be only called once
+
+            // update groupmembership
             this.backend.manageGroupMembership().then(() => {
-              console.log('First callback: manageGroupMembership');
-              setTimeout(() => {
-                this.splashScreen.hide();
-                console.log('end splash autologin');
-              }, 1000);
+              if (!initFinished) {
+                initFinished = true;
+                setTimeout(() => {
+                  this.splashScreen.hide();
+                  console.log('end splash autologin');
+                }, 1000);
 
-              // FIXME: this should be done only once when first setting the language
-              this.backend.setLanguage(this.global.language);
+                this.backend.setLanguage(this.global.language);
 
-              initFinished = true;
-              this.router.navigateByUrl('/home');
+                initFinished = true;
+                this.router.navigateByUrl('/home');
+              }
             });
         });
     }

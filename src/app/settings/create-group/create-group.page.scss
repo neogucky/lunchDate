@@ -1,5 +1,7 @@
-app-create-group {
-  ion-label.italic {
-    font-style: italic;
-  }
+ion-label.italic {
+  font-style: italic;
+}
+
+ion-input.groupKey {
+  text-transform: uppercase;
 }
