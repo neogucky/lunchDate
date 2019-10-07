@@ -45,9 +45,10 @@ export class LoginPage implements OnInit {
         });
 
         this.route.queryParams.subscribe(params => {
-          if (params && params.user) {
-              this.username = params.user.username;
-              this.password = params.user.password;
+          console.log('params', params);
+          if (params && params.username) {
+              this.username = params.username;
+              this.password = params.password;
           }
         });
     }

@@ -3,12 +3,12 @@
     <h1 class="title">{{ 'TIME.ADD_NEW_CAPTION' | translate }}</h1>
     </ion-toolbar>
   </ion-header>
-  <ion-content padding>
+  <ion-content class="ion-padding">
     <ion-list>
       <ion-item>
         <ion-label color="primary">{{'TIME.SELECT_TIME' | translate}}</ion-label>
         <ion-datetime #datePicker
-                      text-center
+                      class="ion-text-center"
                       displayFormat="HH:mm"
                       hourValues="10,11,12,13,14,15"
                       minuteValues="0,15,30,45"

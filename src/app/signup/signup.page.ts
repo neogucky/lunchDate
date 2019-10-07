@@ -48,7 +48,8 @@ export class SignupPage {
           self.auth.sendEmailVerification();
           const navigationExtras: NavigationExtras = {
             queryParams: {
-              user: credentials
+              username: credentials.email,
+              password: credentials.password
             }
           };
           this.navCtrl.navigateBack(['login'], navigationExtras);

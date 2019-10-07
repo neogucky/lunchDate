@@ -14,7 +14,7 @@
 
   div.userBox {
 
-    margin: 0 15px 15px 15px;
+    margin: 0 -15px 15px 0;
 
     ion-icon {
       font-size: 5.5em;
@@ -33,7 +33,7 @@
     }
 
     div.inner {
-      margin-left: 20px;
+      margin-left: 15px;
       margin-top: 6px;
       display: inline-block;
       max-width: calc(100% - 110px);
