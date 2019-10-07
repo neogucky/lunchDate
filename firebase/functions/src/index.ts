@@ -117,37 +117,22 @@ exports.joinGroup = functions.firestore.document('participants/{participantID}')
       });
     });
   } else if (change.after.data().group === 'leave_G5x9') {
+    console.log('leaving group', context.params.participantID);
     return new Promise((resolve, reject) => {
-      db.collection('group').doc( change.before.data().group ).get()
-        .then(doc => {
-          const group = doc.data();
-          let roles = group.roles;
+
+      db.collection('group').doc(change.before.data().group ).update({
+        "roles": admin.firestore.FieldValue.arrayRemove({"UID": context.params.participantID, "role": 'member'})
+      }).then(() => {
 
           try {
-            const deleteIndex = roles.findIndex((element) => element.UID === context.params.participantID);
-            if (deleteIndex > -1) {
-              roles.splice(deleteIndex, 1);
-            }
-            db.collection('group').doc(doc.id).set({roles: roles}, {merge: true}).catch(err => {
-              console.error('Error setting group roles', err);
-            }).then(() => {
-              db.collection('participants').doc(context.params.participantID).set({
-                group: '', groupKey: ''}, {merge: true}).then(() => {
-                resolve(group.name);
-              }).catch(err => {
-                console.error('Error setting users group', err);
-              });
-            }).catch(err => console.log(err));
-          } catch(err){
-            console.error('Error setting users group', err);
-            //even if there is some error remove the group of the user
             db.collection('participants').doc(context.params.participantID).set({
-              group: ''
-            }, {merge: true}).then(() => {
-              resolve(group.name);
+              group: '', groupKey: ''}, {merge: true}).then(() => {
+              resolve('');
             }).catch(err => {
               console.error('Error setting users group', err);
             });
+          } catch(err){
+            console.error('Error removing users group', err);
           }
 
         }).catch(err => {
