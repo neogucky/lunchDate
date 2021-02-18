@@ -5,6 +5,13 @@ An App to find a time and location to go to lunch with your colleagues
 
 1. install all dependencies 
 
+Python (also add to PATH):
+https://www.python.org/downloads/
+
+packages:
+```
+npm install
+```
 
 2. install ionic CLI globally
 
