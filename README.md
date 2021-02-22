@@ -5,9 +5,6 @@ An App to find a time and location to go to lunch with your colleagues
 
 1. install all dependencies 
 
-Python (also add to PATH):
-https://www.python.org/downloads/
-
 packages:
 ```
 npm install
@@ -19,7 +16,24 @@ npm install
 npm install -g @ionic/cli
 ```
 
-3. serve app
+3. create config.ts with firebase config, for security reasons this should never be checked in to a public repository
+
+```
+export const firebaseConfig = {
+  fire: {
+    apiKey: 'YOUR-API-KEY',
+    authDomain: 'YOUR-AUTH-DOMAIN',
+    databaseURL: 'YOUR-DATABASE-URL',
+    projectId: 'YOUR-PROJECT-ID',
+    storageBucket: 'YOUR-STORAGE-BUCKET',
+    messagingSenderId: 'YOUR-SENDER-ID'
+  }
+};
+```
+
+*Note to self:* copy config.ts from onedrive
+
+4. serve app
 
 ```
 ionic serve
